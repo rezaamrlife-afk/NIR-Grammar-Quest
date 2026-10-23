@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#14123a">
+<title>NIR Reading Adventure™ — NIR Academy</title>
+<style>
+:root{--ink:#14123a;--navy:#0b0a24;--vio:#4b3fa8;--gold:#f5b942;--mint:#3ddbb0;--cream:#fff4dc}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:var(--navy);color:var(--cream);font:16px/1.45 Georgia,'Palatino Linotype',serif}
+html,body{-webkit-touch-callout:none;-webkit-text-size-adjust:100%;overscroll-behavior:none}
+button,select{font:inherit}
+button,select,.btn{touch-action:manipulation}
+#g{position:fixed;inset:0;width:100%;height:100%;display:block;touch-action:none}
+#hud{position:fixed;top:0;left:0;right:0;display:none;gap:6px;align-items:center;flex-wrap:wrap;padding:calc(6px + env(safe-area-inset-top)) calc(8px + env(safe-area-inset-right)) 6px calc(8px + env(safe-area-inset-left));font:700 13px/1.2 system-ui,sans-serif;pointer-events:none;z-index:2}
+#hud span,#hud button{background:rgba(11,10,36,.82);border:1px solid var(--vio);border-radius:10px;padding:5px 8px;color:var(--cream)}
+#hud button{pointer-events:auto;min-height:44px;min-width:44px;margin-left:auto;cursor:pointer}
+#ctl{position:fixed;left:0;right:0;bottom:0;display:none;justify-content:space-between;padding:10px calc(14px + env(safe-area-inset-right)) calc(10px + env(safe-area-inset-bottom)) calc(14px + env(safe-area-inset-left));z-index:2;pointer-events:none}
+#ctl div{display:flex;gap:12px}
+#ctl button{pointer-events:auto;width:72px;height:72px;border-radius:50%;border:3px solid var(--gold);background:rgba(75,63,168,.78);color:var(--cream);font-size:28px;touch-action:none;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none}
+#ctl button.on{background:var(--gold);color:var(--ink)}
+@media(max-width:360px){#ctl button{width:62px;height:62px}}
+@media(hover:hover) and (pointer:fine) and (min-width:900px){#ctl{display:none!important}}
+#ov{position:fixed;inset:0;display:flex;overflow-y:auto;overflow-x:hidden;background:radial-gradient(circle at 50% 0,#2b2370,var(--navy) 70%);z-index:5;padding:calc(12px + env(safe-area-inset-top)) calc(12px + env(safe-area-inset-right)) calc(12px + env(safe-area-inset-bottom)) calc(12px + env(safe-area-inset-left))}
+.card{margin:auto;width:100%;max-width:560px;padding:4px}
+h1{font-size:clamp(26px,8vw,42px);margin:.1em 0;color:var(--gold);line-height:1.1}
+h2{margin:.2em 0;font-size:22px;color:var(--mint)}
+.tag{color:var(--mint);font-style:italic;margin:.2em 0}
+.btn{display:block;width:100%;min-height:52px;margin:8px 0;padding:10px 14px;border-radius:14px;border:2px solid var(--gold);background:var(--vio);color:var(--cream);font-weight:700;cursor:pointer;text-align:center}
+.btn.pri{background:var(--gold);color:var(--ink)}
+.btn:focus-visible,select:focus-visible,#hud button:focus-visible,#ctl button:focus-visible{outline:3px solid var(--mint);outline-offset:2px}
+.btn[disabled]{opacity:.65;cursor:default}
+.row{display:flex;gap:8px;flex-wrap:wrap}.row>*{flex:1 1 140px}
+select{width:100%;min-height:46px;border-radius:12px;background:var(--ink);color:var(--cream);border:2px solid var(--vio);padding:6px}
+.pass{background:rgba(255,244,220,.08);border-left:4px solid var(--gold);padding:10px 12px;border-radius:8px;font-size:17px;line-height:1.55}
+.opt{text-align:left}
+.opt.ok{background:var(--mint);color:var(--ink);border-color:var(--mint)}
+.opt.bad{background:#5b2340}
+.fb{padding:8px 10px;border-radius:10px;background:rgba(61,219,176,.16);border:1px solid var(--mint);margin:8px 0;font:15px/1.4 system-ui,sans-serif}
+.sm{font:14px/1.4 system-ui,sans-serif;opacity:.92;display:block}
+td{padding:2px 10px 2px 0;font:15px system-ui,sans-serif}
+#toast{position:fixed;top:calc(58px + env(safe-area-inset-top));left:50%;transform:translateX(-50%);background:var(--gold);color:var(--ink);padding:6px 14px;border-radius:20px;font:700 14px system-ui,sans-serif;display:none;z-index:3;max-width:90%;text-align:center}
+#pg{position:fixed;top:0;left:0;height:5px;width:0;background:#ffc93c;z-index:4;display:none}
+#ov{background:rgba(24,20,80,.74)}
+h1{color:#fff;font-weight:900;text-shadow:0 3px 0 #ff7a3d,0 6px 0 rgba(0,0,0,.3)}
+.tag{color:#ffc93c;font-weight:700;font-style:normal}
+h2{color:#ffc93c;font-weight:900}
+.btn{border:0;border-radius:22px;background:#fff;color:#1d1a5c;box-shadow:0 5px 0 #8d8bc8}
+.btn:active{transform:translateY(3px);box-shadow:0 2px 0 #8d8bc8}
+.btn.pri{background:#ffc93c;color:#3a2200;box-shadow:0 5px 0 #c77c0a}
+.btn.pri:active{box-shadow:0 2px 0 #c77c0a}
+select{border:3px solid #ffc93c;border-radius:999px;background:#fff;color:#1d1a5c;font-weight:800;padding:6px 14px}
+.sm{color:#fff}.btn .sm{color:#5a58a6}
+#hud span,#hud button{background:rgba(20,20,70,.6);border:2px solid rgba(255,255,255,.7);border-radius:12px}
+#ctl button{background:rgba(255,255,255,.22);border:3px solid rgba(255,255,255,.7);box-shadow:0 4px 0 rgba(0,0,0,.3)}
+#ctl button.on{background:rgba(255,255,255,.55);color:#fff;transform:translateY(3px);box-shadow:0 1px 0 rgba(0,0,0,.3)}
+#ctl>div:last-child button{width:92px;height:92px;background:rgba(255,160,60,.5);border-color:#ffe3b0}
+.logo{display:flex;justify-content:center;align-items:center;font-weight:800;font-size:18px;color:#ffc93c;margin-bottom:4px}
+.lgi{width:auto;max-width:200px;object-fit:contain;background:#fff;border-radius:10px;padding:3px}
+.cr{font:13px/1.5 system-ui,sans-serif;text-align:center;margin:10px 0 0;color:#fff}
+.cr a{display:inline-block;padding:8px 6px;color:#ffc93c;font-weight:700;text-decoration:underline}
+.qcard{background:#fff;color:#1d1a5c;border:4px solid #ffc93c;border-radius:20px;padding:14px}
+.qcard h2{color:#1d1a5c}
+.qcard .pass{background:#fff7dc;border-left-color:#ff7a3d;color:#1d1a5c}
+.qcard .btn{border:3px solid #5a58a6;box-shadow:none;border-radius:14px;background:#fff;color:#1d1a5c}
+.qcard .btn.pri{background:#ffc93c;border-color:#c77c0a;color:#3a2200}
+.qcard .opt.ok{background:#d9f7e1;border-color:#117a35}
+.qcard .opt.bad{background:#ffe0e4;border-color:#b3122f}
+.qcard .opt[disabled]{opacity:1}
+.qcard .fb{background:#efeeff;border-color:#5a58a6;color:#1d1a5c}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style></head><body>
+<canvas id="g" aria-label="Game area"></canvas>
+<div id="hud"><span id="hs"></span><span id="hb"></span><span id="hl"></span><span id="hc"></span><button id="hp" aria-label="Pause game">❚❚</button></div>
+<div id="pg"></div><div id="toast" role="status" aria-live="polite"></div>
+<div id="ctl"><div><button data-k="l" aria-label="Move left">◀</button><button data-k="r" aria-label="Move right">▶</button></div><div><button data-k="j" aria-label="Jump">▲</button></div></div>
+<main id="ov"></main>
+<script>
+(()=>{'use strict';
+/* ===== Helpers, storage, i18n ===== */
+const $=s=>document.querySelector(s),cv=$('#g'),cx=cv.getContext('2d'),ov=$('#ov'),hud=$('#hud'),ctl=$('#ctl'),tst=$('#toast');
+const DEV=location.hostname==='localhost',log=(...a)=>{if(DEV)console.log(...a)};
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const shuf=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]]}return a};
+const RM=matchMedia('(prefers-reduced-motion:reduce)').matches;
+let mem={};
+const load=()=>{try{return JSON.parse(localStorage.getItem('nir_ra_v1'))||mem}catch(e){return mem}};
+let sv=Object.assign({snd:1,lang:'en',sel:'A1',best:{},done:{}},load());
+if(typeof sv.best!=='object'||!sv.best)sv.best={};if(typeof sv.done!=='object'||!sv.done)sv.done={};
+const save=()=>{mem=sv;try{localStorage.setItem('nir_ra_v1',JSON.stringify(sv))}catch(e){}};
+const T={
+en:{made:'Made for NIR Academy by',by:'Dr. Niki Majidi',play:'Play',levels:'Levels',resume:'Resume',restart:'Restart level',menu:'Main menu',cont:'Continue',listen:'Listen',hint:'Hint',ok:'Correct!',no:'Not quite — that does not match the text.',reset:'Reset progress',sure:'Delete all saved progress?',yes:'Yes, reset',cancel:'Cancel',sound:'Sound',retry:'Try again',next:'Next question',how:'Run, jump and collect books. Read at each lectern, answer the questions, find the golden key, then reach the gate.',pause:'Paused'},
+fa:{made:'ساخته‌شده برای آکادمی NIR توسط',by:'دکتر نیکی مجیدی',play:'شروع بازی',levels:'مرحله‌ها',resume:'ادامه',restart:'شروع دوباره مرحله',menu:'منوی اصلی',cont:'ادامه',listen:'گوش دادن',hint:'راهنمایی',ok:'درست!',no:'درست نیست؛ با متن مطابقت ندارد.',reset:'پاک کردن پیشرفت',sure:'همهٔ پیشرفت ذخیره‌شده پاک شود؟',yes:'بله، پاک کن',cancel:'انصراف',sound:'صدا',retry:'تلاش دوباره',next:'سؤال بعدی',how:'بدوید، بپرید و کتاب جمع کنید. در هر جایگاه متن را بخوانید، به سؤال‌ها پاسخ دهید، کلید طلایی را پیدا کنید و به دروازه برسید.',pause:'متوقف شد'},
+tr:{made:'NIR Academy için hazırlayan:',by:'Dr. Niki Majidi',play:'Oyna',levels:'Seviyeler',resume:'Devam et',restart:'Seviyeyi yeniden başlat',menu:'Ana menü',cont:'Devam',listen:'Dinle',hint:'İpucu',ok:'Doğru!',no:'Tam değil — metinle uyuşmuyor.',reset:'İlerlemeyi sıfırla',sure:'Kayıtlı tüm ilerleme silinsin mi?',yes:'Evet, sıfırla',cancel:'İptal',sound:'Ses',retry:'Tekrar dene',next:'Sonraki soru',how:'Koş, zıpla ve kitap topla. Her kürsüde metni oku, soruları yanıtla, altın anahtarı bul ve kapıya ulaş.',pause:'Duraklatıldı'}};
+const t=k=>(T[sv.lang]&&T[sv.lang][k])||T.en[k]||k;
+/* Branding: logo (falls back to text if it cannot load) and credit links */
+const LOGO='https://niracademy.com/wp-content/uploads/2026/05/Logo-1.jpeg',SITES=['niracademy.com/','niracademy.com/game-center/'];
+const logo=h=>`<div class="logo"><img class="lgi" style="height:${h}px" src="${LOGO}" alt="NIR Academy" referrerpolicy="no-referrer" onerror="this.replaceWith(document.createTextNode('NIR Academy'))"></div>`;
+const credit=()=>`<p class="cr">${t('made')} ${t('by')}<br>${SITES.map(u=>`<a dir="ltr" href="https://${u}" target="_blank" rel="noopener">${u}</a>`).join('')}</p>`;
+
+/* ===== Reading content (original). Each question: [text,[correct,wrong,wrong,wrong],explanation,hint] ===== */
+const D={
+A1:[
+['Tom’s Day','Tom wakes up at seven. He eats bread and drinks milk. Then he walks to school with his sister Mia. School starts at eight.',[
+['What does Tom drink?',['Milk','Tea','Juice','Water'],'The text says he drinks milk.','Look at breakfast.'],
+['Who walks to school with Tom?',['His sister','His friend','His teacher','His dog'],'Tom walks with his sister Mia.','Find the name Mia.'],
+['When does school start?',['At eight','At seven','At nine','At six'],'School starts at eight; Tom wakes up at seven.','Last sentence.']]],
+['The Red Cat','Lina has a red cat. The cat is small and very fast. It sleeps on the sofa and plays in the garden. Lina loves her cat.',[
+['What colour is the cat?',['Red','Black','White','Brown'],'The first sentence says the cat is red.','First sentence.'],
+['Where does the cat sleep?',['On the sofa','In the garden','On the bed','In a box'],'It sleeps on the sofa and plays in the garden.','Sleeps, not plays.'],
+['What is the text mainly about?',['Lina and her cat','A big garden','A school day','A fast car'],'The whole text describes Lina’s cat.','Who is in every sentence?']]],
+['At the Market','Ali goes to the market on Saturday. He buys apples, rice and fish. The apples are cheap, but the fish is expensive. He goes home at noon.',[
+['When does Ali go to the market?',['On Saturday','On Sunday','On Monday','On Friday'],'He goes on Saturday.','First sentence.'],
+['Which food is expensive?',['The fish','The apples','The rice','The bread'],'The text says the fish is expensive.','Find “but”.'],
+['What does “cheap” mean here?',['Not expensive','Very big','Very old','Not fresh'],'“Cheap, but the fish is expensive” shows the opposite ideas.','“But” shows a contrast.']]]],
+A2:[
+['The Lost Umbrella','Last Friday it rained all morning. Sara left her umbrella on the bus, so she got wet on the way to work. At lunch she called the bus company. They found the umbrella, and she will collect it tomorrow.',[
+['Why did Sara get wet?',['She left her umbrella on the bus','She forgot her coat','The bus was late','She walked in a park'],'“So” shows the result: no umbrella, so she got wet.','Look for “so”.'],
+['What happened after she called the company?',['They found the umbrella','She got wet','It started to rain','She left the bus'],'The company found the umbrella after her call.','Read the end.'],
+['What will Sara do tomorrow?',['Collect her umbrella','Call the company','Buy a new umbrella','Go to the park'],'“Will collect it tomorrow” is the future plan.','Look for “will”.']]],
+['Weekend Plans','Ben and his cousin want to visit the lake on Sunday. They will take a train at nine o’clock and bring sandwiches. If the weather is bad, they will go to the cinema instead.',[
+['How will they travel to the lake?',['By train','By bus','By car','By bike'],'They will take a train.','Second sentence.'],
+['What will they do if the weather is bad?',['Go to the cinema','Stay home','Visit the lake anyway','Go shopping'],'The last sentence gives the bad-weather plan.','Find “if”.'],
+['What does “instead” mean here?',['In place of the lake','After the lake','Before the lake','At the lake'],'They choose the cinema in place of the lake.','Cinema replaces what?']]],
+['A New Hobby','Mei started painting last month because she felt tired of screens. At first her pictures were messy, but she practised every evening. Now her friends ask her to paint birthday cards.',[
+['Why did Mei start painting?',['She was tired of screens','Her friends asked her','She wanted money','Her teacher said so'],'The text gives “tired of screens” as the reason.','Find “because”.'],
+['What was true at first?',['Her pictures were messy','She painted cards','She was famous','She hated painting'],'“At first her pictures were messy.”','Find “at first”.'],
+['What does “practised every evening” mean?',['Did it again to improve','Stopped painting','Sold her pictures','Forgot her paints'],'Practising means repeating to get better.','She improved by doing what?']]]],
+B1:[
+['The Quiet Library','When the town council cut library hours, many residents were upset. Teenagers lost a calm place to study, and older people lost a weekly meeting point. A volunteer group then offered to keep the doors open on weekends, although they still need more helpers.',[
+['What is the main idea?',['Volunteers are trying to keep the library useful','The council built a new library','Teenagers dislike studying','The library has closed for ever'],'The passage moves from the cut to the volunteers’ response.','Think of the whole passage.'],
+['Who lost a weekly meeting point?',['Older people','Teenagers','Volunteers','Council members'],'The text names older people for this.','Second sentence.'],
+['What can we infer about the volunteers?',['They think the library matters to the community','They work for the council','They are paid','They want fewer visitors'],'Giving free time to reopen it suggests they value it.','Why volunteer?']]],
+['Mountain Rescue','Karim was hiking alone when thick fog covered the path. Instead of walking on, he stayed still, put on his warm jacket and used his whistle. Rescuers heard the signal within an hour. Later, he admitted he should have checked the weather forecast first.',[
+['Why did Karim stay still?',['Walking in fog could be dangerous','He was bored','He wanted to sleep','His phone broke'],'Staying put is safer when you cannot see the path.','Think about the fog.'],
+['How soon did rescuers hear him?',['Within an hour','Overnight','After two days','Immediately'],'The text says within an hour.','Third sentence.'],
+['What does “admitted” mean here?',['Accepted something was true','Denied it','Forgot it','Hoped for it'],'He accepted that he made a mistake.','He says it was his mistake.']]],
+['Street Food Festival','Every spring, the city’s street food festival brings together cooks from many countries. Visitors say the best part is not the food itself but the stories behind each recipe. As a result, many cooks now print short family histories on their menus.',[
+['What is the main idea?',['Food stories make the festival special','Food is very cheap','Cooks dislike menus','Spring is hot'],'Visitors value the stories most.','Find “best part”.'],
+['Why do cooks print family histories?',['Visitors enjoy the stories','The city requires it','It saves money','They want shorter menus'],'“As a result” links visitors’ interest to the change.','Look at “As a result”.'],
+['What does “brings together” mean?',['Gathers in one place','Separates','Sells','Hides'],'The festival gathers cooks from many countries.','Cooks from many countries…']]]],
+B2:[
+['The Attention Economy','Many apps are designed to hold our attention for as long as possible, because advertising revenue grows with every extra minute we spend on them. Defenders argue that users remain free to log off. Critics reply that features such as endless scrolling quietly weaken that freedom, making self-control a poor match for professional design.',[
+['What is the writer mainly doing?',['Presenting two views on app design','Promoting an app','Teaching programming','Praising advertisers'],'Both defenders and critics are presented.','Who speaks in the passage?'],
+['What do the critics imply?',['Engineered habits can be hard to resist','Apps are free to build','Scrolling is rare','Defenders are right'],'Self-control is a “poor match” for professional design.','Read the last clause.'],
+['What does “quietly” suggest here?',['Without drawing attention','Without any noise','Without emotion','Without permission'],'The effect works subtly, not loudly.','It modifies “weaken”.']]],
+['Rewilding the Valley','When wolves were reintroduced to the valley, ecologists predicted fewer deer. What surprised them was the change in deer behaviour: the animals avoided open riverbanks, so young trees began to recover. Skeptical farmers, however, point out that the evidence from one valley cannot prove the effect elsewhere.',[
+['What surprised the ecologists?',['Deer changed their behaviour','Wolves disappeared','Farmers agreed','Trees died'],'The surprise was behaviour, not numbers.','Find “surprised”.'],
+['Why did young trees begin to recover?',['Deer avoided the riverbanks','There was more rain','Farmers planted them','Wolves ate the bark'],'“So” links avoided riverbanks to recovery.','Look for “so”.'],
+['What do the farmers doubt?',['That one valley’s results apply elsewhere','That wolves exist','That trees grow','That deer drink water'],'They say one valley cannot prove the effect elsewhere.','Last sentence.']]],
+['A Letter to the Editor','I was disappointed that the council spent a fortune on a fountain while the bus service remains unreliable. A fountain may delight visitors, but residents need to reach work on time. Surely public money should first solve everyday problems before it decorates the town.',[
+['What is the writer’s purpose?',['To persuade the council to change priorities','To describe a fountain’s history','To thank the council','To advertise buses'],'The writer argues money should go to everyday problems.','Look at “should first”.'],
+['What is the tone?',['Critical but reasoned','Joyful','Neutral and detached','Insulting'],'The writer complains but offers reasons.','Complaint plus reasons.'],
+['What does “a fortune” mean here?',['A very large amount of money','A lucky chance','A prediction','A small gift'],'It stresses how costly the fountain was.','Compare with “bus service”.']]]]};
+const WORDS={A1:[['cheap','low price'],['noon','12 o’clock'],['garden','outdoor plants']],A2:[['collect','pick up'],['instead','in place of'],['practise','repeat to improve']],B1:[['resident','person who lives there'],['admit','say it is true'],['recipe','food instructions']],B2:[['revenue','income'],['skeptical','doubtful'],['decorate','make prettier']]};
+const LVD={A1:'Short everyday texts and simple facts.',A2:'Simple stories, past and future plans.',B1:'Longer texts, main ideas and inference.',B2:'Implied meaning, tone and perspectives.'};
+
+/* ===== World (deterministic, every jump ≤110px gap / ≤80px rise) ===== */
+const L=5400,GY=380,PL=[[0,380,900],[1010,380,520],[1200,300,150],[1640,380,300],[2050,380,160],[2320,320,140],[2570,380,160],[2780,320,140],[3030,380,520],[3230,300,150],[3660,380,300],[4070,380,200],[4380,330,140],[4630,380,700]].map(([x,y,w])=>({x,y,w}));
+const BK=[[450,340],[780,340],[1400,340],[1780,340],[2130,340],[2390,280],[2850,280],[3400,340],[3800,340],[4170,340],[4450,290],[4950,340]],TK=[[1275,260],[2640,340],[3880,320]],CP=[1060,3080,4680],SPK=[600,3900],GATE=5240;
+const AREA=['The Library Entrance','The Floating Book Bridge','The Vocabulary Garden','The Mystery Reading Hall','The Ancient Story Chamber','The Golden Reading Gate'];
+const hexA=c=>[1,3,5].map(i=>parseInt(c.substr(i,2),16));
+const mix=(a,b,t)=>{const x=hexA(a),y=hexA(b);return'rgb('+x.map((v,i)=>v+(y[i]-v)*t|0)+')'};
+const SKY=[['#2f7bff','#8fd3ff','#ffd9a8'],['#5a3fc0','#a78bf0','#ffc6e0'],['#17a58f','#7fe0c8','#f4f0b0'],['#3a2a8a','#7a5fd0','#e0a0d0'],['#ff7a8a','#ffb58a','#ffe6a8'],['#e8932a','#ffd27a','#fff2c0']];
+const HL=[['#9fa9ee','#6fc3c9','#43a98a'],['#b79af0','#8a7ad8','#5a9a9a'],['#7fb0e8','#4fbfa6','#3a9a62'],['#9a7ad0','#7a68c0','#5a8a9a'],['#d99bd0','#e8a07a','#79b86a'],['#e8b070','#d9a050','#8fb85a']];
+
+/* ===== State ===== */
+let st='menu',lv='A1',W=0,pl,cam=0,sc=1,VW=560,OY=0,spawn=60,score,rp,books,toks,keys,lives,qF,qOK,qT,bks,tks,key,cps,ens,parts=[],rd=null,rc=false,area=-1,tT=0,gT=0;
+const K={l:0,r:0,j:0,jp:0};
+
+/* ===== Audio & speech ===== */
+let AC;
+function sfx(f,d=.12,ty='sine',f2){if(!sv.snd)return;try{AC=AC||new(window.AudioContext||window.webkitAudioContext)();if(AC.state==='suspended')AC.resume();const o=AC.createOscillator(),g=AC.createGain(),n=AC.currentTime;o.type=ty;o.frequency.setValueAtTime(f,n);if(f2)o.frequency.exponentialRampToValueAtTime(f2,n+d);g.gain.setValueAtTime(.12,n);g.gain.exponentialRampToValueAtTime(.001,n+d);o.connect(g);g.connect(AC.destination);o.start();o.stop(n+d)}catch(e){log(e)}}
+const stopSpeak=()=>{try{window.speechSynthesis&&speechSynthesis.cancel()}catch(e){}};
+function speak(x){try{const s=window.speechSynthesis;if(!s){toast('Speech is not supported here');return}if(s.speaking){s.cancel();return}const u=new SpeechSynthesisUtterance(x);u.lang='en-US';u.rate=.9;s.speak(u)}catch(e){toast('Speech failed')}}
+function toast(m,ms=1800){tst.textContent=m;tst.style.display='block';clearTimeout(tT);tT=setTimeout(()=>tst.style.display='none',ms)}
+
+/* ===== Game flow ===== */
+function start(l,demo){
+  if(!D[l]||D[l].length<3){lv=l;ov.innerHTML='<div class="card"><h2>Content unavailable</h2><p>This level’s reading bank is missing. Please choose another level.</p><button class="btn" data-a="levels">Levels</button></div>';log('missing bank',l);return}
+  lv=l;sv.sel=l;save();W=1;score=rp=books=toks=keys=qF=qOK=0;lives=3;qT=9;area=-1;parts=[];spawn=60;cam=0;
+  pl={x:60,y:300,w:22,h:34,vx:0,vy:0,f:1,coy:0,buf:0,inv:0,g:0};
+  bks=BK.map(([x,y])=>({x,y,got:0}));tks=TK.map(([x,y],i)=>({x,y,got:0,w:WORDS[l][i]}));key={x:3300,y:262,got:0};
+  cps=CP.map((x,i)=>({x,i,s:0,d:D[l][i]}));
+  ens=[{x:1260,a:1260,b:1480,d:1},{x:4900,a:4900,b:5200,d:1}];
+  hudU();if(demo)return;setState('play');
+}
+function setState(s){st=s;const p=s==='play';ov.style.display=p?'none':'flex';hud.style.display=p?'flex':'none';ctl.style.display=p?'flex':'none';$('#pg').style.display=p?'block':'none';if(s!=='read')stopSpeak();if(!p)K.l=K.r=K.j=K.jp=0;render();ov.scrollTop=0;const f=ov.querySelector('button,select');if(f&&!p)f.focus({preventScroll:true})}
+function hudU(){$('#hs').textContent='Score '+(score+rp);$('#hb').textContent='Books '+books+'/'+BK.length+' · Key '+keys+'/1';const hl=$('#hl');hl.textContent='♥'.repeat(Math.max(0,lives))+'♡'.repeat(Math.max(0,3-lives));hl.setAttribute('aria-label','Lives '+lives);$('#hc').textContent='Readings '+cps.filter(c=>c.s===2).length+'/3'}
+function hit(){if(pl.inv>0)return;lives--;sfx(200,.3,'sawtooth',60);pl.inv=1.6;pl.vy=-380;pl.vx=-pl.f*160;hudU();if(lives<=0)setState('over')}
+function fall(){lives--;sfx(200,.3,'sawtooth',60);hudU();if(lives<=0){setState('over');return}pl.x=spawn;pl.y=300;pl.vx=pl.vy=0;pl.inv=1.5;cam=Math.max(0,spawn-VW*.35)}
+function burst(x,y,c){if(RM)return;for(let i=0;i<6&&parts.length<60;i++)parts.push({x,y,vx:(Math.random()-.5)*160,vy:-Math.random()*140,l:.5,c})}
+function finish(){sfx(660,.5,'triangle',1320);score+=100+lives*20;const tot=score+rp;sv.done[lv]=1;sv.best[lv]=Math.max(sv.best[lv]||0,tot);save();setState('done')}
+const hitR=(a,x,y,w,h)=>a.x<x+w&&a.x+a.w>x&&a.y<y+h&&a.y+a.h>y;
+
+function upd(dt){
+  const p=pl,d=(K.r?1:0)-(K.l?1:0);
+  p.vx+=(d*230-p.vx)*Math.min(1,(d?12:9)*dt);if(d)p.f=d;
+  p.coy-=dt;p.buf-=dt;p.inv-=dt;
+  if(K.jp){p.buf=.12;K.jp=0}
+  if(p.buf>0&&p.coy>0){p.vy=-560;p.buf=0;p.coy=0;sfx(440,.12,'square',760)}
+  if(!K.j&&p.vy<-250)p.vy=-250;
+  p.vy=Math.min(900,p.vy+1500*dt);
+  const ob=p.y+p.h,was=p.g;p.x=Math.max(0,Math.min(L-p.w,p.x+p.vx*dt));p.y+=p.vy*dt;p.g=0;
+  for(const q of PL){if(p.vy>=0&&p.x+p.w>q.x+4&&p.x<q.x+q.w-4&&ob<=q.y+6&&p.y+p.h>=q.y){p.y=q.y-p.h;p.vy=0;p.g=1}}
+  if(p.g){p.coy=.1;if(!was)burst(p.x+11,p.y+p.h,'#cbb8ff')}
+  if(p.y>560){fall();return}
+  for(const b of bks)if(!b.got&&hitR(p,b.x-10,b.y-10,20,20)){b.got=1;books++;score+=10;sfx(880,.12,'triangle',1320);burst(b.x,b.y,'#f5b942');hudU()}
+  for(const k of tks)if(!k.got&&hitR(p,k.x-12,k.y-12,24,24)){k.got=1;toks++;score+=25;sfx(700,.18,'triangle',1000);burst(k.x,k.y,'#3ddbb0');toast(k.w[0]+' = '+k.w[1],2600);hudU()}
+  if(!key.got&&hitR(p,key.x-12,key.y-12,24,24)){key.got=1;keys=1;score+=50;sfx(520,.4,'triangle',1500);toast('Golden key found!');hudU()}
+  for(const e of ens){e.x+=e.d*60*dt;if(e.x>e.b||e.x<e.a)e.d*=-1;if(hitR(p,e.x+3,356,22,24)&&p.inv<=0)hit()}
+  for(const s of SPK)if(hitR(p,s+4,364,28,16)&&p.inv<=0)hit();
+  if(st!=='play')return;
+  for(const c of cps)if(c.s===0&&Math.abs(p.x+11-c.x)<32&&p.g){c.s=1;spawn=c.x-40;K.l=K.r=K.j=0;p.vx=0;rd={c,qi:0};prepQ();setState('read');return}
+  if(p.x+11>GATE){if(keys>=1&&cps.every(c=>c.s===2)){finish();return}p.x=GATE-34;p.vx=0;if(gT<=0){toast(keys<1?'Find the golden key first':'Finish all 3 readings first',2200);gT=2}}
+  gT-=dt;
+  const a=Math.min(5,p.x/900|0);if(a!==area){area=a;toast(AREA[a],2200)}
+  cam+=(Math.max(0,Math.min(L-VW,p.x-VW*.35))-cam)*Math.min(1,6*dt);
+  for(const q of parts){q.l-=dt;q.x+=q.vx*dt;q.y+=q.vy*dt;q.vy+=400*dt}parts=parts.filter(q=>q.l>0);
+}
+
+/* ===== Reading checkpoint ===== */
+function prepQ(){const q=rd.c.d[2][rd.qi];rd.q=q;rd.o=shuf(q[1].map((x,i)=>({t:x,ok:i===0})));rd.tr=0;rd.done=0;rd.sel=[];rd.msg=''}
+function readHTML(){
+  const c=rd.c,q=rd.q,n=c.d[2].length;
+  return `<div class="card qcard"><h2>${esc(c.d[0])}</h2><div class="pass" dir="ltr">${esc(c.d[1])}</div>
+<button class="btn" data-a="listen">🔊 ${t('listen')}</button><p dir="ltr"><b>Question ${rd.qi+1} of ${n}: ${esc(q[0])}</b></p>`+
+  rd.o.map((o,i)=>{const bad=rd.sel.includes(i),good=rd.done&&o.ok;return `<button class="btn opt ${good?'ok':bad?'bad':''}" dir="ltr" data-a="opt" data-i="${i}" ${(rd.done||bad)?'disabled':''}>${good?'✓ ':bad?'✗ ':''}${esc(o.t)}</button>`}).join('')+
+  (rd.msg?`<div class="fb" id="fb" role="status">${rd.msg}</div>`:'')+
+  (rd.done?`<button class="btn pri" data-a="next">${rd.qi<n-1?t('next'):t('cont')}</button>`:'')+'</div>';
+}
+function answer(i){
+  const o=rd.o[i],q=rd.q;if(rd.done||!o)return;rd.tr++;
+  if(o.ok){rd.done=1;qOK++;if(rd.tr===1){qF++;rp+=50}else rp+=20;sfx(660,.2,'triangle',990);rd.msg='<b>✓ '+t('ok')+'</b> '+esc(q[2])}
+  else{rd.sel.push(i);sfx(220,.25,'sawtooth',150);
+    if(rd.tr>=2){rd.done=1;rd.msg='<b>✗</b> '+esc(q[2])}else rd.msg='✗ '+t('no')+'<br>💡 '+t('hint')+': '+esc(q[3])+'<br>'+t('retry')+'.'}
+  hudU();render();const f=$('#fb');if(f)f.scrollIntoView({block:'nearest'});
+}
+
+/* ===== Screens ===== */
+function render(){
+  const acc=qT?Math.round(100*qF/qT):0,fin=qT?Math.round(100*qOK/qT):0,H={
+  menu:()=>`<div class="card">${logo(48)}<h1>NIR Reading Adventure™</h1><p class="tag">Read. Explore. Collect. Understand.</p>
+<label class="sm">CEFR level<select id="lvsel">${['A1','A2','B1','B2'].map(l=>`<option ${l===sv.sel?'selected':''}>${l}</option>`).join('')}</select></label>
+<label class="sm">Interface language<select id="lang"><option value="en" ${sv.lang==='en'?'selected':''}>English</option><option value="fa" ${sv.lang==='fa'?'selected':''}>فارسی</option><option value="tr" ${sv.lang==='tr'?'selected':''}>Türkçe</option></select></label>
+<button class="btn pri" data-a="start" data-l="${sv.sel}">${t('play')} ${sv.sel}</button>
+<div class="row"><button class="btn" data-a="levels">${t('levels')}</button><button class="btn" data-a="snd">${t('sound')}: ${sv.snd?'On':'Off'}</button></div>
+<p class="sm" ${sv.lang==='fa'?'dir="rtl"':''}>${t('how')}</p>
+<p class="sm">Keyboard: ← → or A D to move · Space or ↑ to jump · Esc to pause. Touch: use the on-screen buttons.</p>
+${rc?`<div class="fb">${t('sure')}</div><div class="row"><button class="btn" data-a="rcy">${t('yes')}</button><button class="btn" data-a="rcn">${t('cancel')}</button></div>`:`<button class="btn" data-a="rc">${t('reset')}</button>`}${credit()}</div>`,
+  levels:()=>`<div class="card"><h2>${t('levels')}</h2>${['A1','A2','B1','B2'].map(l=>`<button class="btn" data-a="start" data-l="${l}"><b>${l}</b> — ${LVD[l]}<small class="sm">${sv.done[l]?'✓ Completed':'Not completed yet'} · Best score: ${sv.best[l]||'—'}</small></button>`).join('')}<button class="btn" data-a="menu">${t('menu')}</button></div>`,
+  read:()=>readHTML(),
+  pause:()=>`<div class="card"><h2>${t('pause')}</h2><button class="btn pri" data-a="resume">${t('resume')}</button><button class="btn" data-a="restart">${t('restart')}</button><button class="btn" data-a="snd">${t('sound')}: ${sv.snd?'On':'Off'}</button><button class="btn" data-a="menu">${t('menu')}</button></div>`,
+  done:()=>`<div class="card">${logo(36)}<h1>Level ${lv} complete!</h1><p class="tag">Badge earned: Reader ${lv} 🏅</p><table>
+<tr><td>Platform score</td><td><b>${score}</b></td></tr><tr><td>Reading points</td><td><b>${rp}</b></td></tr><tr><td>Total (best ${sv.best[lv]})</td><td><b>${score+rp}</b></td></tr>
+<tr><td>Books collected</td><td><b>${books}/${BK.length}</b></td></tr><tr><td>Vocabulary tokens</td><td><b>${toks}/3</b></td></tr>
+<tr><td>Questions answered</td><td><b>${qT}</b></td></tr><tr><td>First-attempt accuracy</td><td><b>${acc}%</b></td></tr><tr><td>Final accuracy (max 2 tries)</td><td><b>${fin}%</b></td></tr></table>
+<p>${acc>=78?'Strength: you found details and ideas accurately on the first try.':'Strength: you used hints and kept going until you understood.'}</p>
+<p>Next step: ${acc<60?'before answering, reread the passage and find the exact sentence that proves your choice.':'replay aiming for 9/9 on the first try, or try the next level.'}</p>
+<p class="sm">This is game practice feedback only — not an official CEFR assessment.</p>
+<button class="btn pri" data-a="start" data-l="${lv}">Replay level</button><button class="btn" data-a="levels">Select another level</button>${credit()}</div>`,
+  over:()=>`<div class="card"><h1>Out of lives</h1><p>Every reader stumbles. Your reading answers are not lost — try the level again.</p><button class="btn pri" data-a="start" data-l="${lv}">${t('retry')}</button><button class="btn" data-a="menu">${t('menu')}</button></div>`};
+  ov.dir=sv.lang==='fa'?'rtl':'ltr';ov.innerHTML=(H[st]||H.menu)();
+}
+ov.addEventListener('click',e=>{
+  const b=e.target.closest('[data-a]');if(!b||b.disabled)return;const a=b.dataset.a;sfx(500,.05);
+  if(a==='start')start(b.dataset.l);else if(a==='levels')setState('levels');else if(a==='menu'){rc=false;setState('menu')}
+  else if(a==='snd'){sv.snd=sv.snd?0:1;save();render()}else if(a==='rc'){rc=true;render()}else if(a==='rcn'){rc=false;render()}
+  else if(a==='rcy'){sv.best={};sv.done={};rc=false;save();render()}
+  else if(a==='resume')setState('play');else if(a==='restart')start(lv);
+  else if(a==='listen')speak(rd.c.d[1]);else if(a==='opt')answer(+b.dataset.i);
+  else if(a==='next'){if(rd.qi<rd.c.d[2].length-1){rd.qi++;prepQ();render();ov.scrollTop=0}else{rd.c.s=2;hudU();toast('Reading complete — keep going!');setState('play')}}
+});
+ov.addEventListener('change',e=>{if(e.target.id==='lvsel'){sv.sel=e.target.value;save();render()}if(e.target.id==='lang'){sv.lang=e.target.value;save();render()}});
+
+/* ===== Input ===== */
+const togglePause=()=>{if(st==='play')setState('pause');else if(st==='pause')setState('play')};
+$('#hp').addEventListener('click',togglePause);
+const KM={ArrowLeft:'l',KeyA:'l',ArrowRight:'r',KeyD:'r',Space:'j',ArrowUp:'j',KeyW:'j'};
+addEventListener('keydown',e=>{if(e.code==='Escape'){togglePause();return}if(st!=='play')return;const k=KM[e.code];if(!k)return;e.preventDefault();if(k==='j'&&!K.j)K.jp=1;K[k]=1});
+addEventListener('keyup',e=>{const k=KM[e.code];if(k)K[k]=0});
+addEventListener('blur',()=>{K.l=K.r=K.j=K.jp=0});
+document.addEventListener('visibilitychange',()=>{if(document.hidden&&st==='play')setState('pause')});
+ctl.addEventListener('contextmenu',e=>e.preventDefault());
+/* iPhone Safari ignores user-scalable=no: block pinch / double-tap zoom ONLY while playing, so menus and reading text stay zoomable */
+['gesturestart','gesturechange','gestureend'].forEach(n=>document.addEventListener(n,e=>{if(st==='play')e.preventDefault()}));
+document.addEventListener('touchmove',e=>{if(st==='play'&&(e.touches.length>1||e.target.closest('#ctl,#g,#hud')))e.preventDefault()},{passive:false});
+let lastTap=0;document.addEventListener('touchend',e=>{const n=Date.now();if(st==='play'&&n-lastTap<350&&e.target.closest('#ctl,#g'))e.preventDefault();lastTap=n},{passive:false});
+document.addEventListener('dblclick',e=>{if(st==='play')e.preventDefault()});
+ctl.querySelectorAll('button').forEach(b=>{const k=b.dataset.k;
+  b.addEventListener('pointerdown',e=>{e.preventDefault();try{b.setPointerCapture(e.pointerId)}catch(x){}if(k==='j'&&!K.j)K.jp=1;K[k]=1;b.classList.add('on')});
+  ['pointerup','pointercancel','lostpointercapture'].forEach(ev=>b.addEventListener(ev,()=>{K[k]=0;b.classList.remove('on')}))});
+
+/* ===== Rendering (bright cartoon 2.5D look) ===== */
+function size(){const d=Math.min(devicePixelRatio||1,2);cv.width=innerWidth*d|0;cv.height=innerHeight*d|0;sc=Math.min(cv.height/450,cv.width/400);VW=cv.width/sc;OY=(cv.height-450*sc)/2}
+addEventListener('resize',size);addEventListener('orientationchange',()=>setTimeout(size,200));
+const rr=(x,y,w,h,r)=>{cx.beginPath();cx.roundRect?cx.roundRect(x,y,w,h,r):cx.rect(x,y,w,h)};
+const DEC=[];for(let x=140,i=0;x<L;x+=150+(i*53%90),i++)if(PL.some(p=>p.y===380&&x>p.x+40&&x<p.x+p.w-40))DEC.push({x,t:i%3});
+const pg=$('#pg');let lastPc=-1;
+function box(x,y,w,h,d,f,t,s){const dy=d*.6;cx.fillStyle=f;cx.fillRect(x,y,w,h);cx.fillStyle=t;cx.beginPath();cx.moveTo(x,y);cx.lineTo(x+d,y-dy);cx.lineTo(x+w+d,y-dy);cx.lineTo(x+w,y);cx.fill();cx.fillStyle=s;cx.beginPath();cx.moveTo(x+w,y);cx.lineTo(x+w+d,y-dy);cx.lineTo(x+w+d,y+h-dy);cx.lineTo(x+w,y+h);cx.fill()}
+function hills(par,base,amp,fr,col,ph){cx.fillStyle=col;cx.beginPath();cx.moveTo(0,1200);for(let sx=0;sx<=VW+24;sx+=24){const wx=sx+cam*par;cx.lineTo(sx,base-(Math.sin(wx*fr+ph)*amp+Math.sin(wx*fr*2.3+1)*amp*.4))}cx.lineTo(VW+24,1200);cx.fill()}
+function tree(x,t){const y=370;cx.fillStyle='#7a4a2b';cx.fillRect(x-3,y-34,6,34);cx.fillStyle=t===1?'#ff8fb1':'#2f9e6b';cx.beginPath();cx.arc(x,y-42,17,0,7);cx.fill();cx.fillStyle=t===1?'#ffb5cb':'#52c783';cx.beginPath();cx.arc(x-4,y-47,11,0,7);cx.fill()}
+function draw(ts){
+  if(!W)return;
+  const w=cv.width,h=cv.height,T=ts/1000,f=Math.max(0,Math.min(5,(cam+VW/2)/900)),a=f|0,b=Math.min(5,a+1),u=f-a,sk=k=>mix(SKY[a][k],SKY[b][k],u),hl=k=>mix(HL[a][k],HL[b][k],u),bob=RM?0:Math.sin(T*3)*3,cl=cam-40,cr=cam+VW+40;
+  cx.setTransform(1,0,0,1,0,0);const g=cx.createLinearGradient(0,OY,0,OY+380*sc);g.addColorStop(0,sk(0));g.addColorStop(.55,sk(1));g.addColorStop(1,sk(2));cx.fillStyle=g;cx.fillRect(0,0,w,h);
+  cx.setTransform(sc,0,0,sc,0,OY);
+  cx.fillStyle='rgba(255,240,180,.25)';cx.beginPath();cx.arc(VW*.78,84,46,0,7);cx.fill();cx.fillStyle='rgba(255,240,180,.5)';cx.beginPath();cx.arc(VW*.78,84,32,0,7);cx.fill();cx.fillStyle='#fff6c8';cx.beginPath();cx.arc(VW*.78,84,22,0,7);cx.fill();
+  cx.fillStyle='rgba(255,255,255,.85)';
+  for(let i=0;i<5;i++){const x=((i*230-cam*.12+(RM?0:T*8))%(VW+320)+(VW+320))%(VW+320)-160,y=60+(i*37%70);cx.beginPath();cx.ellipse(x,y,34,11,0,0,7);cx.ellipse(x+20,y-8,22,10,0,0,7);cx.ellipse(x-20,y-4,20,8,0,0,7);cx.fill()}
+  hills(.1,315,42,.006,hl(0),0);hills(.22,340,35,.01,hl(1),2);hills(.4,362,25,.016,hl(2),4);
+  cx.setTransform(sc,0,0,sc,-Math.round(cam*sc),OY);
+  for(const d of DEC)if(d.x>cl&&d.x<cr)tree(d.x,d.t);
+  for(const p of PL){if(p.x+p.w<cl||p.x>cr)continue;
+    if(p.y===380){box(p.x,380,p.w,1000,22,'#9a5c3a','#62d36e','#6f3f28');cx.fillStyle='#3fae55';cx.fillRect(p.x,380,p.w,7);cx.fillStyle='rgba(0,0,0,.12)';for(let x=Math.max(p.x,cl);x<Math.min(p.x+p.w,cr);x+=46)cx.fillRect(x+6,402+(x%3)*14,18,5)}
+    else{box(p.x,p.y,p.w,18,14,'#b26b3e','#62d36e','#7d4527');cx.fillStyle='#3fae55';cx.fillRect(p.x,p.y,p.w,4)}}
+  const ok=keys>=1&&cps.every(c=>c.s===2),fx=GATE+80;
+  cx.fillStyle='#e8e8f5';cx.fillRect(fx-2,262,5,112);cx.fillStyle='#ffc93c';cx.beginPath();cx.arc(fx,260,5,0,7);cx.fill();cx.fillStyle='#ff3d5a';cx.beginPath();cx.moveTo(fx+3,266);cx.lineTo(fx+46+(RM?0:Math.sin(T*6)*3),278);cx.lineTo(fx+3,290);cx.fill();
+  for(let r=0;r<2;r++)for(let c=0;c<6;c++){cx.fillStyle=(r+c)%2?'#222':'#fff';cx.fillRect(fx-18+c*6,368+r*6,6,6)}
+  cx.fillStyle=ok?'#ffc93c':'#6b5bd6';rr(GATE,290,60,90,12);cx.fill();cx.fillStyle='#14123a';rr(GATE+10,304,40,76,10);cx.fill();
+  cx.textAlign='center';cx.textBaseline='middle';cx.font='800 13px system-ui,sans-serif';cx.fillStyle='rgba(20,20,70,.7)';rr(GATE-6,262,72,22,11);cx.fill();cx.fillStyle='#fff';cx.fillText(ok?'OPEN ✓':'LOCKED',GATE+30,274);
+  for(const c of cps){if(c.x<cl||c.x>cr)continue;const d=c.s===2;cx.fillStyle='#e8e8f5';cx.fillRect(c.x-1.5,324,3,50);cx.fillStyle=d?'#2fa24f':'#ffc93c';cx.beginPath();cx.arc(c.x,320,11,0,7);cx.fill();cx.fillStyle=d?'#fff':'#3a2200';cx.font='800 14px system-ui,sans-serif';cx.fillText(d?'✓':'?',c.x,321)}
+  for(const x of SPK){if(x<cl||x>cr)continue;for(let i=0;i<3;i++){const sx=x+i*12;cx.fillStyle='#cfd6ea';cx.beginPath();cx.moveTo(sx,380);cx.lineTo(sx+6,363);cx.lineTo(sx+12,380);cx.fill();cx.fillStyle='#7f89ad';cx.beginPath();cx.moveTo(sx+6,363);cx.lineTo(sx+12,380);cx.lineTo(sx+7,380);cx.fill()}}
+  for(const b of bks){if(b.got||b.x<cl||b.x>cr)continue;const y=b.y+bob;cx.fillStyle='rgba(255,216,74,.28)';cx.beginPath();cx.arc(b.x,y,15,0,7);cx.fill();cx.fillStyle='#e29a10';cx.fillRect(b.x-10,y-9,20,18);cx.fillStyle='#ffd84a';cx.fillRect(b.x-7,y-9,17,18);cx.fillStyle='#fff3a8';cx.fillRect(b.x-4,y-5,10,2);cx.fillRect(b.x-4,y,10,2)}
+  cx.font='800 13px system-ui,sans-serif';
+  for(const k of tks){if(k.got||k.x<cl||k.x>cr)continue;const y=k.y+bob,bw=k.w[0].length*8+20;cx.fillStyle='#ffc93c';rr(k.x-bw/2-2,y-12,bw+4,24,12);cx.fill();cx.fillStyle='#2a2466';rr(k.x-bw/2,y-10,bw,20,10);cx.fill();cx.fillStyle='#fff';cx.fillText(k.w[0],k.x,y+1)}
+  if(!key.got){const y=key.y+bob;cx.fillStyle='rgba(255,216,74,.3)';cx.beginPath();cx.arc(key.x,y+6,16,0,7);cx.fill();cx.fillStyle='#ffc93c';cx.beginPath();cx.arc(key.x,y,8,0,7);cx.fill();cx.fillRect(key.x-2,y,4,18);cx.fillRect(key.x,y+12,8,3);cx.fillStyle='#2a2466';cx.beginPath();cx.arc(key.x,y,3,0,7);cx.fill()}
+  for(const e of ens){if(e.x<cl||e.x>cr)continue;const q=Math.sin(T*6+e.x*.1)*.12,sx=e.x+14;cx.fillStyle='rgba(20,20,60,.25)';cx.beginPath();cx.ellipse(sx,377,15,4,0,0,7);cx.fill();cx.fillStyle='#5fd04f';cx.beginPath();cx.ellipse(sx,376,15*(1+q),13*(1-q),0,Math.PI,0);cx.rect(sx-15*(1+q),375,30*(1+q),5);cx.fill();cx.fillStyle='#a6f093';cx.beginPath();cx.ellipse(sx-5,366,4,2.5,0,0,7);cx.fill();cx.fillStyle='#173';cx.fillRect(sx-7+e.d*2,369,3,5);cx.fillRect(sx+3+e.d*2,369,3,5)}
+  const p=pl;
+  if(p.g){cx.fillStyle='rgba(20,20,60,.28)';cx.beginPath();cx.ellipse(p.x+11,p.y+p.h-2,12,4,0,0,7);cx.fill()}
+  if(!(p.inv>0&&((ts/90)|0)%2)){const air=!p.g,sw=air?.9:(Math.abs(p.vx)>20?Math.sin(ts/90)*.9:0);
+    cx.save();cx.translate(p.x+11,p.y+p.h);cx.scale(p.f,1);cx.lineCap='round';cx.lineWidth=6;cx.strokeStyle='#2c2f7d';
+    cx.beginPath();cx.moveTo(-3,-13);cx.lineTo(-3+sw*10,air?-4:0);cx.moveTo(3,-13);cx.lineTo(3-sw*10,air&&p.vy<0?-8:0);cx.stroke();
+    cx.fillStyle='#ffc93c';rr(-15,-30,9,16,3);cx.fill();cx.fillStyle='#19b6a6';rr(-9,-31,18,19,6);cx.fill();cx.fillStyle='#ff7a3d';cx.fillRect(-9,-19,18,3);
+    cx.strokeStyle='#ffd1a1';cx.lineWidth=5;cx.beginPath();cx.moveTo(1,-27);cx.lineTo(air?8:-sw*9+4,air?-34:-18);cx.stroke();
+    cx.fillStyle='#ffd1a1';cx.beginPath();cx.arc(1,-38,9,0,7);cx.fill();cx.fillStyle='#2a2466';cx.beginPath();cx.arc(1,-40,9.5,Math.PI,0);cx.fill();cx.fillRect(2,-41,12,4);
+    cx.fillStyle='#ffc93c';cx.beginPath();cx.arc(1,-47,2.8,0,7);cx.fill();cx.fillStyle='#232050';cx.fillRect(5,-39,2.6,4);cx.restore()}
+  for(const q of parts){cx.globalAlpha=Math.max(0,q.l*1.6);cx.fillStyle=q.c;cx.fillRect(q.x-2,q.y-2,4,4)}cx.globalAlpha=1;
+  const pc=Math.min(100,pl.x/GATE*100|0);if(pc!==lastPc){lastPc=pc;pg.style.width=pc+'%'}
+}
+let last=0;
+function loop(ts){requestAnimationFrame(loop);const dt=Math.min(.05,(ts-last)/1000||0);last=ts;if(st==='play')upd(dt);else if(st==='menu'||st==='levels'){cam+=70*dt;if(cam>L-VW-10)cam=0}draw(ts)}
+size();start(sv.sel,1);setState('menu');requestAnimationFrame(loop);
+})();
+</script></body></html>

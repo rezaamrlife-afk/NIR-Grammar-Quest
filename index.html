@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#2a2466">
 <title>NIR Grammar Quest</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -47,8 +47,8 @@ canvas{display:block;background:#171235;max-width:100%;max-height:100%}
 #build::-webkit-scrollbar{display:none}
 .wchip{display:inline-flex;align-items:center;justify-content:center;padding:4px 9px;border-radius:9px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);color:rgba(255,255,255,.4);margin:0 2px}
 .wchip.on{background:linear-gradient(180deg,#ffe08a,#ffb93c);color:#2a1a00;border-color:transparent;box-shadow:0 2px 0 rgba(0,0,0,.18)}
-@keyframes pop{0%{transform:scale(1.28)}100%{transform:scale(1)}}
-.pill.pop{animation:pop .28s ease-out}
+@keyframes pillpop{0%{transform:scale(1.28)}100%{transform:scale(1)}}
+.pill.pop{animation:pillpop .28s ease-out}
 #toast{position:fixed;top:56px;left:50%;transform:translateX(-50%);background:linear-gradient(180deg,rgba(45,34,96,.92),rgba(30,22,68,.92));border:1px solid rgba(255,216,74,.35);box-shadow:0 8px 20px rgba(0,0,0,.35);padding:8px 18px;border-radius:14px;font-weight:700;display:none;z-index:6;max-width:88vw;text-align:center;font-size:13.5px}
 #ctl{position:fixed;bottom:0;left:0;right:0;display:none;justify-content:space-between;align-items:flex-end;padding:16px;z-index:4;pointer-events:none}
 .pad{display:flex;gap:10px;pointer-events:auto}
@@ -97,9 +97,9 @@ canvas{display:block;background:#171235;max-width:100%;max-height:100%}
 "use strict";
 const $=s=>document.querySelector(s);
 const STR={
- en:{title:'NIR Grammar Quest',sub:'Build sentences. Beat the gate. Learn the rule.',play:'Play',levels:'Levels',locked:'Locked',soon:'Coming soon',level:'Level',resume:'Resume',restart:'Restart',menu:'Menu',pause:'Pause',win:'Level complete!',lose:'Try again',next:'Next',back:'Back',rule:'Grammar rule',made:'Made for NIR Academy by',by:'Dr. Niki Majidi',gate:'Grammar Gate — choose the correct word',sentDone:'Sentence complete! ✓',allDone:'All sentences built!',score:'Score'},
- fa:{title:'ماجراجویی گرامر NIR',sub:'جمله بساز، از دروازه عبور کن، قاعده را یاد بگیر.',play:'شروع',levels:'مرحله‌ها',locked:'قفل',soon:'به‌زودی',level:'مرحله',resume:'ادامه',restart:'شروع دوباره',menu:'منو',pause:'توقف',win:'مرحله تمام شد!',lose:'دوباره امتحان کن',next:'بعدی',back:'بازگشت',rule:'قاعده‌ی گرامری',made:'ساخته‌شده برای آکادمی NIR توسط',by:'دکتر نیکی مجیدی',gate:'دروازه‌ی گرامر — کلمه‌ی درست را انتخاب کن',sentDone:'جمله کامل شد! ✓',allDone:'همه‌ی جمله‌ها ساخته شد!',score:'امتیاز'},
- tr:{title:'NIR Dilbilgisi Macerası',sub:'Cümle kur, kapıyı geç, kuralı öğren.',play:'Oyna',levels:'Seviyeler',locked:'Kilitli',soon:'Yakında',level:'Seviye',resume:'Devam',restart:'Yeniden başlat',menu:'Menü',pause:'Duraklat',win:'Seviye tamamlandı!',lose:'Tekrar dene',next:'Sonraki',back:'Geri',rule:'Dilbilgisi kuralı',made:'NIR Academy için hazırlayan:',by:'Dr. Niki Majidi',gate:'Dilbilgisi Kapısı — doğru kelimeyi seç',sentDone:'Cümle tamam! ✓',allDone:'Tüm cümleler kuruldu!',score:'Puan'}
+ en:{title:'NIR Grammar Quest',sub:'Build sentences. Beat the gate. Learn the rule.',play:'Play',levels:'Levels',locked:'Locked',soon:'Coming soon',level:'Level',resume:'Resume',restart:'Restart',menu:'Menu',pause:'Pause',win:'Level complete!',lose:'Try again',next:'Next',back:'Back',rule:'Grammar rule',made:'Made for NIR Academy by',by:'Dr. Niki Majidi',gate:'Grammar Gate — choose the correct word',sentDone:'Sentence complete! ✓',allDone:'All sentences built!',score:'Score',finishFirst:'Collect every word and pass every gate first!'},
+ fa:{title:'ماجراجویی گرامر NIR',sub:'جمله بساز، از دروازه عبور کن، قاعده را یاد بگیر.',play:'شروع',levels:'مرحله‌ها',locked:'قفل',soon:'به‌زودی',level:'مرحله',resume:'ادامه',restart:'شروع دوباره',menu:'منو',pause:'توقف',win:'مرحله تمام شد!',lose:'دوباره امتحان کن',next:'بعدی',back:'بازگشت',rule:'قاعده‌ی گرامری',made:'ساخته‌شده برای آکادمی NIR توسط',by:'دکتر نیکی مجیدی',gate:'دروازه‌ی گرامر — کلمه‌ی درست را انتخاب کن',sentDone:'جمله کامل شد! ✓',allDone:'همه‌ی جمله‌ها ساخته شد!',score:'امتیاز',finishFirst:'اول همه‌ی کلمه‌ها و دروازه‌ها را کامل کن!'},
+ tr:{title:'NIR Dilbilgisi Macerası',sub:'Cümle kur, kapıyı geç, kuralı öğren.',play:'Oyna',levels:'Seviyeler',locked:'Kilitli',soon:'Yakında',level:'Seviye',resume:'Devam',restart:'Yeniden başlat',menu:'Menü',pause:'Duraklat',win:'Seviye tamamlandı!',lose:'Tekrar dene',next:'Sonraki',back:'Geri',rule:'Dilbilgisi kuralı',made:'NIR Academy için hazırlayan:',by:'Dr. Niki Majidi',gate:'Dilbilgisi Kapısı — doğru kelimeyi seç',sentDone:'Cümle tamam! ✓',allDone:'Tüm cümleler kuruldu!',score:'Puan',finishFirst:'Önce tüm kelimeleri ve kapıları tamamla!'}
 };
 let lang='en';
 const tx=k=>(STR[lang]&&STR[lang][k])||STR.en[k]||k;
@@ -115,9 +115,9 @@ const LV=[
    ['The','sun','rises','in','the','east.']
   ],
   gates:[
-   {q:'He ___ to work by bus.',opts:['goes','go','going'],a:0,fa:'با فعل سوم‌شخص مفرد (he/she/it) در زمان حال ساده، فعل s/es می‌گیرد: goes.',tr:'Üçüncü tekil şahısla (he/she/it) geniş zamanda fiil -s/-es alır: goes.'},
-   {q:'I ___ coffee every morning.',opts:['drinks','drink','drinking'],a:1,fa:'با I/you/we/they فعل بدون s می‌آید: drink.',tr:'I/you/we/they ile fiil -s almaz: drink.'},
-   {q:'They ___ in the park on Sundays.',opts:['plays','play','playing'],a:1,fa:'با they فعل بدون s می‌آید: play.',tr:"They ile fiil -s almaz: play."}
+   {q:'He ___ to work by bus.',opts:['goes','go','going'],a:0,en:'With he/she/it, the verb takes -s/-es: goes.',fa:'با فعل سوم‌شخص مفرد (he/she/it) در زمان حال ساده، فعل s/es می‌گیرد: goes.',tr:'Üçüncü tekil şahısla (he/she/it) geniş zamanda fiil -s/-es alır: goes.'},
+   {q:'I ___ coffee every morning.',opts:['drinks','drink','drinking'],a:1,en:'With I/you/we/they, the verb has no -s: drink.',fa:'با I/you/we/they فعل بدون s می‌آید: drink.',tr:'I/you/we/they ile fiil -s almaz: drink.'},
+   {q:'They ___ in the park on Sundays.',opts:['plays','play','playing'],a:1,en:'With they, the verb has no -s: play.',fa:'با they فعل بدون s می‌آید: play.',tr:'They ile fiil -s almaz: play.'}
   ],
   rule:{en:'Present Simple: use the base verb for I/you/we/they, and add -s/-es for he/she/it. Use it for habits, routines and facts.',
         fa:'زمان حال ساده: برای I/you/we/they فعل ساده (بدون s) و برای he/she/it فعل با s/es می‌آید. برای عادت‌ها، کارهای روزمره و حقایق به کار می‌رود.',
@@ -131,7 +131,7 @@ const KEY='nirGrammarQuest.v1';
 let sv={unlocked:1,best:{},lang:'en'};
 try{const s=JSON.parse(localStorage.getItem(KEY));if(s&&typeof s==='object'){sv.unlocked=Math.max(1,s.unlocked|0);sv.best=(s.best&&typeof s.best==='object')?s.best:{};sv.lang=s.lang||'en';}}catch(e){}
 function save(){try{localStorage.setItem(KEY,JSON.stringify(sv));}catch(e){}}
-lang=sv.lang;
+lang=STR[sv.lang]?sv.lang:'en';
 
 /* ---------- canvas / world ---------- */
 const cv=$('#g'),X=cv.getContext('2d');
@@ -141,45 +141,43 @@ addEventListener('resize',size);size();
 
 const GY=280,FF="Fredoka,Vazirmatn,system-ui,sans-serif";
 let state='menu',cur=0,cam=0,T=0,last=0,shake=0;
-let L=0; // level length
+let L=0;
 let SOL=[],spikeL=[],gatesX=[];
 let p={x:60,y:GY,vx:0,vy:0,f:1,g:true,ph:0,inv:0,coy:0,buf:0,sq:0,gy:GY,jant:0,idle:0,happy:0,dt:0};
-let hearts=3,score=0,words=[],gateIdx=0,gatesPassed=[],sentIdx=0,toastT=0,toastS='',celeT=0,winT=0;
+let hearts=3,score=0,words=[],gateIdx=0,gatesPassed=[],toastT=0,toastS='',winT=0;
 
 function buildWorld(){
   const lv=LV[cur];
-  const sentCount=lv.sentences.length,gateCount=lv.gates.length;
-  // layout: ground is continuous with a couple of raised bits; words spaced out per sentence; gates interleaved
-  // place sentence word tokens sequentially, remembering each sentence's end x
+  const gateCount=lv.gates.length;
   words=[];let x=360;const sentEnd=[];
   lv.sentences.forEach((sent,si)=>{
     sent.forEach((w,wi)=>{x+=72+((wi*13)%18);words.push({x,y:GY-34-((wi%2)?8:0),w,si,wi,got:false});});
     sentEnd.push(x);x+=170;
   });
-  // one grammar gate after each of the first `gateCount` sentences
   gatesX=[];for(let i=0;i<gateCount&&i<sentEnd.length;i++)gatesX.push(Math.round(sentEnd[i]+85));
   gatesPassed=lv.gates.map(()=>false);
   L=x+260;
   SOL=[{x:0,y:GY,w:L,h:300,g:1}];
-  // small floating platforms for variety / challenge
   const plats=[[420,214,90],[1060,206,90],[1720,210,90],[2380,206,90],[3040,210,90]];
   for(const q of plats)if(q[0]<L-260)SOL.push({x:q[0],y:q[1],w:q[2],h:16,k:1});
   spikeL=[[640,34],[1500,34],[2400,34]].filter(s=>s[0]<L-300&&!gatesX.some(g=>Math.abs(g-s[0])<70)&&!words.some(w=>Math.abs(w.x-s[0])<50));
 }
 function reset(i){
-  cur=i;sv.sel=i;save();
+  cur=i;
   buildWorld();
   p={x:60,y:GY,vx:0,vy:0,f:1,g:true,ph:0,inv:0,coy:0,buf:0,sq:0,gy:GY,jant:0,idle:0,happy:0,dt:0};
-  hearts=3;score=0;sentIdx=0;gateIdx=0;toastT=0;winT=0;celeT=0;cam=0;
+  hearts=3;score=0;gateIdx=0;toastT=0;winT=0;cam=0;gateOpenIdx=-1;parts=[];
+  inp.l=inp.r=inp.j=0;
   words.forEach(w=>w.got=false);
 }
 const inp={l:0,r:0,j:0};
 function key(k,v){if(k==='ArrowLeft'||k==='a')inp.l=v;else if(k==='ArrowRight'||k==='d')inp.r=v;else if(k===' '||k==='ArrowUp'||k==='w'){if(v&&state==='play')p.buf=.13;inp.j=v;}}
-addEventListener('keydown',e=>{if(state==='play'||state==='menu')key(e.key,1);});
-addEventListener('keyup',e=>key(e.key,0));
-function holdBtn(id,on,off){const el=$(id);const a=()=>on();const b=()=>off();
-  el.addEventListener('pointerdown',e=>{e.preventDefault();a();});
-  el.addEventListener('pointerup',b);el.addEventListener('pointerleave',b);el.addEventListener('pointercancel',b);}
+const kn=e=>e.key.length===1?e.key.toLowerCase():e.key;
+addEventListener('keydown',e=>{if(e.repeat)return;if(state==='play'||state==='menu')key(kn(e),1);});
+addEventListener('keyup',e=>key(kn(e),0));
+function holdBtn(id,on,off){const el=$(id);
+  el.addEventListener('pointerdown',e=>{e.preventDefault();on();});
+  el.addEventListener('pointerup',off);el.addEventListener('pointerleave',off);el.addEventListener('pointercancel',off);}
 holdBtn('#bl',()=>inp.l=1,()=>inp.l=0);
 holdBtn('#br',()=>inp.r=1,()=>inp.r=0);
 holdBtn('#jp',()=>{if(state==='play')p.buf=.13;inp.j=1;},()=>inp.j=0);
@@ -202,21 +200,19 @@ function jingle(notes,ty,v,gap){try{const a=actx(),t=a.currentTime;notes.forEach
 const SND={word:()=>jingle([880,1174]),sent:()=>jingle([523,659,784,1047]),ok:()=>jingle([659,988]),bad:()=>jingle([294,220],'sawtooth',.1,.14),win:()=>jingle([523,659,784,1047,784,1047,1319],'triangle',.16,.12),hurt:()=>jingle([300,200],'sawtooth',.1,.1)};
 
 /* ---------- physics ---------- */
-function hit(a,b,c,d,e,f,g,h){return a<e+g&&a+c>e&&b<f+h&&b+d>f;}
 function update(dt){
   const tgt=(inp.r-inp.l)*168;
   p.vx+=(tgt-p.vx)*Math.min(1,dt*(p.g?14:11));
   if(tgt)p.f=tgt>0?1:-1;
   p.coy=p.g?.1:p.coy-dt;p.buf-=dt;p.inv-=dt;
   p.happy=Math.max(0,p.happy-dt);if(p.g&&Math.abs(p.vx)<15&&!inp.l&&!inp.r)p.idle+=dt;else p.idle=0;
-  if(p.jant>0){p.jant=Math.max(0,p.jant-dt);p.sq=.22;if(p.jant<=0){p.vy=-430;p.g=false;p.coy=0;p.buf=0;p.sq=-.3;nt&&0;sfxJump();}}
+  if(p.jant>0){p.jant=Math.max(0,p.jant-dt);p.sq=.22;if(p.jant<=0){p.vy=-430;p.g=false;p.coy=0;p.buf=0;p.sq=-.3;sfxJump();}}
   else if(p.buf>0&&p.coy>0){p.jant=.045;p.sq=.22;}
   if(!inp.j&&p.vy<-160)p.vy=-160;
   p.vy=Math.min(p.vy+1150*dt,720);
   p.x+=p.vx*dt;
   for(const s of SOL){if(s.k&&p.x+11>s.x&&p.x-11<s.x+s.w&&p.y>s.y&&p.y-34<s.y+s.h){p.x=(p.vx>0)?s.x-11:s.x+s.w+11;p.vx=0;}}
   p.x=Math.max(12,Math.min(L,p.x));
-  // grammar gate invisible walls
   gatesX.forEach((gx,i)=>{if(!gatesPassed[i]&&p.x+11>gx-6&&p.x<gx+6){p.x=gx-12;p.vx=0;openGate(i);}});
   const wasG=p.g,pv=p.vy;p.g=false;
   p.y+=p.vy*dt;
@@ -226,18 +222,27 @@ function update(dt){
   if(p.g&&Math.abs(p.vx)>20)p.ph+=dt*(8+Math.abs(p.vx)*.03);
   if(p.y>H+60){hurt();p.x=Math.max(12,p.x-80);p.y=GY;p.vx=p.vy=0;p.g=true;p.inv=1.4;}
   for(const [sx,w] of spikeL)if(p.y>GY-14&&p.x+8>sx&&p.x-8<sx+w)hurt();
-  // word collect
-  for(const wd of words){if(wd.got)continue;if(wd.si!==sentenceCursor(wd.si))continue;const need=sentenceProgress(wd.si);if(wd.wi!==need)continue;
+  // word collect (only the current sentence, in order)
+  const cs=curSentence();
+  for(const wd of words){if(wd.got||wd.si!==cs)continue;if(wd.wi!==sentenceProgress(wd.si))continue;
     if(Math.abs(wd.x-p.x)<26&&Math.abs(wd.y-(p.y-20))<30){wd.got=true;score+=15;p.happy=.4;SND.word();spawnBurst(wd.x,wd.y);spawnText(wd.x,wd.y-6,'+15');checkSentence(wd.si);}}
   if(state!=='play')return;
-  if(p.x>=L-20&&allDone())finishLevel(true);
+  if(p.x>=L-20){
+    if(allDone())finishLevel(true);
+    else if(toastT<=0){toastS=tx('finishFirst');toastT=2;}
+  }
   cam+=(Math.max(0,Math.min(L-W,p.x-W*.35))-cam)*Math.min(1,dt*6);
 }
-function sentenceProgress(si){const lv=LV[cur];let n=0;for(const wd of words)if(wd.si===si&&wd.got)n++;return n;}
-function sentenceCursor(){return 0;} // placeholder unused guard removed below
+function sentenceProgress(si){let n=0;for(const wd of words)if(wd.si===si&&wd.got)n++;return n;}
+function curSentence(){
+  const lv=LV[cur];
+  for(let si=0;si<lv.sentences.length;si++)
+    if(!lv.sentences[si].every((_,wi)=>words.find(w=>w.si===si&&w.wi===wi).got))return si;
+  return -1;
+}
 function allDone(){return gatesPassed.every(x=>x)&&words.every(w=>w.got);}
 function hurt(){if(p.inv>0)return;hearts--;p.inv=1.3;SND.hurt();shake=.25;const hp=$('#hearts');hp.classList.remove('pop');void hp.offsetWidth;hp.classList.add('pop');if(hearts<=0)finishLevel(false);}
-function sfxJump(){SND.ok&&jingle([520],'square',.08,.01);}
+function sfxJump(){jingle([520],'square',.08,.01);}
 function spawnBurst(x,y){parts.push({x,y,l:1,vx:0,vy:0});}
 function spawnText(x,y,txt){parts.push({x,y,l:1,vy:-26,txt});}
 let parts=[];
@@ -251,15 +256,16 @@ function checkSentence(si){
 let gateOpenIdx=-1;
 function openGate(i){
   if(gateOpenIdx===i||gatesPassed[i])return;gateOpenIdx=i;
+  inp.l=inp.r=inp.j=0;
   const lv=LV[cur],g=lv.gates[i];
   $('#gq').innerHTML=tx('gate')+'<br><br><b>'+g.q.replace('___','<b style="color:#ff9a4a">___</b>')+'</b>';
-  const box=$('#gopts');box.innerHTML='';let answered=false;
+  const box=$('#gopts');box.innerHTML='';let answered=false,missed=false;
   const order=g.opts.map((o,idx)=>idx).sort(()=>Math.random()-.5);
   order.forEach(idx=>{const b=document.createElement('button');b.className='opt';b.textContent=g.opts[idx];
     b.onclick=()=>{if(answered)return;answered=true;
       if(idx===g.a){b.classList.add('ok');$('#gmsg').textContent='✓';SND.ok();gatesPassed[i]=true;score+=60;
-        setTimeout(()=>{$('#gate').style.display='none';gateOpenIdx=-1;},650);}
-      else{b.classList.add('bad');$('#gmsg').textContent=lang==='fa'?g.fa:(lang==='tr'?g.tr:'');SND.bad();hurt();answered=false;setTimeout(()=>b.classList.remove('bad'),500);}
+        setTimeout(()=>{$('#gate').style.display='none';gateOpenIdx=-1;if(state==='gate'){state='play';last=performance.now();}},650);}
+      else{b.classList.add('bad');$('#gmsg').textContent=g[lang]||g.en;SND.bad();if(!missed){missed=true;hurt();}answered=false;setTimeout(()=>b.classList.remove('bad'),500);}
     };box.appendChild(b);});
   $('#gmsg').textContent='';
   $('#gate').style.display='flex';state='gate';
@@ -363,22 +369,19 @@ function drawGate(cx,i){const gx=gatesX[i]-cx;if(gx<-60||gx>W+60)return;const do
   const col=done?'#2fa24f':'#7a63e8',glow=done?'#7ff0a8':'#c6b8ff',pulse=.55+.25*Math.sin(T*3+i);
   X.save();X.translate(gx,GY);
   X.fillStyle='rgba(0,0,0,.18)';X.beginPath();X.ellipse(0,2,30,6,0,0,6.3);X.fill();
-  // checkered base plinth
   for(let k=-1;k<=1;k++){X.fillStyle=k%2===0?'#2a2244':'#e8e8f5';X.fillRect(-36+(k+1)*24,-10,24,10);}
-  // arch posts
   const pg=X.createLinearGradient(-40,-110,-20,0);pg.addColorStop(0,shade(col,20));pg.addColorStop(1,shade(col,-20));
   X.fillStyle=pg;roundRect(-40,-110,14,110,6);X.fill();roundRect(26,-110,14,110,6);X.fill();
-  // glow aura under arch
   const rg=X.createRadialGradient(0,-70,4,0,-70,54);rg.addColorStop(0,'rgba('+(done?'90,240,160':'190,170,255')+','+pulse+')');rg.addColorStop(1,'rgba(0,0,0,0)');X.fillStyle=rg;X.beginPath();X.arc(0,-70,54,0,6.3);X.fill();
-  // arch top
   X.fillStyle=pg;X.beginPath();X.moveTo(-40,-108);X.quadraticCurveTo(0,-150,40,-108);X.lineTo(26,-108);X.quadraticCurveTo(0,-130,-26,-108);X.closePath();X.fill();
   X.strokeStyle=glow;X.lineWidth=2;X.globalAlpha=.8;X.beginPath();X.arc(0,-70,36,Math.PI*1.08,Math.PI*1.92);X.stroke();X.globalAlpha=1;
   X.fillStyle='#fff';X.font='800 15px '+FF;X.textAlign='center';X.textBaseline='middle';X.fillText(done?'✓':'?',0,-66);
   X.restore();
 }
 function drawWords(cx){X.font='800 13px '+FF;X.textAlign='center';X.textBaseline='middle';
+  const cs=curSentence();
   for(const wd of words){if(wd.got)continue;const sx=wd.x-cx;if(sx<-40||sx>W+40)continue;
-    const active=wd.wi===sentenceProgress(wd.si);const bob=Math.sin(T*2.4+wd.x*.05)*3;
+    const active=wd.si===cs&&wd.wi===sentenceProgress(wd.si);const bob=Math.sin(T*2.4+wd.x*.05)*3;
     const txt=wd.w,tw=txt.length*7.4+20;
     groundShadow(sx,GY-2,0,999,tw*.4,4,.18);
     if(active){const pulse=4+2*Math.sin(T*4+wd.x*.02);X.strokeStyle='rgba(255,201,60,.55)';X.lineWidth=2;roundRect(sx-tw/2-2-pulse*.4,wd.y+bob-13-pulse*.4,tw+4+pulse*.8,24+pulse*.8,13);X.stroke();}
@@ -422,12 +425,12 @@ function drawPlayer(){
   X.save();X.translate(3,0);leg(-sw*10,air&&p.vy<0?-8:0);X.restore();
   X.fillStyle=SK;X.beginPath();X.arc(1,-40,11,0,6.3);fo();
   X.fillStyle='rgba(255,120,130,.5)';X.beginPath();X.arc(7,-36.5,2.5,0,6.3);X.fill();
-  const hurt=p.inv>1&&state==='play';
-  if(hurt||(T%3.4)<.12){X.strokeStyle=OL;X.lineWidth=1.7;X.beginPath();X.moveTo(3,-41);X.lineTo(8,-41);X.stroke();}
+  const hurtF=p.inv>1&&state==='play';
+  if(hurtF||(T%3.4)<.12){X.strokeStyle=OL;X.lineWidth=1.7;X.beginPath();X.moveTo(3,-41);X.lineTo(8,-41);X.stroke();}
   else{X.fillStyle='#fff';X.beginPath();X.ellipse(5.6,-41,3.4,4.2,0,0,6.3);X.fill();X.lineWidth=1;X.strokeStyle=OL;X.stroke();
     X.fillStyle=OL;X.beginPath();X.arc(6.6+glance,-41,2.2,0,6.3);X.fill();X.fillStyle='#fff';X.beginPath();X.arc(7.3+glance*.7,-42.3,.9,0,6.3);X.fill();}
   if(p.happy>0){X.fillStyle='#8a2a3a';X.beginPath();X.arc(6.2,-35.8,2.7,0,Math.PI);X.closePath();X.fill();X.lineWidth=1.1;X.strokeStyle=OL;X.stroke();}
-  else if(hurt){X.strokeStyle=OL;X.lineWidth=1.5;X.beginPath();X.arc(6.4,-33.6,2.3,Math.PI+.3,2*Math.PI-.3);X.stroke();}
+  else if(hurtF){X.strokeStyle=OL;X.lineWidth=1.5;X.beginPath();X.arc(6.4,-33.6,2.3,Math.PI+.3,2*Math.PI-.3);X.stroke();}
   else if(air){X.fillStyle='#8a2a3a';X.beginPath();X.ellipse(7,-34.6,1.8,2.3,0,0,6.3);X.fill();}
   else{X.strokeStyle=OL;X.lineWidth=1.4;X.beginPath();X.arc(6.4,-36.6,2.3,.2,2.6);X.stroke();}
   X.fillStyle='#4b42b8';X.beginPath();X.arc(1,-42,11.8,Math.PI,0);X.closePath();fo();
@@ -443,7 +446,7 @@ function draw(){
   X.save();X.translate(ox,oy);
   const cx=Math.round(cam);
   drawSky();
-  for(let x=140,i=0;x<L;x+=160+(i*47%70),i++)tree(x-cx,i%2);
+  for(let x=140,i=0;x<L;x+=160+(i*47%70),i++){const tx0=x-cx;if(tx0<-90||tx0>W+90)continue;tree(tx0,i%2);}
   drawGround(cx);
   flowers(cx);
   drawSpikes(cx);
@@ -463,8 +466,8 @@ function hud(){
   if(hearts!==hvLast){$('#hv').textContent=hearts;pulse($('#hearts'));hvLast=hearts;}
   if(score!==svLast){$('#sv0').textContent=score;pulse($('#scorep'));svLast=score;}
   const lv=LV[cur];
-  let si=0;for(;si<lv.sentences.length;si++){if(!lv.sentences[si].every((_,wi)=>words.find(w=>w.si===si&&w.wi===wi).got))break;}
-  if(si<lv.sentences.length){const sent=lv.sentences[si],done=sentenceProgress(si);
+  const si=curSentence();
+  if(si>=0){const sent=lv.sentences[si],done=sentenceProgress(si);
     $('#build').innerHTML=sent.map((w,i)=>`<span class="wchip${i<done?' on':''}">${i<done?w:'•'}</span>`).join('');}
   else $('#build').innerHTML=`<span class="wchip on">✓ ${tx('allDone')}</span>`;
   if(toastT>0){toastT-=1/60;$('#toast').style.display='block';$('#toast').textContent=toastS;}else $('#toast').style.display='none';
@@ -476,10 +479,12 @@ function show(view){
   $('#hud').style.display=view==='play'?'flex':'none';
   $('#build').style.display=view==='play'?'flex':'none';
   $('#ctl').style.display=view==='play'?'flex':'none';
+  if(view!=='play')$('#toast').style.display='none';
 }
 const LICON=['🔤','⏳','🕰️','📘','📍'];
 function menuScreen(){
   state='menu';show('menu');musOff();
+  document.documentElement.dir=lang==='fa'?'rtl':'ltr';
   const oc=$('#oc');
   let lv=`<div class="langRow">${['en','fa','tr'].map(l=>`<button data-l="${l}" class="${l===lang?'on':''}">${l.toUpperCase()}</button>`).join('')}</div>
   <div class="logo">N</div>
@@ -491,8 +496,10 @@ function menuScreen(){
   oc.querySelectorAll('[data-l]').forEach(b=>b.onclick=()=>{lang=b.dataset.l;sv.lang=lang;save();menuScreen();});
   oc.querySelectorAll('[data-p]').forEach(b=>b.onclick=()=>{const i=+b.dataset.p;if(i<sv.unlocked&&LV[i].unlocked!==false)startLevel(i);});
 }
-function startLevel(i){reset(i);state='play';show('play');musOn(.45);last=performance.now();}
-function finishLevel(win){state=win?'cele':'res';show('');
+function startLevel(i){reset(i);hvLast=-1;svLast=-1;state='play';show('play');musOn(.45);last=performance.now();}
+function finishLevel(win){
+  $('#gate').style.display='none';gateOpenIdx=-1;inp.l=inp.r=inp.j=0;
+  state=win?'cele':'res';show('');
   if(win){SND.win();sv.best[cur+1]=Math.max(sv.best[cur+1]||0,score);if(cur+1>=sv.unlocked&&cur+1<LV.length&&LV[cur+1].unlocked!==false)sv.unlocked=Math.max(sv.unlocked,cur+2);save();}
   musOff();
   setTimeout(()=>resultScreen(win),win?700:300);
@@ -513,7 +520,10 @@ function loop(ts){requestAnimationFrame(loop);const dt=Math.min(.05,(ts-last)/10
   if(state==='play'){update(dt);}
   draw();if(state==='play'||state==='gate')hud();
 }
-document.addEventListener('visibilitychange',()=>{if(document.hidden&&state==='play'){state='pause';musOff();}});
+document.addEventListener('visibilitychange',()=>{
+  if(document.hidden&&state==='play'){state='pause';inp.l=inp.r=inp.j=0;musOff();}
+  else if(!document.hidden&&state==='pause'){state='play';last=performance.now();musOn(.45);}
+});
 document.addEventListener('pointerdown',()=>{try{actx();}catch(e){}},{once:true});
 menuScreen();
 requestAnimationFrame(loop);

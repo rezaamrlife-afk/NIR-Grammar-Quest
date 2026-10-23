@@ -122,13 +122,28 @@ const LV=[
   rule:{en:'Present Simple: use the base verb for I/you/we/they, and add -s/-es for he/she/it. Use it for habits, routines and facts.',
         fa:'زمان حال ساده: برای I/you/we/they فعل ساده (بدون s) و برای he/she/it فعل با s/es می‌آید. برای عادت‌ها، کارهای روزمره و حقایق به کار می‌رود.',
         tr:'Geniş zaman: I/you/we/they ile fiil yalın halde, he/she/it ile fiile -s/-es eklenir. Alışkanlıklar, rutinler ve gerçekler için kullanılır.'}},
- {topic:'Present Continuous',unlocked:false},
+ {topic:'Present Continuous',nn:{fa:'حال استمراری',tr:'Şimdiki zaman'},unlocked:true,
+  sky:['#2f7bff','#8fd3ff','#eaf8ff'],hl:['#7fb0e8','#4fbfa6','#3a9a62'],
+  sentences:[
+   ['She','is','reading','a','book','now.'],
+   ['He','is','washing','the','car','today.'],
+   ['We','are','watching','a','movie','tonight.'],
+   ['The','birds','are','flying','in','the','sky.']
+  ],
+  gates:[
+   {q:'She ___ a letter right now.',opts:['is writing','write','writes'],a:0,en:'With he/she/it, use is + verb-ing: is writing.',fa:'با he/she/it از is + فعل‌ing استفاده می‌کنیم: is writing.',tr:'He/she/it ile is + fiil-ing kullanılır: is writing.'},
+   {q:'They ___ football at the moment.',opts:['is playing','are playing','play'],a:1,en:'With they, use are + verb-ing: are playing.',fa:'با they از are + فعل‌ing استفاده می‌کنیم: are playing.',tr:'They ile are + fiil-ing kullanılır: are playing.'},
+   {q:'I ___ for the bus now.',opts:['is waiting','am waiting','waits'],a:1,en:'With I, use am + verb-ing: am waiting.',fa:'با I از am + فعل‌ing استفاده می‌کنیم: am waiting.',tr:'I ile am + fiil-ing kullanılır: am waiting.'}
+  ],
+  rule:{en:'Present Continuous: am/is/are + verb-ing. Use it for actions happening right now, or temporary actions around the present.',
+        fa:'زمان حال استمراری: am/is/are + فعل‌ing. برای کارهایی که همین الان در حال انجام‌اند یا موقتی هستند به کار می‌رود.',
+        tr:'Şimdiki zaman: am/is/are + fiil-ing. Şu anda yapılan veya geçici eylemler için kullanılır.'}},
  {topic:'Past Simple',unlocked:false},
  {topic:'Articles (a/an/the)',unlocked:false},
  {topic:'Prepositions of Place',unlocked:false}
 ];
 const KEY='nirGrammarQuest.v1';
-let sv={unlocked:1,best:{},lang:'en'};
+let sv={unlocked:2,best:{},lang:'en'};
 try{const s=JSON.parse(localStorage.getItem(KEY));if(s&&typeof s==='object'){sv.unlocked=Math.max(1,s.unlocked|0);sv.best=(s.best&&typeof s.best==='object')?s.best:{};sv.lang=s.lang||'en';}}catch(e){}
 function save(){try{localStorage.setItem(KEY,JSON.stringify(sv));}catch(e){}}
 lang=STR[sv.lang]?sv.lang:'en';
@@ -236,8 +251,9 @@ function update(dt){
 function sentenceProgress(si){let n=0;for(const wd of words)if(wd.si===si&&wd.got)n++;return n;}
 function curSentence(){
   const lv=LV[cur];
+  if(!words.length)return 0;
   for(let si=0;si<lv.sentences.length;si++)
-    if(!lv.sentences[si].every((_,wi)=>words.find(w=>w.si===si&&w.wi===wi).got))return si;
+    if(!lv.sentences[si].every((_,wi)=>words.find(w=>w.si===si&&w.wi===wi)?.got))return si;
   return -1;
 }
 function allDone(){return gatesPassed.every(x=>x)&&words.every(w=>w.got);}
@@ -248,7 +264,7 @@ function spawnText(x,y,txt){parts.push({x,y,l:1,vy:-26,txt});}
 let parts=[];
 
 function checkSentence(si){
-  const lv=LV[cur],done=lv.sentences[si].every((_,wi)=>words.find(w=>w.si===si&&w.wi===wi).got);
+  const lv=LV[cur],done=lv.sentences[si].every((_,wi)=>words.find(w=>w.si===si&&w.wi===wi)?.got);
   if(done){SND.sent();toastS=tx('sentDone')+' "'+lv.sentences[si].join(' ')+'"';toastT=2.4;score+=40;}
 }
 

@@ -258,7 +258,7 @@ let L=0;
 let SOL=[],spikeL=[],gatesX=[],enemies=[];
 let p={x:60,y:GY,vx:0,vy:0,f:1,g:true,ph:0,inv:0,coy:0,buf:0,sq:0,gy:GY,jant:0,idle:0,happy:0,dt:0};
 let hearts=3,score=0,words=[],gateIdx=0,gatesPassed=[],toastT=0,toastS='',winT=0;
-let mp=false,gems=[],pick=null,shield=false,gc=0;
+let mp=false,gems=[],pick=null,shield=false,gc=0,combo=0,comboT=0,lastM=1,hitT=0,dustT=0;
 
 function buildWorld(){
   const lv=LV[cur];
@@ -336,6 +336,7 @@ const SND={word:()=>jingle([880,1174]),sent:()=>jingle([523,659,784,1047]),ok:()
 
 /* ---------- physics ---------- */
 function update(dt){
+  if(comboT>0){comboT-=dt;if(comboT<=0){combo=0;lastM=1;}}
   const tgt=(inp.r-inp.l)*168;
   p.vx+=(tgt-p.vx)*Math.min(1,dt*(p.g?14:11));
   if(tgt)p.f=tgt>0?1:-1;
@@ -352,9 +353,10 @@ function update(dt){
   const wasG=p.g,pv=p.vy;p.g=false;
   p.y+=p.vy*dt;
   for(const s of SOL){if(p.x+11>s.x&&p.x-11<s.x+s.w&&p.y>s.y&&p.y-34<s.y+s.h){if(p.vy>=0){p.y=s.y;p.g=true;p.gy=s.y;}else p.y=s.y+s.h+34;p.vy=0;}}
-  if(p.g&&!wasG&&pv>250){p.sq=.3;}
+  if(p.g&&!wasG&&pv>250){p.sq=.3;for(let i=0;i<5;i++)parts.push({x:p.x+(i-2)*5,y:p.gy-2,l:.6,vx:(i-2)*16,vy:-8-(i%2)*6,d:1});}
   if(p.sq)p.sq*=Math.pow(.001,dt);
   if(p.g&&Math.abs(p.vx)>20)p.ph+=dt*(8+Math.abs(p.vx)*.03);
+  dustT-=dt;if(p.g&&Math.abs(p.vx)>110&&dustT<=0){dustT=.1;parts.push({x:p.x-p.f*8,y:p.gy-2,l:.6,vx:-p.f*14,vy:-10,d:1});}
   if(p.y>H+60){hurt();p.x=Math.max(12,p.x-80);p.y=GY;p.vx=p.vy=0;p.g=true;p.inv=1.4;}
   for(const [sx,w] of spikeL)if(p.y>GY-14&&p.x+8>sx&&p.x-8<sx+w)hurt();
   for(const en of enemies){
@@ -363,15 +365,15 @@ function update(dt){
     if(en.x<=en.x0){en.x=en.x0;en.dir=1;}else if(en.x>=en.x1){en.x=en.x1;en.dir=-1;}
     const ex=en.x,ew=13,eh=20,etop=GY-eh;
     if(p.x+10>ex-ew&&p.x-10<ex+ew&&p.y>etop-4){
-      if(p.vy>0&&p.y<etop+12){en.alive=false;p.vy=-330;p.sq=.3;score+=30;p.happy=.4;SND.ok();spawnBurst(ex,etop);spawnText(ex,etop-6,'+30');}
+      if(p.vy>0&&p.y<etop+12){const pt=30*bump();en.alive=false;p.vy=-330;p.sq=.3;score+=pt;p.happy=.4;SND.ok();shake=.3;hitT=.09;vib(20);spawnBurst(ex,etop);spawnBurst(ex,etop+8);spawnText(ex,etop-6,'+'+pt);}
       else hurt();
     }
   }
   // word collect (only the current sentence, in order)
   const cs=curSentence();
   for(const wd of words){if(wd.got||wd.si!==cs)continue;if(wd.wi!==sentenceProgress(wd.si))continue;
-    if(Math.abs(wd.x-p.x)<26&&Math.abs(wd.y-(p.y-20))<30){wd.got=true;score+=15;p.happy=.4;SND.word();spawnBurst(wd.x,wd.y);spawnText(wd.x,wd.y-6,'+15');checkSentence(wd.si);}}
-  for(const g of gems){if(g.got)continue;if(Math.abs(g.x-p.x)<22&&Math.abs(g.y-(p.y-20))<28){g.got=true;gc++;score+=10;SND.gem();spawnBurst(g.x,g.y);spawnText(g.x,g.y-8,'+10');}}
+    if(Math.abs(wd.x-p.x)<26&&Math.abs(wd.y-(p.y-20))<30){wd.got=true;const pt=15*bump();score+=pt;p.happy=.4;SND.word();vib(10);spawnBurst(wd.x,wd.y);spawnText(wd.x,wd.y-6,'+'+pt);checkSentence(wd.si);}}
+  for(const g of gems){if(g.got)continue;if(Math.abs(g.x-p.x)<22&&Math.abs(g.y-(p.y-20))<28){g.got=true;gc++;const pt=10*bump();score+=pt;SND.gem();vib(8);spawnBurst(g.x,g.y);spawnText(g.x,g.y-8,'+'+pt);}}
   if(pick&&!pick.got&&Math.abs(pick.x-p.x)<24&&Math.abs(pick.y-(p.y-20))<30){pick.got=true;shield=true;SND.ok();spawnBurst(pick.x,pick.y);toastS=tx('shield');toastT=2;}
   if(state!=='play')return;
   if(p.x>=L-20){
@@ -389,7 +391,20 @@ function curSentence(){
   return -1;
 }
 function allDone(){return gatesPassed.every(x=>x)&&words.every(w=>w.got);}
-function hurt(){if(p.inv>0)return;if(shield){shield=false;p.inv=1.2;SND.ok();shake=.15;spawnBurst(p.x,p.y-22);spawnText(p.x,p.y-52,'🛡️');return;}hearts--;p.inv=1.3;SND.hurt();shake=.25;const hp=$('#hearts');hp.classList.remove('pop');void hp.offsetWidth;hp.classList.add('pop');if(hearts<=0)finishLevel(false);}
+function hurt(){if(p.inv>0)return;if(shield){shield=false;p.inv=1.2;SND.ok();shake=.15;spawnBurst(p.x,p.y-22);spawnText(p.x,p.y-52,'🛡️');return;}hearts--;combo=0;lastM=1;hitT=.1;vib(40);p.inv=1.3;SND.hurt();shake=.25;const hp=$('#hearts');hp.classList.remove('pop');void hp.offsetWidth;hp.classList.add('pop');if(hearts<=0)finishLevel(false);}
+const vib=ms=>{try{navigator.vibrate&&navigator.vibrate(ms);}catch(e){}};
+function mult(){return combo>=9?4:combo>=6?3:combo>=3?2:1;}
+function bump(){combo++;comboT=5;const m=mult();if(m>lastM){lastM=m;spawnText(p.x,p.y-64,'COMBO ×'+m);}return m;}
+function drawCombo(){
+  const m=mult();if(m<2||comboT<=0)return;
+  const sx=Math.round(p.x-cam)+4,y=p.y-66-Math.sin(T*4)*1.5,w=34;
+  X.font='800 14px '+FF;X.textAlign='center';X.textBaseline='middle';
+  const g=X.createLinearGradient(0,y-10,0,y+10);g.addColorStop(0,'#ffe08a');g.addColorStop(1,'#ff9a3d');
+  X.fillStyle=g;roundRect(sx-w/2,y-10,w,20,10);X.fill();X.lineWidth=1.6;X.strokeStyle='#1a1650';X.stroke();
+  X.fillStyle='#2a1a00';X.fillText('×'+m,sx,y+1);
+  X.fillStyle='rgba(255,255,255,.85)';roundRect(sx-w/2+3,y+12,(w-6)*Math.max(0,Math.min(1,comboT/5)),3,1.5);X.fill();
+  X.textAlign='left';
+}
 function sfxJump(){jingle([520],'square',.08,.01);}
 function spawnBurst(x,y){for(let i=0;i<9;i++){const a=i/9*6.283+Math.random()*.5,s=40+Math.random()*55;parts.push({x,y,l:1,vx:Math.cos(a)*s,vy:Math.sin(a)*s-25,c:i%2});}}
 function spawnText(x,y,txt){parts.push({x,y,l:1,vy:-26,txt});}
@@ -657,7 +672,7 @@ function drawWords(cx){X.font='800 13px '+FF;X.textAlign='center';X.textBaseline
 }
 const GACC=['#ffd84a','#7fe3ff','#ff9a5a','#ffe27a','#d9a8ff'];
 function buildExtras(){
-  gems=[];shield=false;gc=0;
+  gems=[];shield=false;gc=0;combo=0;comboT=0;lastM=1;hitT=0;
   for(const s of SOL)if(s.k)gems.push({x:s.x+s.w/2,y:s.y-26,got:false});
   for(const [sx,w] of spikeL)[[4,-44],[w/2,-60],[w-4,-44]].forEach(([dx,dy])=>gems.push({x:sx+dx,y:GY+dy,got:false}));
   let px=(gatesX[0]||600)+110;if(spikeL.some(s=>Math.abs(s[0]+17-px)<50))px+=70;
@@ -767,11 +782,13 @@ function draw(){
   drawFlag(cx);
   drawPlayer();
   drawShield();
+  drawCombo();
   foliageFrame(cx);
   weather(cx);
-  for(const q of parts){q.l-=.02;q.x+=(q.vx||0)/60;q.y+=(q.vy||0)/60;if(q.vy&&!q.txt)q.vy+=3;
+  for(const q of parts){q.l-=.02;q.x+=(q.vx||0)/60;q.y+=(q.vy||0)/60;if(q.vy&&!q.txt&&!q.d)q.vy+=3;
     X.globalAlpha=Math.max(0,q.l);
     if(q.txt){X.font='800 14px '+FF;X.textAlign='center';X.textBaseline='middle';X.lineWidth=3;X.strokeStyle='rgba(26,22,80,.85)';X.strokeText(q.txt,q.x-cx,q.y);X.fillStyle='#fff';X.fillText(q.txt,q.x-cx,q.y);X.textAlign='left';}
+    else if(q.d){X.fillStyle='rgba(255,246,225,.6)';X.beginPath();X.arc(q.x-cx,q.y,2+(.6-q.l)*8,0,6.3);X.fill();}
     else{X.fillStyle=q.c?'#fff6c8':'#ffd84a';X.beginPath();X.arc(q.x-cx,q.y,1.5+Math.max(0,q.l)*2.2,0,6.3);X.fill();}}
   X.globalAlpha=1;parts=parts.filter(q=>q.l>0);
   X.restore();
@@ -868,7 +885,7 @@ $('#pz').addEventListener('click',pauseGame);
 
 /* ---------- loop ---------- */
 function loop(ts){requestAnimationFrame(loop);const dt=Math.max(0,Math.min(.05,(ts-last)/1000||0));last=ts;T+=dt;
-  if(state==='play'){update(dt);}
+  if(state==='play'){if(hitT>0){hitT-=dt;update(dt*.18);}else update(dt);}
   draw();if(state==='play'||state==='gate')hud();
 }
 document.addEventListener('visibilitychange',()=>{

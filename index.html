@@ -116,6 +116,7 @@ canvas{display:block;background:#171235;max-width:100%;max-height:100%}
 .fly{position:fixed;z-index:8;pointer-events:none;padding:4px 10px;border-radius:10px;background:linear-gradient(180deg,#ffe08a,#ffb93c);color:#2a1a00;font:800 13px Fredoka,Vazirmatn,sans-serif;box-shadow:0 4px 12px rgba(0,0,0,.35);white-space:nowrap}
 #vz:focus-visible{outline:3px solid #ffd84a;outline-offset:2px}
 @media(max-width:400px){.pill{padding:6px 9px}#hud .grp{gap:6px}}
+.bhp{color:#ff4d6d;font-size:18px;letter-spacing:3px;margin-top:8px}
 /* result */
 .stars{font-size:36px;letter-spacing:6px;line-height:1;margin:2px 0 10px}
 .stars span{display:inline-block;color:#ffd84a;text-shadow:0 3px 0 rgba(0,0,0,.25),0 0 16px rgba(255,200,60,.5);opacity:0;animation:starIn .55s cubic-bezier(.2,1.4,.4,1) forwards}
@@ -153,9 +154,9 @@ canvas{display:block;background:#171235;max-width:100%;max-height:100%}
 "use strict";
 const $=s=>document.querySelector(s);
 const STR={
- en:{title:'NIR Grammar Quest',sub:'Build sentences. Beat the gate. Learn the rule.',play:'Play',levels:'Levels',locked:'Locked',soon:'Coming soon',level:'Level',resume:'Resume',restart:'Restart',menu:'Menu',pause:'Pause',win:'Level complete!',lose:'Try again',next:'Next',back:'Back',rule:'Grammar rule',made:'Made for NIR Academy by',by:'Dr. Niki Majidi',gate:'Grammar Gate — choose the correct word',sentDone:'Sentence complete! ✓',allDone:'All sentences built!',score:'Score',finishFirst:'Collect every word and pass every gate first!',shield:'Shield ready! 🛡️'},
- fa:{title:'ماجراجویی گرامر NIR',sub:'جمله بساز، از دروازه عبور کن، قاعده را یاد بگیر.',play:'شروع',levels:'مرحله‌ها',locked:'قفل',soon:'به‌زودی',level:'مرحله',resume:'ادامه',restart:'شروع دوباره',menu:'منو',pause:'توقف',win:'مرحله تمام شد!',lose:'دوباره امتحان کن',next:'بعدی',back:'بازگشت',rule:'قاعده‌ی گرامری',made:'ساخته‌شده برای آکادمی NIR توسط',by:'دکتر نیکی مجیدی',gate:'دروازه‌ی گرامر — کلمه‌ی درست را انتخاب کن',sentDone:'جمله کامل شد! ✓',allDone:'همه‌ی جمله‌ها ساخته شد!',score:'امتیاز',finishFirst:'اول همه‌ی کلمه‌ها و دروازه‌ها را کامل کن!',shield:'سپر فعال شد! 🛡️'},
- tr:{title:'NIR Dilbilgisi Macerası',sub:'Cümle kur, kapıyı geç, kuralı öğren.',play:'Oyna',levels:'Seviyeler',locked:'Kilitli',soon:'Yakında',level:'Seviye',resume:'Devam',restart:'Yeniden başlat',menu:'Menü',pause:'Duraklat',win:'Seviye tamamlandı!',lose:'Tekrar dene',next:'Sonraki',back:'Geri',rule:'Dilbilgisi kuralı',made:'NIR Academy için hazırlayan:',by:'Dr. Niki Majidi',gate:'Dilbilgisi Kapısı — doğru kelimeyi seç',sentDone:'Cümle tamam! ✓',allDone:'Tüm cümleler kuruldu!',score:'Puan',finishFirst:'Önce tüm kelimeleri ve kapıları tamamla!',shield:'Kalkan hazır! 🛡️'}
+ en:{title:'NIR Grammar Quest',sub:'Build sentences. Beat the gate. Learn the rule.',play:'Play',levels:'Levels',locked:'Locked',soon:'Coming soon',level:'Level',resume:'Resume',restart:'Restart',menu:'Menu',pause:'Pause',win:'Level complete!',lose:'Try again',next:'Next',back:'Back',rule:'Grammar rule',made:'Made for NIR Academy by',by:'Dr. Niki Majidi',gate:'Grammar Gate — choose the correct word',sentDone:'Sentence complete! ✓',allDone:'All sentences built!',score:'Score',finishFirst:'Collect every word and pass every gate first!',shield:'Shield ready! 🛡️',boss:'Boss Battle — answer to strike!',bossDown:'Boss defeated! 🎉'},
+ fa:{title:'ماجراجویی گرامر NIR',sub:'جمله بساز، از دروازه عبور کن، قاعده را یاد بگیر.',play:'شروع',levels:'مرحله‌ها',locked:'قفل',soon:'به‌زودی',level:'مرحله',resume:'ادامه',restart:'شروع دوباره',menu:'منو',pause:'توقف',win:'مرحله تمام شد!',lose:'دوباره امتحان کن',next:'بعدی',back:'بازگشت',rule:'قاعده‌ی گرامری',made:'ساخته‌شده برای آکادمی NIR توسط',by:'دکتر نیکی مجیدی',gate:'دروازه‌ی گرامر — کلمه‌ی درست را انتخاب کن',sentDone:'جمله کامل شد! ✓',allDone:'همه‌ی جمله‌ها ساخته شد!',score:'امتیاز',finishFirst:'اول همه‌ی کلمه‌ها و دروازه‌ها را کامل کن!',shield:'سپر فعال شد! 🛡️',boss:'نبرد با غول — درست جواب بده تا ضربه بزنی!',bossDown:'غول شکست خورد! 🎉'},
+ tr:{title:'NIR Dilbilgisi Macerası',sub:'Cümle kur, kapıyı geç, kuralı öğren.',play:'Oyna',levels:'Seviyeler',locked:'Kilitli',soon:'Yakında',level:'Seviye',resume:'Devam',restart:'Yeniden başlat',menu:'Menü',pause:'Duraklat',win:'Seviye tamamlandı!',lose:'Tekrar dene',next:'Sonraki',back:'Geri',rule:'Dilbilgisi kuralı',made:'NIR Academy için hazırlayan:',by:'Dr. Niki Majidi',gate:'Dilbilgisi Kapısı — doğru kelimeyi seç',sentDone:'Cümle tamam! ✓',allDone:'Tüm cümleler kuruldu!',score:'Puan',finishFirst:'Önce tüm kelimeleri ve kapıları tamamla!',shield:'Kalkan hazır! 🛡️',boss:'Boss Savaşı — doğru cevapla, vur!',bossDown:'Boss yenildi! 🎉'}
 };
 let lang='en';
 const tx=k=>(STR[lang]&&STR[lang][k])||STR.en[k]||k;
@@ -261,7 +262,7 @@ let L=0;
 let SOL=[],spikeL=[],gatesX=[],enemies=[];
 let p={x:60,y:GY,vx:0,vy:0,f:1,g:true,ph:0,inv:0,coy:0,buf:0,sq:0,gy:GY,jant:0,idle:0,happy:0,dt:0};
 let hearts=3,score=0,words=[],gateIdx=0,gatesPassed=[],toastT=0,toastS='',winT=0;
-let mp=false,gems=[],pick=null,shield=false,gc=0,combo=0,comboT=0,lastM=1,hitT=0,dustT=0;
+let mp=false,gems=[],pick=null,shield=false,gc=0,combo=0,comboT=0,lastM=1,hitT=0,dustT=0,boss=null;
 
 function buildWorld(){
   const lv=LV[cur];
@@ -353,6 +354,7 @@ function update(dt){
   for(const s of SOL){if(s.k&&p.x+11>s.x&&p.x-11<s.x+s.w&&p.y>s.y&&p.y-34<s.y+s.h){p.x=(p.vx>0)?s.x-11:s.x+s.w+11;p.vx=0;}}
   p.x=Math.max(12,Math.min(L,p.x));
   gatesX.forEach((gx,i)=>{if(!gatesPassed[i]&&p.x+11>gx-6&&p.x<gx+6){p.x=gx-12;p.vx=0;openGate(i);}});
+  if(boss&&!boss.dead){if(p.x>boss.x-70){p.x=boss.x-70;p.vx=0;}if(!boss.fight&&p.x>boss.x-170){boss.fight=true;p.vx=0;openBoss();}}
   const wasG=p.g,pv=p.vy;p.g=false;
   p.y+=p.vy*dt;
   for(const s of SOL){if(p.x+11>s.x&&p.x-11<s.x+s.w&&p.y>s.y&&p.y-34<s.y+s.h){if(p.vy>=0){p.y=s.y;p.g=true;p.gy=s.y;}else p.y=s.y+s.h+34;p.vy=0;}}
@@ -393,7 +395,7 @@ function curSentence(){
     if(!lv.sentences[si].every((_,wi)=>words.find(w=>w.si===si&&w.wi===wi)?.got))return si;
   return -1;
 }
-function allDone(){return gatesPassed.every(x=>x)&&words.every(w=>w.got);}
+function allDone(){return gatesPassed.every(x=>x)&&words.every(w=>w.got)&&(!boss||boss.dead);}
 function hurt(){if(p.inv>0)return;if(shield){shield=false;p.inv=1.2;SND.ok();shake=.15;spawnBurst(p.x,p.y-22);spawnText(p.x,p.y-52,'🛡️');return;}hearts--;combo=0;lastM=1;hitT=.1;vib(40);p.inv=1.3;SND.hurt();shake=.25;const hp=$('#hearts');hp.classList.remove('pop');void hp.offsetWidth;hp.classList.add('pop');if(hearts<=0)finishLevel(false);}
 function spawnConfetti(n){const cols=['#ffd84a','#ff7a8a','#4fc3ff','#7ff0a8','#d9a8ff','#ff9a5a'];for(let i=0;i<n;i++)parts.push({x:p.x+(Math.random()-.5)*30,y:p.y-46,l:1.6,vx:(Math.random()-.5)*190,vy:-90-Math.random()*130,cf:1,col:cols[i%6],r:Math.random()*6});}
 function say(t){if(!sv.voice||!('speechSynthesis' in window))return;try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t);u.lang='en-US';u.rate=.9;speechSynthesis.speak(u);}catch(e){}}
@@ -409,6 +411,58 @@ function flyWord(wd){
     const a=el.animate([{transform:'translate(0,0) scale(1)',opacity:1},{transform:'translate('+dx*.5+'px,'+(dy*.5-30)+'px) scale(1.25)',opacity:1,offset:.45},{transform:'translate('+dx+'px,'+dy+'px) scale(.8)',opacity:.9}],{duration:520,easing:'cubic-bezier(.4,0,.2,1)'});
     const e2=el;a.onfinish=()=>e2.remove();setTimeout(()=>e2.remove(),900);
   }catch(e){if(el)el.remove();}
+}
+const BCOL=['#ff6a8d','#4fc3ff','#ff9a5a','#e8b83a','#a77bff'];
+function openBoss(){
+  inp.l=inp.r=inp.j=0;
+  const lv=LV[cur];if(!boss.qs)boss.qs=lv.gates.map((_,i)=>i).sort(()=>Math.random()-.5);
+  const g=lv.gates[boss.qs[boss.round%boss.qs.length]];
+  $('#gq').innerHTML='<span class="gk">👹 '+tx('boss')+'</span><div class="bhp">'+'♥'.repeat(boss.hp)+'<span style="opacity:.28">'+'♥'.repeat(boss.max-boss.hp)+'</span></div><br><b>'+g.q.replace('___','<b style="color:#ff9a4a">___</b>')+'</b>';
+  const box=$('#gopts');box.innerHTML='';let answered=false,missed=false;
+  const order=g.opts.map((o,idx)=>idx).sort(()=>Math.random()-.5);
+  order.forEach(idx=>{const b=document.createElement('button');b.className='opt';b.textContent=g.opts[idx];
+    b.onclick=()=>{if(answered)return;answered=true;
+      if(idx===g.a){b.classList.add('ok');$('#gmsg').textContent='✓';SND.ok();boss.hp--;boss.hit=.5;score+=100;shake=.3;hitT=.09;vib(30);spawnBurst(boss.x,GY-60);spawnBurst(boss.x+12,GY-40);spawnText(boss.x,GY-100,'+100');
+        setTimeout(()=>{if(state!=='gate')return;
+          if(boss.hp<=0){boss.dead=true;boss.fight=false;score+=150;SND.win();for(let i=0;i<5;i++)spawnBurst(boss.x+(i-2)*14,GY-30-i*10);spawnConfetti(40);toastS=tx('bossDown');toastT=2.6;$('#gate').style.display='none';state='play';last=performance.now();}
+          else{boss.round++;openBoss();}},700);}
+      else{b.classList.add('bad');$('#gmsg').textContent=g[lang]||g.en;SND.bad();if(!missed){missed=true;hurt();}answered=false;setTimeout(()=>b.classList.remove('bad'),500);}
+    };box.appendChild(b);});
+  $('#gmsg').textContent='';
+  $('#gate').style.display='flex';state='gate';
+}
+function drawBoss(cx){
+  if(!boss||boss.dead)return;
+  if(boss.hit>0)boss.hit-=1/60;
+  const sx=Math.round(boss.x-cx);if(sx<-100||sx>W+100)return;
+  const k=cur%5,col=BCOL[k],OL='#1a1650',bob=Math.abs(Math.sin(T*2.2))*3,hit=boss.hit>0,sh=hit?Math.sin(T*70)*3:0;
+  groundShadow(sx,GY-2,0,999,40,7,.3);
+  X.save();X.translate(sx+sh,GY-5-bob);X.lineJoin='round';X.lineCap='round';
+  const ol=()=>{X.lineWidth=2.6;X.strokeStyle=OL;X.stroke();};
+  X.fillStyle=shade(col,-28);for(const fx of[-20,20]){X.beginPath();X.ellipse(fx,0,13,6.5,0,0,6.3);X.fill();ol();}
+  const aw=Math.sin(T*3)*5;
+  for(const d of[-1,1]){X.beginPath();X.moveTo(d*32,-36);X.lineTo(d*47,-24+aw*d);X.lineWidth=11;X.strokeStyle=OL;X.stroke();X.lineWidth=7;X.strokeStyle=shade(col,-12);X.stroke();X.fillStyle=col;X.beginPath();X.arc(d*47,-24+aw*d,6,0,6.3);X.fill();ol();}
+  const bg=X.createLinearGradient(0,-76,0,-4);bg.addColorStop(0,shade(col,24));bg.addColorStop(1,shade(col,-14));
+  X.fillStyle=bg;X.beginPath();X.ellipse(0,-40,38,36,0,0,6.3);X.fill();ol();
+  if(hit){X.fillStyle='rgba(255,255,255,.7)';X.fill();}
+  X.fillStyle='rgba(255,255,255,.22)';X.beginPath();X.ellipse(0,-26,23,19,0,0,6.3);X.fill();
+  X.fillStyle='rgba(255,255,255,.3)';X.beginPath();X.ellipse(-16,-62,9,5,-.5,0,6.3);X.fill();
+  for(const d of[-1,1]){X.fillStyle='#fff';X.beginPath();X.ellipse(d*13,-52,8.5,10.5,0,0,6.3);X.fill();X.lineWidth=1.6;X.strokeStyle=OL;X.stroke();
+    if(hit){X.lineWidth=2.4;X.beginPath();X.moveTo(d*13-5,-56);X.lineTo(d*13+5,-48);X.moveTo(d*13+5,-56);X.lineTo(d*13-5,-48);X.stroke();}
+    else{X.fillStyle=OL;X.beginPath();X.arc(d*13-3,-50,4.2,0,6.3);X.fill();X.fillStyle='#fff';X.beginPath();X.arc(d*13-4.5,-52,1.4,0,6.3);X.fill();}
+    X.lineWidth=3.2;X.strokeStyle=OL;X.beginPath();X.moveTo(d*23,-67);X.lineTo(d*6,-61);X.stroke();}
+  X.fillStyle='#3a0f2a';X.beginPath();X.ellipse(0,-32,16,hit?10:8,0,0,Math.PI);X.closePath();X.fill();X.lineWidth=2;X.strokeStyle=OL;X.stroke();
+  X.fillStyle='#fff';for(let i=-2;i<=2;i+=2){X.beginPath();X.moveTo(i*5-3,-32);X.lineTo(i*5+3,-32);X.lineTo(i*5,-26);X.closePath();X.fill();}
+  if(k===0){for(const d of[-1,1]){X.fillStyle='#fff3d6';X.beginPath();X.moveTo(d*20,-70);X.lineTo(d*30,-96);X.lineTo(d*9,-74);X.closePath();X.fill();ol();}}
+  else if(k===1){X.beginPath();X.moveTo(0,-76);X.quadraticCurveTo(8,-90,0,-100);X.lineWidth=3;X.strokeStyle=OL;X.stroke();X.fillStyle='#ffe08a';X.beginPath();X.arc(0,-102,5.5,0,6.3);X.fill();ol();}
+  else if(k===2){for(let i=-2;i<=2;i++){X.fillStyle=shade(col,-30);X.beginPath();X.moveTo(i*11-6,-72+Math.abs(i)*3);X.lineTo(i*11,-90+Math.abs(i)*6);X.lineTo(i*11+6,-72+Math.abs(i)*3);X.closePath();X.fill();ol();}}
+  else if(k===3){X.fillStyle='#ffd84a';X.beginPath();X.moveTo(-17,-74);X.lineTo(-17,-90);X.lineTo(-8,-82);X.lineTo(0,-94);X.lineTo(8,-82);X.lineTo(17,-90);X.lineTo(17,-74);X.closePath();X.fill();ol();}
+  else{X.fillStyle='#5b3aa8';X.beginPath();X.moveTo(-20,-72);X.lineTo(2,-108);X.lineTo(20,-72);X.closePath();X.fill();ol();X.fillStyle='#ffd84a';X.beginPath();X.arc(2,-90,3,0,6.3);X.fill();}
+  X.restore();
+  const bw=64,bx=sx-bw/2,by=GY-132;
+  X.fillStyle='rgba(20,15,50,.7)';roundRect(bx-2,by-2,bw+4,12,6);X.fill();
+  if(boss.hp>0){X.fillStyle='#ff4d6d';roundRect(bx,by,bw*boss.hp/boss.max,8,4);X.fill();}
+  X.lineWidth=1.4;X.strokeStyle='rgba(255,255,255,.5)';roundRect(bx-2,by-2,bw+4,12,6);X.stroke();
 }
 const vib=ms=>{try{navigator.vibrate&&navigator.vibrate(ms);}catch(e){}};
 function mult(){return combo>=9?4:combo>=6?3:combo>=3?2:1;}
@@ -690,6 +744,7 @@ function drawWords(cx){X.font='800 13px '+FF;X.textAlign='center';X.textBaseline
 }
 const GACC=['#ffd84a','#7fe3ff','#ff9a5a','#ffe27a','#d9a8ff'];
 function buildExtras(){
+  spikeL=spikeL.filter(s=>s[0]<L-420);boss={x:L-170,hp:3,max:3,dead:false,hit:0,fight:false,round:0,qs:null};
   gems=[];shield=false;gc=0;combo=0;comboT=0;lastM=1;hitT=0;
   for(const s of SOL)if(s.k)gems.push({x:s.x+s.w/2,y:s.y-26,got:false});
   for(const [sx,w] of spikeL)[[4,-44],[w/2,-60],[w-4,-44]].forEach(([dx,dy])=>gems.push({x:sx+dx,y:GY+dy,got:false}));
@@ -794,6 +849,7 @@ function draw(){
   flowers(cx);
   drawSpikes(cx);
   drawEnemies(cx);
+  drawBoss(cx);
   gatesX.forEach((g,i)=>drawGate(cx,i));
   drawWords(cx);
   drawGems(cx);

@@ -122,6 +122,7 @@ canvas{display:block;background:#171235;max-width:100%;max-height:100%}
 @media(prefers-reduced-motion:reduce){.card,.gcard,.logo,.card h1,.opt.bad,.stars span{animation:none!important}.stars span{opacity:1}}
 
 .nbi{background:rgba(255,255,255,.08);border:1px solid rgba(255,216,74,.3);border-radius:14px;padding:10px 12px;margin:8px 0;text-align:start;font-size:14px;line-height:1.6}.nbi small{display:block;color:#ffd84a;font-weight:600}
+.cr{font:13px/1.5 Fredoka,Vazirmatn,system-ui,sans-serif;text-align:center;margin:12px 0 0;color:#fff}.cr a{display:inline-block;padding:8px 6px;color:#ffc93c;font-weight:700;text-decoration:underline}
 /* ======= Mobile fix + performance layer ======= */
 html,body{overscroll-behavior:none;-webkit-touch-callout:none;-webkit-text-size-adjust:100%}
 button{touch-action:manipulation}
@@ -932,6 +933,8 @@ function show(view){
   $('#ctl').style.display=view==='play'?'flex':'none';
   if(view!=='play')$('#toast').style.display='none';
 }
+const SITES=['niracademy.com/','niracademy.com/game-center/'];
+function credit(){return '<p class="cr">'+tx('made')+' '+tx('by')+'<br>'+SITES.map(u=>'<a dir="ltr" href="https://'+u+'" target="_blank" rel="noopener">'+u+'</a>').join(' ')+'</p>';}
 const LICON=['🔤','⏳','🕰️','📘','📍'];
 const LCOL=['#ffd84a','#4fc3ff','#ff7a8a','#ffb347','#b48cff'];
 function menuScreen(){
@@ -944,7 +947,7 @@ function menuScreen(){
   <h1>${tx('title')}</h1><div class="sub">${tx('sub')}</div><div class="lvgrid">`;
   LV.forEach((l,i)=>{const open=i<sv.unlocked&&l.unlocked!==false;
     lv+=`<button class="lvb" style="--c:${LCOL[i%LCOL.length]}" ${open?'':'disabled'} data-p="${i}"><div style="font-size:20px">${LICON[i]||'✨'}</div><b>${tx('level')} ${i+1}</b><span>${l.nn&&l.nn[lang]?l.nn[lang]:l.topic}</span><small>${open?(sv.best[i+1]?'★ '+sv.best[i+1]:tx('play')):(l.unlocked===false?tx('soon'):tx('locked'))}</small></button>`;});
-  lv+='</div><div class="row"><button class="btn ghost" id="nbBtn">📒 '+tx('nb')+(nbCount()?' ('+nbCount()+')':'')+'</button></div><div style="font-size:11px;opacity:.6;margin-top:6px">'+tx('made')+' '+tx('by')+'</div>';
+  lv+='</div><div class="row"><button class="btn ghost" id="nbBtn">📒 '+tx('nb')+(nbCount()?' ('+nbCount()+')':'')+'</button></div>'+credit();
   oc.innerHTML=lv;const nbb=$('#nbBtn');if(nbb)nbb.onclick=nbScreen;
   oc.querySelectorAll('[data-l]').forEach(b=>b.onclick=()=>{lang=b.dataset.l;sv.lang=lang;save();menuScreen();});
   oc.querySelectorAll('[data-p]').forEach(b=>b.onclick=()=>{const i=+b.dataset.p;if(i<sv.unlocked&&LV[i].unlocked!==false)startLevel(i);});
@@ -971,7 +974,7 @@ function resultScreen(win){
   if(win)html+=`<div class="stars">${[0,1,2].map(i=>`<span class="${i<n?'':'off'}" style="animation-delay:${.25+i*.22}s">★</span>`).join('')}</div>`;
   html+=`<div class="sub">${tx('score')}: ${score}${gems.length?' · 💎 '+gc+'/'+gems.length:''}</div>`;
   if(win){html+=`<div id="rule" style="display:block"><b>${tx('rule')}:</b><br>${lv.rule[lang]||lv.rule.en}</div>`;}
-  html+=`<div class="row"><button class="btn" id="rAgain">${tx('restart')}</button>${(win&&cur+1<LV.length&&LV[cur+1].unlocked!==false)?`<button class="btn" id="rNext">${tx('next')}</button>`:''}<button class="btn ghost" id="rMenu">${tx('menu')}</button></div>`;
+  html+=`<div class="row"><button class="btn" id="rAgain">${tx('restart')}</button>${(win&&cur+1<LV.length&&LV[cur+1].unlocked!==false)?`<button class="btn" id="rNext">${tx('next')}</button>`:''}<button class="btn ghost" id="rMenu">${tx('menu')}</button></div>${credit()}`;
   oc.innerHTML=html;show('menu');
   $('#rAgain').onclick=()=>startLevel(cur);
   $('#rMenu').onclick=menuScreen;

@@ -122,12 +122,9 @@ canvas{display:block;background:#171235;max-width:100%;max-height:100%}
 @media(prefers-reduced-motion:reduce){.card,.gcard,.logo,.card h1,.opt.bad,.stars span{animation:none!important}.stars span{opacity:1}}
 
 /* ======= Mobile fix + performance layer ======= */
-html,body{overscroll-behavior:none}
+html,body{overscroll-behavior:none;-webkit-touch-callout:none;-webkit-text-size-adjust:100%}
+button{touch-action:manipulation}
 #wrap,canvas{touch-action:none}
-#rot{position:fixed;inset:0;z-index:20;display:none;flex-direction:column;align-items:center;justify-content:center;gap:14px;background:#171235;font:700 18px Fredoka,Vazirmatn,sans-serif;text-align:center;line-height:1.8;padding:20px}
-#rot i{font-size:60px;font-style:normal;animation:rotp 1.8s ease-in-out infinite}
-@keyframes rotp{0%,25%{transform:rotate(0)}70%,100%{transform:rotate(-90deg)}}
-@media(pointer:coarse) and (orientation:portrait){#rot{display:flex}}
 @media(pointer:coarse){
  .pill,#build,.cbtn,.card,.gcard,#gate,#ov{backdrop-filter:none!important;-webkit-backdrop-filter:none!important}
  .pill,#build{background:rgba(24,18,60,.85)}
@@ -150,8 +147,6 @@ html,body{overscroll-behavior:none}
   <div class="pad"><button class="cbtn" id="bl">◀</button><button class="cbtn" id="br">▶</button></div>
   <button id="jp">JUMP</button>
 </div>
-
-<div id="rot"><i>📱</i><div>Please rotate your phone<br>گوشی را بچرخان<br>Telefonu yatay çevir</div></div>
 
 <div id="gate">
   <div class="gcard">
@@ -939,6 +934,7 @@ function show(view){
 const LICON=['🔤','⏳','🕰️','📘','📍'];
 const LCOL=['#ffd84a','#4fc3ff','#ff7a8a','#ffb347','#b48cff'];
 function menuScreen(){
+  try{screen.orientation&&screen.orientation.unlock&&screen.orientation.unlock();}catch(e){}
   state='menu';mp=false;show('menu');musOff();
   document.documentElement.dir=lang==='fa'?'rtl':'ltr';
   const oc=$('#oc');
@@ -955,12 +951,9 @@ function menuScreen(){
 /* mobile: go fullscreen + lock landscape (needs a user gesture, so it runs from the Play tap) */
 function lockLandscape(){
   if(!COARSE)return;
-  try{
-    const el=document.documentElement,fs=el.requestFullscreen||el.webkitRequestFullscreen;
-    const lk=()=>{try{screen.orientation&&screen.orientation.lock&&screen.orientation.lock('landscape').catch(()=>{});}catch(e){}};
-    const r=fs&&fs.call(el);
-    if(r&&r.then)r.then(lk).catch(lk);else lk();
-  }catch(e){}
+  const lock=()=>{try{screen.orientation&&screen.orientation.lock&&screen.orientation.lock('landscape').catch(()=>{});}catch(e){}};
+  try{const d=document.documentElement,fs=d.requestFullscreen||d.webkitRequestFullscreen,r=fs&&fs.call(d,{navigationUI:'hide'});if(r&&r.then)r.then(lock).catch(()=>{});else lock();}catch(e){}
+  setTimeout(()=>{if(innerHeight>innerWidth&&state==='play'){toastS='Tip: turn your phone sideways for a bigger view';toastT=3.5;}},1200);
 }
 function startLevel(i){lockLandscape();mp=false;reset(i);hvLast=-1;svLast=-1;gcLast=-1;bKey='';state='play';show('play');musOn(.45);last=performance.now();}
 function finishLevel(win){
@@ -1009,7 +1002,6 @@ vzb.addEventListener('click',()=>{sv.voice=!sv.voice;save();vzb.textContent=sv.v
 let lastDraw=0;
 function loop(ts){requestAnimationFrame(loop);
   if(ts-lastDraw<15)return;lastDraw=ts;
-  if(COARSE&&innerHeight>innerWidth){last=ts;return;}
   const dt=Math.max(0,Math.min(.05,(ts-last)/1000||0));last=ts;T+=dt;
   if(state==='play'){if(hitT>0){hitT-=dt;update(dt*.18);}else update(dt);}
   draw();if(state==='play'||state==='gate')hud();
@@ -1019,6 +1011,12 @@ document.addEventListener('visibilitychange',()=>{
   else if(!document.hidden&&state==='pause'&&!mp){state='play';last=performance.now();musOn(.45);}
 });
 document.addEventListener('pointerdown',()=>{try{actx();}catch(e){}},{once:true});
+
+/* ---------- mobile lock-down (no zoom / scroll / double-tap while playing) ---------- */
+['gesturestart','gesturechange','gestureend'].forEach(n=>document.addEventListener(n,e=>{if(state==='play')e.preventDefault();}));
+document.addEventListener('touchmove',e=>{if(state==='play'&&(e.touches.length>1||e.target.closest('#ctl,#g,#hud')))e.preventDefault();},{passive:false});
+let lastTap=0;document.addEventListener('touchend',e=>{const n=Date.now();if(state==='play'&&n-lastTap<350&&e.target.closest('#ctl,#g'))e.preventDefault();lastTap=n;},{passive:false});
+document.addEventListener('dblclick',e=>{if(state==='play')e.preventDefault();});
 menuScreen();
 requestAnimationFrame(loop);
 })();

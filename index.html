@@ -487,18 +487,35 @@ function foliageFrame(cx){
   for(let i=0;i<4;i++){const x=((i*260-cx*.5)%(W+320)+(W+320))%(W+320)-160,sway=Math.sin(T*.9+i)*4;
     leafCluster(x+sway,1.15,.5);}
 }
-function drawGround(cx){const gr=X.createLinearGradient(0,GY,0,H);gr.addColorStop(0,'#a8693f');gr.addColorStop(1,'#5e351f');X.fillStyle=gr;X.fillRect(0,GY,W,H-GY);
-  const gg=X.createLinearGradient(0,GY-2,0,GY+9);gg.addColorStop(0,'#4fc766');gg.addColorStop(1,'#2f9e4b');X.fillStyle=gg;X.fillRect(0,GY,W,9);
-  X.strokeStyle='rgba(20,90,40,.55)';X.lineWidth=1.4;X.lineCap='round';
-  for(let x=-((cx|0)%9);x<W;x+=9){const h=3+((x+(cx|0))%5),lean=((x*7)%5)-2;X.beginPath();X.moveTo(x,GY+2);X.lineTo(x+lean*.6,GY+2-h);X.stroke();}
-  X.fillStyle='rgba(0,0,0,.14)';for(let x=-((cx|0)%46);x<W;x+=46)X.fillRect(x+6,GY+24,18,5);
-  X.fillStyle='rgba(255,255,255,.08)';for(let x=-((cx|0)%27);x<W;x+=27)X.beginPath(),X.ellipse(x+13,GY+16+((x*3)%8),5,2.6,0,0,6.3),X.fill();
-  const off=cx|0;for(let x=-(off%64);x<W;x+=16){const sd=(x+off)*2654435761>>>0,n=sd%100;
-    if(n<34){const dy=14+(sd>>>5)%(H-GY-20),r=.8+(sd>>>9)%3*.5,lt=(sd>>>3)%2;
-      X.fillStyle=lt?'rgba(255,220,180,.12)':'rgba(0,0,0,.15)';X.beginPath();X.arc(x+(sd>>>7)%16,GY+dy,r,0,6.3);X.fill();}}
-  for(const s of SOL)if(s.k){const sx=s.x-cx;if(sx<-100||sx>W+100)continue;const pg=X.createLinearGradient(0,s.y,0,s.y+16);pg.addColorStop(0,'#b26b3e');pg.addColorStop(1,'#7d4527');X.fillStyle=pg;roundRect(sx,s.y,s.w,16,6);X.fill();
-    X.fillStyle='#3fae55';roundRect(sx,s.y,s.w,5,3);X.fill();
-    X.fillStyle='rgba(0,0,0,.12)';X.fillRect(sx+6,s.y+10,s.w-12,2.4);}
+function drawGround(cx){
+  const lv=LV[cur],off=cx|0,hs=n=>((n*2654435761)>>>0)%1000/1000;
+  const top=mix('#58d06f',lv.hl[2],.2),topD=shade(top,-24),topL=shade(top,30);
+  const soil=mix('#b9774a',lv.sky[1],.12);
+  /* soil: smooth gradient + world-locked strata and pebbles */
+  const gr=X.createLinearGradient(0,GY,0,H);gr.addColorStop(0,soil);gr.addColorStop(.5,shade(soil,-22));gr.addColorStop(1,'#4a2a1a');
+  X.fillStyle=gr;X.fillRect(0,GY,W,H-GY);
+  for(let x=-(off%58)-58;x<W+58;x+=58){const k=Math.floor((x+off)/58);
+    X.fillStyle='rgba(0,0,0,.11)';X.beginPath();X.ellipse(x+29,GY+27+hs(k)*14,20+hs(k+7)*14,3,0,0,6.3);X.fill();
+    X.fillStyle='rgba(255,230,200,.10)';X.beginPath();X.ellipse(x+14,GY+22+hs(k+3)*20,10+hs(k+5)*8,2.2,0,0,6.3);X.fill();}
+  for(let x=-(off%23)-23;x<W+23;x+=23){const k=Math.floor((x+off)/23),r=1.2+hs(k+11)*2.2,y=GY+20+hs(k+13)*(H-GY-26);
+    if(hs(k+17)<.55){X.fillStyle=hs(k)<.5?'rgba(255,235,210,.22)':'rgba(40,20,10,.28)';X.beginPath();X.ellipse(x+hs(k+19)*18,y,r*1.5,r,0,0,6.3);X.fill();}}
+  /* soft shadow cast by the grass onto the soil */
+  const sh=X.createLinearGradient(0,GY+8,0,GY+30);sh.addColorStop(0,'rgba(20,8,0,.30)');sh.addColorStop(1,'rgba(20,8,0,0)');X.fillStyle=sh;X.fillRect(0,GY+8,W,22);
+  /* grass cap with scalloped lower edge */
+  X.fillStyle=topD;for(let x=-(off%11)-11;x<W+11;x+=11){const k=Math.floor((x+off)/11);X.beginPath();X.ellipse(x+5,GY+9,6.5,4+hs(k)*3.5,0,0,6.3);X.fill();}
+  const gg=X.createLinearGradient(0,GY-2,0,GY+11);gg.addColorStop(0,topL);gg.addColorStop(.35,top);gg.addColorStop(1,topD);X.fillStyle=gg;X.fillRect(0,GY,W,10);
+  X.fillStyle='rgba(255,255,255,.35)';X.fillRect(0,GY,W,1.6);
+  /* swaying grass blades, two tones */
+  X.lineCap='round';X.lineWidth=1.5;
+  for(let x=-(off%7)-7;x<W+7;x+=7){const k=Math.floor((x+off)/7),h=3.5+hs(k)*6,lean=(hs(k+99)-.5)*3+Math.sin(T*1.8+k*.5)*1.3;
+    X.strokeStyle=k%2?topL:top;X.beginPath();X.moveTo(x,GY+2);X.quadraticCurveTo(x+lean*.3,GY-h*.5,x+lean,GY+1-h);X.stroke();}
+  /* modern floating platforms: rounded soil body, glossy grass cap, soft drop shadow */
+  for(const s of SOL)if(s.k){const sx=s.x-cx;if(sx<-100||sx>W+100)continue;
+    X.fillStyle='rgba(15,10,40,.20)';X.beginPath();X.ellipse(sx+s.w/2,s.y+25,s.w*.46,4.5,0,0,6.3);X.fill();
+    const pg=X.createLinearGradient(0,s.y,0,s.y+16);pg.addColorStop(0,soil);pg.addColorStop(1,shade(soil,-34));X.fillStyle=pg;roundRect(sx,s.y,s.w,17,8);X.fill();
+    X.fillStyle='rgba(0,0,0,.14)';for(let i=0;i<3;i++){X.beginPath();X.ellipse(sx+s.w*(.2+i*.3),s.y+12,5,1.6,0,0,6.3);X.fill();}
+    const cg=X.createLinearGradient(0,s.y-1,0,s.y+7);cg.addColorStop(0,topL);cg.addColorStop(1,topD);X.fillStyle=cg;roundRect(sx-2,s.y-1,s.w+4,7,3.5);X.fill();
+    X.fillStyle='rgba(255,255,255,.4)';roundRect(sx+4,s.y,s.w-8,1.6,.8);X.fill();}
 }
 function flowers(cx){
   const cols=['#ff6a8d','#ffd84a','#ffffff','#c9a0ff','#ff9a3d'];

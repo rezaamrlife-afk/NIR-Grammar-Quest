@@ -138,12 +138,27 @@ const LV=[
   rule:{en:'Present Continuous: am/is/are + verb-ing. Use it for actions happening right now, or temporary actions around the present.',
         fa:'زمان حال استمراری: am/is/are + فعل‌ing. برای کارهایی که همین الان در حال انجام‌اند یا موقتی هستند به کار می‌رود.',
         tr:'Şimdiki zaman: am/is/are + fiil-ing. Şu anda yapılan veya geçici eylemler için kullanılır.'}},
- {topic:'Past Simple',unlocked:false},
+ {topic:'Past Simple',nn:{fa:'گذشته ساده',tr:'Geçmiş zaman'},unlocked:true,
+  sky:['#2a3a7a','#e8795a','#ffd79a'],hl:['#4a4a8a','#7a5a6a','#4a7a5a'],
+  sentences:[
+   ['She','read','a','book','yesterday.'],
+   ['He','went','to','school','last','week.'],
+   ['They','played','football','on','Sunday.'],
+   ['The','sun','rose','at','six.']
+  ],
+  gates:[
+   {q:'She ___ to the party last night.',opts:['go','goed','went'],a:2,en:'Go is irregular: its past form is went, not goed.',fa:'go فعل بی‌قاعده است و شکل گذشته‌اش went است، نه goed.',tr:'Go düzensiz bir fiildir; geçmiş hali went\'tir, goed değil.'},
+   {q:'They ___ football yesterday.',opts:['played','play','playing'],a:0,en:'Regular verbs add -ed in the past: play → played.',fa:'افعال باقاعده در گذشته ed می‌گیرند: play → played.',tr:'Düzenli fiiller geçmişte -ed alır: play → played.'},
+   {q:'I ___ a letter last week.',opts:['write','wrote','writed'],a:1,en:'Write is irregular: its past form is wrote.',fa:'write فعل بی‌قاعده است و شکل گذشته‌اش wrote است.',tr:'Write düzensiz bir fiildir; geçmiş hali wrote\'tur.'}
+  ],
+  rule:{en:'Past Simple: regular verbs add -ed (played); many common verbs are irregular (go→went, write→wrote). Use it for finished actions in the past.',
+        fa:'زمان گذشته ساده: افعال باقاعده ed می‌گیرند (played)، و بسیاری از افعال پرکاربرد بی‌قاعده‌اند (go→went, write→wrote). برای کارهایی که در گذشته تمام شده‌اند به کار می‌رود.',
+        tr:'Geçmiş zaman: düzenli fiiller -ed alır (played), birçok yaygın fiil düzensizdir (go→went, write→wrote). Geçmişte tamamlanmış eylemler için kullanılır.'}},
  {topic:'Articles (a/an/the)',unlocked:false},
  {topic:'Prepositions of Place',unlocked:false}
 ];
 const KEY='nirGrammarQuest.v1';
-let sv={unlocked:2,best:{},lang:'en'};
+let sv={unlocked:3,best:{},lang:'en'};
 try{const s=JSON.parse(localStorage.getItem(KEY));if(s&&typeof s==='object'){sv.unlocked=Math.max(1,s.unlocked|0);sv.best=(s.best&&typeof s.best==='object')?s.best:{};sv.lang=s.lang||'en';}}catch(e){}
 function save(){try{localStorage.setItem(KEY,JSON.stringify(sv));}catch(e){}}
 lang=STR[sv.lang]?sv.lang:'en';
@@ -157,7 +172,7 @@ addEventListener('resize',size);size();
 const GY=280,FF="Fredoka,Vazirmatn,system-ui,sans-serif";
 let state='menu',cur=0,cam=0,T=0,last=0,shake=0;
 let L=0;
-let SOL=[],spikeL=[],gatesX=[];
+let SOL=[],spikeL=[],gatesX=[],enemies=[];
 let p={x:60,y:GY,vx:0,vy:0,f:1,g:true,ph:0,inv:0,coy:0,buf:0,sq:0,gy:GY,jant:0,idle:0,happy:0,dt:0};
 let hearts=3,score=0,words=[],gateIdx=0,gatesPassed=[],toastT=0,toastS='',winT=0;
 
@@ -176,6 +191,13 @@ function buildWorld(){
   const plats=[[420,214,90],[1060,206,90],[1720,210,90],[2380,206,90],[3040,210,90]];
   for(const q of plats)if(q[0]<L-260)SOL.push({x:q[0],y:q[1],w:q[2],h:16,k:1});
   spikeL=[[640,34],[1500,34],[2400,34]].filter(s=>s[0]<L-300&&!gatesX.some(g=>Math.abs(g-s[0])<70)&&!words.some(w=>Math.abs(w.x-s[0])<50));
+  enemies=[];
+  gatesX.forEach((gx,i)=>{
+    if(i%2!==0)return;
+    const zoneStart=gx+26,zoneEnd=sentEnd[i]+170-14;
+    if(zoneEnd-zoneStart>30&&!spikeL.some(s=>Math.abs(s[0]-((zoneStart+zoneEnd)/2))<90))
+      enemies.push({x0:zoneStart,x1:zoneEnd,x:(zoneStart+zoneEnd)/2,dir:1,alive:true,ph:Math.random()*6,kind:cur%3});
+  });
 }
 function reset(i){
   cur=i;
@@ -184,6 +206,7 @@ function reset(i){
   hearts=3;score=0;gateIdx=0;toastT=0;winT=0;cam=0;gateOpenIdx=-1;parts=[];
   inp.l=inp.r=inp.j=0;
   words.forEach(w=>w.got=false);
+  const gateEl=$('#gate');if(gateEl)gateEl.style.display='none';
 }
 const inp={l:0,r:0,j:0};
 function key(k,v){if(k==='ArrowLeft'||k==='a')inp.l=v;else if(k==='ArrowRight'||k==='d')inp.r=v;else if(k===' '||k==='ArrowUp'||k==='w'){if(v&&state==='play')p.buf=.13;inp.j=v;}}
@@ -237,6 +260,16 @@ function update(dt){
   if(p.g&&Math.abs(p.vx)>20)p.ph+=dt*(8+Math.abs(p.vx)*.03);
   if(p.y>H+60){hurt();p.x=Math.max(12,p.x-80);p.y=GY;p.vx=p.vy=0;p.g=true;p.inv=1.4;}
   for(const [sx,w] of spikeL)if(p.y>GY-14&&p.x+8>sx&&p.x-8<sx+w)hurt();
+  for(const en of enemies){
+    if(!en.alive)continue;
+    en.x+=en.dir*42*dt;en.ph+=dt*6;
+    if(en.x<=en.x0){en.x=en.x0;en.dir=1;}else if(en.x>=en.x1){en.x=en.x1;en.dir=-1;}
+    const ex=en.x,ew=13,eh=20,etop=GY-eh;
+    if(p.x+10>ex-ew&&p.x-10<ex+ew&&p.y>etop-4){
+      if(p.vy>0&&p.y<etop+12){en.alive=false;p.vy=-330;p.sq=.3;score+=30;p.happy=.4;SND.ok();spawnBurst(ex,etop);spawnText(ex,etop-6,'+30');}
+      else hurt();
+    }
+  }
   // word collect (only the current sentence, in order)
   const cs=curSentence();
   for(const wd of words){if(wd.got||wd.si!==cs)continue;if(wd.wi!==sentenceProgress(wd.si))continue;
@@ -381,6 +414,73 @@ function flowers(cx){
   }
 }
 function drawSpikes(cx){for(const [sx,w] of spikeL){const x=sx-cx;if(x<-40||x>W+40)continue;for(let i=0;i<3;i++){const px=x+i*(w/3);const sg=X.createLinearGradient(px,GY-16,px+w/6,GY);sg.addColorStop(0,'#eef2ff');sg.addColorStop(1,'#9aa3c8');X.fillStyle=sg;X.beginPath();X.moveTo(px,GY);X.lineTo(px+w/6,GY-16);X.lineTo(px+w/3,GY);X.closePath();X.fill();X.strokeStyle='rgba(0,0,0,.18)';X.lineWidth=1;X.stroke();}}}
+function drawEnemies(cx){
+  for(const en of enemies){
+    if(!en.alive)continue;
+    const sx=Math.round(en.x-cx);if(sx<-40||sx>W+40)continue;
+    const kind=en.kind||0;
+    if(kind===1)drawEnemyPuff(en,sx);
+    else if(kind===2)drawEnemyWisp(en,sx);
+    else drawEnemySlime(en,sx);
+  }
+}
+function drawEnemySlime(en,sx){
+  const bob=Math.abs(Math.sin(en.ph))*2.2,sqz=Math.sin(en.ph*2)*.1,OL='#1a1650',legA=Math.sin(en.ph)*4;
+  groundShadow(sx,GY-2,0,999,12,3.6,.26);
+  X.save();X.translate(sx,GY-2-bob);X.scale(en.dir*(1+sqz*.3),1-sqz*.3);
+  X.lineCap='round';
+  X.strokeStyle=OL;X.lineWidth=5;
+  X.beginPath();X.moveTo(-6,-2);X.lineTo(-6+legA*.6,4);X.stroke();
+  X.beginPath();X.moveTo(6,-2);X.lineTo(6-legA*.6,4);X.stroke();
+  X.strokeStyle='#c23a56';X.lineWidth=3;
+  X.beginPath();X.moveTo(-6,-2);X.lineTo(-6+legA*.6,4);X.stroke();
+  X.beginPath();X.moveTo(6,-2);X.lineTo(6-legA*.6,4);X.stroke();
+  const bg=X.createLinearGradient(0,-24,0,-2);bg.addColorStop(0,'#ff8aa0');bg.addColorStop(1,'#ff5a7a');
+  X.fillStyle=bg;X.beginPath();X.ellipse(0,-13,13,12,0,0,6.3);X.fill();X.lineWidth=1.8;X.strokeStyle=OL;X.stroke();
+  X.fillStyle='rgba(255,255,255,.22)';X.beginPath();X.ellipse(-4,-19,4.4,2.6,-.3,0,6.3);X.fill();
+  X.fillStyle='#fff';X.beginPath();X.ellipse(-4.5,-15,3.6,4.2,0,0,6.3);X.fill();X.beginPath();X.ellipse(4.5,-15,3.6,4.2,0,0,6.3);X.fill();
+  X.lineWidth=1;X.strokeStyle=OL;X.stroke();
+  X.fillStyle=OL;X.beginPath();X.arc(-4.5,-14,1.8,0,6.3);X.fill();X.beginPath();X.arc(4.5,-14,1.8,0,6.3);X.fill();
+  X.strokeStyle=OL;X.lineWidth=1.6;X.beginPath();X.moveTo(-8,-20);X.lineTo(-2,-18.5);X.stroke();X.beginPath();X.moveTo(8,-20);X.lineTo(2,-18.5);X.stroke();
+  X.restore();
+}
+function drawEnemyPuff(en,sx){
+  const bob=Math.sin(en.ph)*3.4,sqz=Math.sin(en.ph*2)*.08,OL='#1a4a6e',wing=Math.sin(en.ph*3)*10;
+  groundShadow(sx,GY-2,0,999,11,3.2,.2);
+  X.save();X.translate(sx,GY-16-Math.abs(bob));X.scale(en.dir*(1+sqz*.3),1-sqz*.3);
+  X.fillStyle='rgba(255,255,255,.55)';
+  X.beginPath();X.ellipse(-11,2+wing*.15,6,3.2,.5,0,6.3);X.fill();
+  X.beginPath();X.ellipse(11,2-wing*.15,6,3.2,-.5,0,6.3);X.fill();
+  const bg=X.createLinearGradient(0,-19,0,6);bg.addColorStop(0,'#eaf8ff');bg.addColorStop(1,'#bfe4ff');
+  X.fillStyle=bg;
+  X.beginPath();X.ellipse(0,0,12,9,0,0,6.3);X.fill();
+  X.beginPath();X.ellipse(-7,-7,7,6,0,0,6.3);X.fill();
+  X.beginPath();X.ellipse(7,-7,7,6,0,0,6.3);X.fill();
+  X.beginPath();X.ellipse(0,-11,8,6.4,0,0,6.3);X.fill();
+  X.lineWidth=1.6;X.strokeStyle=OL;X.globalAlpha=.55;
+  X.beginPath();X.ellipse(0,0,12,9,0,0,6.3);X.stroke();X.globalAlpha=1;
+  X.fillStyle='#fff';X.beginPath();X.ellipse(-4.5,-3,3.4,4,0,0,6.3);X.fill();X.beginPath();X.ellipse(4.5,-3,3.4,4,0,0,6.3);X.fill();
+  X.lineWidth=1;X.strokeStyle=OL;X.stroke();
+  X.fillStyle=OL;X.beginPath();X.arc(-4.5,-2,1.6,0,6.3);X.fill();X.beginPath();X.arc(4.5,-2,1.6,0,6.3);X.fill();
+  X.strokeStyle='#5aa0c9';X.lineWidth=1.3;X.beginPath();X.arc(0,2,2.6,.15,Math.PI-.15);X.stroke();
+  X.restore();
+}
+function drawEnemyWisp(en,sx){
+  const bob=Math.sin(en.ph*1.6)*4.2,flick=.62+.22*Math.sin(en.ph*4),OL='#3a1f66';
+  groundShadow(sx,GY-2,0,999,10,3,.16);
+  X.save();X.translate(sx,GY-18-Math.abs(bob));X.scale(en.dir,1);X.globalAlpha=flick;
+  const tail=Math.sin(en.ph*2)*5;
+  X.fillStyle='rgba(170,120,255,.35)';
+  X.beginPath();X.moveTo(-9,2);X.quadraticCurveTo(-13+tail*.4,10,-6,14);X.quadraticCurveTo(0,9,-9,2);X.closePath();X.fill();
+  X.beginPath();X.moveTo(9,2);X.quadraticCurveTo(13-tail*.4,10,6,14);X.quadraticCurveTo(0,9,9,2);X.closePath();X.fill();
+  const bg=X.createRadialGradient(0,-10,2,0,-6,15);bg.addColorStop(0,'rgba(236,220,255,.95)');bg.addColorStop(1,'rgba(150,110,220,.55)');
+  X.fillStyle=bg;X.beginPath();X.arc(0,-6,12,0,6.3);X.fill();
+  X.lineWidth=1.4;X.strokeStyle=OL;X.globalAlpha=flick*.6;X.stroke();X.globalAlpha=flick;
+  X.fillStyle='rgba(255,255,255,.9)';X.beginPath();X.ellipse(-4.5,-9,3,3.6,0,0,6.3);X.fill();X.beginPath();X.ellipse(4.5,-9,3,3.6,0,0,6.3);X.fill();
+  X.fillStyle=OL;X.beginPath();X.arc(-4.5,-8.5,1.5,0,6.3);X.fill();X.beginPath();X.arc(4.5,-8.5,1.5,0,6.3);X.fill();
+  X.strokeStyle=OL;X.lineWidth=1.2;X.beginPath();X.arc(0,-3,2.2,.2,Math.PI-.2);X.stroke();
+  X.globalAlpha=1;X.restore();
+}
 function drawGate(cx,i){const gx=gatesX[i]-cx;if(gx<-60||gx>W+60)return;const done=gatesPassed[i];
   const col=done?'#2fa24f':'#7a63e8',glow=done?'#7ff0a8':'#c6b8ff',pulse=.55+.25*Math.sin(T*3+i);
   X.save();X.translate(gx,GY);
@@ -466,6 +566,7 @@ function draw(){
   drawGround(cx);
   flowers(cx);
   drawSpikes(cx);
+  drawEnemies(cx);
   gatesX.forEach((g,i)=>drawGate(cx,i));
   drawWords(cx);
   drawFlag(cx);
@@ -532,7 +633,7 @@ function resultScreen(win){
 }
 
 /* ---------- loop ---------- */
-function loop(ts){requestAnimationFrame(loop);const dt=Math.min(.05,(ts-last)/1000||0);last=ts;T+=dt;
+function loop(ts){requestAnimationFrame(loop);const dt=Math.max(0,Math.min(.05,(ts-last)/1000||0));last=ts;T+=dt;
   if(state==='play'){update(dt);}
   draw();if(state==='play'||state==='gate')hud();
 }

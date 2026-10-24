@@ -77,14 +77,14 @@ canvas{display:block;background:#171235;max-width:100%;max-height:100%}
 .pill{font-size:15px;background:linear-gradient(180deg,rgba(44,34,96,.72),rgba(20,15,50,.62))}
 #hearts{border-color:rgba(255,77,109,.35)}
 #scorep{border-color:rgba(255,216,74,.35);min-width:64px;justify-content:center}
-#pz{appearance:none;color:#fff;font:700 15px Fredoka,Vazirmatn,sans-serif;cursor:pointer;padding:7px 12px}
-#pz:active{transform:scale(.94)}
+#pz,#vz{appearance:none;color:#fff;font:700 15px Fredoka,Vazirmatn,sans-serif;cursor:pointer;padding:7px 12px}
+#pz:active,#vz:active{transform:scale(.94)}
 #build{top:calc(10px + env(safe-area-inset-top,0px));border:1px solid rgba(255,255,255,.14);box-shadow:0 6px 16px rgba(0,0,0,.25),inset 0 1px 0 rgba(255,255,255,.12)}
 #toast{top:calc(56px + env(safe-area-inset-top,0px))}
 @media(max-width:560px){#build{top:calc(58px + env(safe-area-inset-top,0px))}#toast{top:calc(104px + env(safe-area-inset-top,0px))}}
 /* touch controls */
 #ctl{padding:16px calc(16px + env(safe-area-inset-right,0px)) calc(16px + env(safe-area-inset-bottom,0px)) calc(16px + env(safe-area-inset-left,0px))}
-.cbtn,#jp,#pz{touch-action:none;-webkit-touch-callout:none}
+.cbtn,#jp,#pz,#vz{touch-action:none;-webkit-touch-callout:none}
 .cbtn{background:linear-gradient(180deg,rgba(255,255,255,.26),rgba(255,255,255,.1));backdrop-filter:blur(4px);box-shadow:0 5px 0 rgba(0,0,0,.25);transition:transform .08s,background .1s}
 .cbtn:active{transform:translateY(3px);background:rgba(255,255,255,.34);box-shadow:0 2px 0 rgba(0,0,0,.25)}
 #jp{box-shadow:0 6px 0 #c44f17,0 12px 20px rgba(0,0,0,.3);letter-spacing:.5px}
@@ -113,6 +113,9 @@ canvas{display:block;background:#171235;max-width:100%;max-height:100%}
 .opt.bad{animation:shk .35s}
 @keyframes shk{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
 #gemp{border-color:rgba(127,227,255,.35);min-width:56px;justify-content:center}
+.fly{position:fixed;z-index:8;pointer-events:none;padding:4px 10px;border-radius:10px;background:linear-gradient(180deg,#ffe08a,#ffb93c);color:#2a1a00;font:800 13px Fredoka,Vazirmatn,sans-serif;box-shadow:0 4px 12px rgba(0,0,0,.35);white-space:nowrap}
+#vz:focus-visible{outline:3px solid #ffd84a;outline-offset:2px}
+@media(max-width:400px){.pill{padding:6px 9px}#hud .grp{gap:6px}}
 /* result */
 .stars{font-size:36px;letter-spacing:6px;line-height:1;margin:2px 0 10px}
 .stars span{display:inline-block;color:#ffd84a;text-shadow:0 3px 0 rgba(0,0,0,.25),0 0 16px rgba(255,200,60,.5);opacity:0;animation:starIn .55s cubic-bezier(.2,1.4,.4,1) forwards}
@@ -126,7 +129,7 @@ canvas{display:block;background:#171235;max-width:100%;max-height:100%}
 
 <div id="hud">
   <div class="pill" id="hearts">❤️ <span id="hv">3</span></div>
-  <div class="grp"><button class="pill" id="pz" aria-label="Pause">⏸</button><div class="pill" id="gemp">💎 <span id="gv">0</span></div><div class="pill" id="scorep">⭐ <span id="sv0">0</span></div></div>
+  <div class="grp"><button class="pill" id="vz" aria-label="Voice">🔊</button><button class="pill" id="pz" aria-label="Pause">⏸</button><div class="pill" id="gemp">💎 <span id="gv">0</span></div><div class="pill" id="scorep">⭐ <span id="sv0">0</span></div></div>
 </div>
 <div id="build"></div>
 <div id="toast"></div>
@@ -241,8 +244,8 @@ const LV=[
         tr:'Yer edatları: in (içinde), on (bir yüzeyin üstünde), under (altında), between (iki şeyin arasında). Bir şeyin nerede olduğunu anlatırlar.'}}
 ];
 const KEY='nirGrammarQuest.v1';
-let sv={unlocked:5,best:{},lang:'en'};
-try{const s=JSON.parse(localStorage.getItem(KEY));if(s&&typeof s==='object'){sv.unlocked=Math.max(1,s.unlocked|0);sv.best=(s.best&&typeof s.best==='object')?s.best:{};sv.lang=s.lang||'en';}}catch(e){}
+let sv={unlocked:5,best:{},lang:'en',voice:true};
+try{const s=JSON.parse(localStorage.getItem(KEY));if(s&&typeof s==='object'){sv.unlocked=Math.max(1,s.unlocked|0);sv.best=(s.best&&typeof s.best==='object')?s.best:{};sv.lang=s.lang||'en';sv.voice=s.voice!==false;}}catch(e){}
 function save(){try{localStorage.setItem(KEY,JSON.stringify(sv));}catch(e){}}
 lang=STR[sv.lang]?sv.lang:'en';
 
@@ -372,7 +375,7 @@ function update(dt){
   // word collect (only the current sentence, in order)
   const cs=curSentence();
   for(const wd of words){if(wd.got||wd.si!==cs)continue;if(wd.wi!==sentenceProgress(wd.si))continue;
-    if(Math.abs(wd.x-p.x)<26&&Math.abs(wd.y-(p.y-20))<30){wd.got=true;const pt=15*bump();score+=pt;p.happy=.4;SND.word();vib(10);spawnBurst(wd.x,wd.y);spawnText(wd.x,wd.y-6,'+'+pt);checkSentence(wd.si);}}
+    if(Math.abs(wd.x-p.x)<26&&Math.abs(wd.y-(p.y-20))<30){wd.got=true;const pt=15*bump();score+=pt;p.happy=.4;SND.word();vib(10);spawnBurst(wd.x,wd.y);spawnText(wd.x,wd.y-6,'+'+pt);flyWord(wd);checkSentence(wd.si);}}
   for(const g of gems){if(g.got)continue;if(Math.abs(g.x-p.x)<22&&Math.abs(g.y-(p.y-20))<28){g.got=true;gc++;const pt=10*bump();score+=pt;SND.gem();vib(8);spawnBurst(g.x,g.y);spawnText(g.x,g.y-8,'+'+pt);}}
   if(pick&&!pick.got&&Math.abs(pick.x-p.x)<24&&Math.abs(pick.y-(p.y-20))<30){pick.got=true;shield=true;SND.ok();spawnBurst(pick.x,pick.y);toastS=tx('shield');toastT=2;}
   if(state!=='play')return;
@@ -392,6 +395,21 @@ function curSentence(){
 }
 function allDone(){return gatesPassed.every(x=>x)&&words.every(w=>w.got);}
 function hurt(){if(p.inv>0)return;if(shield){shield=false;p.inv=1.2;SND.ok();shake=.15;spawnBurst(p.x,p.y-22);spawnText(p.x,p.y-52,'🛡️');return;}hearts--;combo=0;lastM=1;hitT=.1;vib(40);p.inv=1.3;SND.hurt();shake=.25;const hp=$('#hearts');hp.classList.remove('pop');void hp.offsetWidth;hp.classList.add('pop');if(hearts<=0)finishLevel(false);}
+function spawnConfetti(n){const cols=['#ffd84a','#ff7a8a','#4fc3ff','#7ff0a8','#d9a8ff','#ff9a5a'];for(let i=0;i<n;i++)parts.push({x:p.x+(Math.random()-.5)*30,y:p.y-46,l:1.6,vx:(Math.random()-.5)*190,vy:-90-Math.random()*130,cf:1,col:cols[i%6],r:Math.random()*6});}
+function say(t){if(!sv.voice||!('speechSynthesis' in window))return;try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t);u.lang='en-US';u.rate=.9;speechSynthesis.speak(u);}catch(e){}}
+function flyWord(wd){
+  let el=null;
+  try{
+    if(matchMedia('(prefers-reduced-motion:reduce)').matches)return;
+    const tg=document.querySelectorAll('#build .wchip')[wd.wi];if(!tg)return;
+    const cr=cv.getBoundingClientRect(),tr=tg.getBoundingClientRect(),sx=cr.left+(wd.x-cam)*S,sy=cr.top+wd.y*S;
+    el=document.createElement('div');el.className='fly';el.textContent=wd.w;document.body.appendChild(el);
+    const w=el.offsetWidth,h=el.offsetHeight,dx=tr.left+tr.width/2-sx,dy=tr.top+tr.height/2-sy;
+    el.style.left=(sx-w/2)+'px';el.style.top=(sy-h/2)+'px';
+    const a=el.animate([{transform:'translate(0,0) scale(1)',opacity:1},{transform:'translate('+dx*.5+'px,'+(dy*.5-30)+'px) scale(1.25)',opacity:1,offset:.45},{transform:'translate('+dx+'px,'+dy+'px) scale(.8)',opacity:.9}],{duration:520,easing:'cubic-bezier(.4,0,.2,1)'});
+    const e2=el;a.onfinish=()=>e2.remove();setTimeout(()=>e2.remove(),900);
+  }catch(e){if(el)el.remove();}
+}
 const vib=ms=>{try{navigator.vibrate&&navigator.vibrate(ms);}catch(e){}};
 function mult(){return combo>=9?4:combo>=6?3:combo>=3?2:1;}
 function bump(){combo++;comboT=5;const m=mult();if(m>lastM){lastM=m;spawnText(p.x,p.y-64,'COMBO ×'+m);}return m;}
@@ -412,7 +430,7 @@ let parts=[];
 
 function checkSentence(si){
   const lv=LV[cur],done=lv.sentences[si].every((_,wi)=>words.find(w=>w.si===si&&w.wi===wi)?.got);
-  if(done){SND.sent();toastS=tx('sentDone')+' "'+lv.sentences[si].join(' ')+'"';toastT=2.4;score+=40;}
+  if(done){SND.sent();spawnConfetti(26);say(lv.sentences[si].join(' '));toastS=tx('sentDone')+' "'+lv.sentences[si].join(' ')+'"';toastT=2.4;score+=40;}
 }
 
 /* ---------- grammar gate ---------- */
@@ -788,6 +806,7 @@ function draw(){
   for(const q of parts){q.l-=.02;q.x+=(q.vx||0)/60;q.y+=(q.vy||0)/60;if(q.vy&&!q.txt&&!q.d)q.vy+=3;
     X.globalAlpha=Math.max(0,q.l);
     if(q.txt){X.font='800 14px '+FF;X.textAlign='center';X.textBaseline='middle';X.lineWidth=3;X.strokeStyle='rgba(26,22,80,.85)';X.strokeText(q.txt,q.x-cx,q.y);X.fillStyle='#fff';X.fillText(q.txt,q.x-cx,q.y);X.textAlign='left';}
+    else if(q.cf){X.save();X.translate(q.x-cx,q.y);X.rotate(q.r+q.l*8);X.fillStyle=q.col;X.fillRect(-3,-1.5,6,3);X.restore();}
     else if(q.d){X.fillStyle='rgba(255,246,225,.6)';X.beginPath();X.arc(q.x-cx,q.y,2+(.6-q.l)*8,0,6.3);X.fill();}
     else{X.fillStyle=q.c?'#fff6c8':'#ffd84a';X.beginPath();X.arc(q.x-cx,q.y,1.5+Math.max(0,q.l)*2.2,0,6.3);X.fill();}}
   X.globalAlpha=1;parts=parts.filter(q=>q.l>0);
@@ -846,7 +865,7 @@ function startLevel(i){mp=false;reset(i);hvLast=-1;svLast=-1;gcLast=-1;state='pl
 function finishLevel(win){
   $('#gate').style.display='none';gateOpenIdx=-1;inp.l=inp.r=inp.j=0;
   state=win?'cele':'res';show('');
-  if(win){SND.win();sv.best[cur+1]=Math.max(sv.best[cur+1]||0,score);if(cur+1>=sv.unlocked&&cur+1<LV.length&&LV[cur+1].unlocked!==false)sv.unlocked=Math.max(sv.unlocked,cur+2);save();}
+  if(win){SND.win();spawnConfetti(60);sv.best[cur+1]=Math.max(sv.best[cur+1]||0,score);if(cur+1>=sv.unlocked&&cur+1<LV.length&&LV[cur+1].unlocked!==false)sv.unlocked=Math.max(sv.unlocked,cur+2);save();}
   musOff();
   setTimeout(()=>resultScreen(win),win?700:300);
 }
@@ -866,7 +885,7 @@ function resultScreen(win){
 /* ---------- pause ---------- */
 function pauseGame(){
   if(state!=='play')return;
-  state='pause';mp=true;inp.l=inp.r=inp.j=0;musOff();
+  state='pause';mp=true;inp.l=inp.r=inp.j=0;musOff();try{window.speechSynthesis&&speechSynthesis.cancel();}catch(e){}
   if(document.activeElement&&document.activeElement.blur)document.activeElement.blur();
   const lv=LV[cur],oc=$('#oc');
   oc.innerHTML=`<div class="logo">⏸</div><h2>${tx('pause')}</h2><div class="sub">${tx('level')} ${cur+1} · ${lv.nn&&lv.nn[lang]?lv.nn[lang]:lv.topic}</div>
@@ -882,6 +901,8 @@ function resumeGame(){
   if(document.activeElement&&document.activeElement.blur)document.activeElement.blur();
 }
 $('#pz').addEventListener('click',pauseGame);
+const vzb=$('#vz');vzb.textContent=sv.voice?'🔊':'🔇';
+vzb.addEventListener('click',()=>{sv.voice=!sv.voice;save();vzb.textContent=sv.voice?'🔊':'🔇';if(!sv.voice&&window.speechSynthesis)try{speechSynthesis.cancel();}catch(e){}vzb.blur();});
 
 /* ---------- loop ---------- */
 function loop(ts){requestAnimationFrame(loop);const dt=Math.max(0,Math.min(.05,(ts-last)/1000||0));last=ts;T+=dt;

@@ -121,6 +121,7 @@ canvas{display:block;background:#171235;max-width:100%;max-height:100%}
 @keyframes starIn{from{opacity:0;transform:scale(.2) rotate(-40deg)}to{opacity:1;transform:none}}
 @media(prefers-reduced-motion:reduce){.card,.gcard,.logo,.card h1,.opt.bad,.stars span{animation:none!important}.stars span{opacity:1}}
 
+.nbi{background:rgba(255,255,255,.08);border:1px solid rgba(255,216,74,.3);border-radius:14px;padding:10px 12px;margin:8px 0;text-align:start;font-size:14px;line-height:1.6}.nbi small{display:block;color:#ffd84a;font-weight:600}
 /* ======= Mobile fix + performance layer ======= */
 html,body{overscroll-behavior:none;-webkit-touch-callout:none;-webkit-text-size-adjust:100%}
 button{touch-action:manipulation}
@@ -163,9 +164,9 @@ button{touch-action:manipulation}
 "use strict";
 const $=s=>document.querySelector(s);
 const STR={
- en:{title:'NIR Grammar Quest',sub:'Build sentences. Beat the gate. Learn the rule.',play:'Play',levels:'Levels',locked:'Locked',soon:'Coming soon',level:'Level',resume:'Resume',restart:'Restart',menu:'Menu',pause:'Pause',win:'Level complete!',lose:'Try again',next:'Next',back:'Back',rule:'Grammar rule',made:'Made for NIR Academy by',by:'Dr. Niki Majidi',gate:'Grammar Gate — choose the correct word',sentDone:'Sentence complete! ✓',allDone:'All sentences built!',score:'Score',finishFirst:'Collect every word and pass every gate first!',shield:'Shield ready! 🛡️',boss:'Boss Battle — answer to strike!',bossDown:'Boss defeated! 🎉'},
- fa:{title:'ماجراجویی گرامر NIR',sub:'جمله بساز، از دروازه عبور کن، قاعده را یاد بگیر.',play:'شروع',levels:'مرحله‌ها',locked:'قفل',soon:'به‌زودی',level:'مرحله',resume:'ادامه',restart:'شروع دوباره',menu:'منو',pause:'توقف',win:'مرحله تمام شد!',lose:'دوباره امتحان کن',next:'بعدی',back:'بازگشت',rule:'قاعده‌ی گرامری',made:'ساخته‌شده برای آکادمی NIR توسط',by:'دکتر نیکی مجیدی',gate:'دروازه‌ی گرامر — کلمه‌ی درست را انتخاب کن',sentDone:'جمله کامل شد! ✓',allDone:'همه‌ی جمله‌ها ساخته شد!',score:'امتیاز',finishFirst:'اول همه‌ی کلمه‌ها و دروازه‌ها را کامل کن!',shield:'سپر فعال شد! 🛡️',boss:'نبرد با غول — درست جواب بده تا ضربه بزنی!',bossDown:'غول شکست خورد! 🎉'},
- tr:{title:'NIR Dilbilgisi Macerası',sub:'Cümle kur, kapıyı geç, kuralı öğren.',play:'Oyna',levels:'Seviyeler',locked:'Kilitli',soon:'Yakında',level:'Seviye',resume:'Devam',restart:'Yeniden başlat',menu:'Menü',pause:'Duraklat',win:'Seviye tamamlandı!',lose:'Tekrar dene',next:'Sonraki',back:'Geri',rule:'Dilbilgisi kuralı',made:'NIR Academy için hazırlayan:',by:'Dr. Niki Majidi',gate:'Dilbilgisi Kapısı — doğru kelimeyi seç',sentDone:'Cümle tamam! ✓',allDone:'Tüm cümleler kuruldu!',score:'Puan',finishFirst:'Önce tüm kelimeleri ve kapıları tamamla!',shield:'Kalkan hazır! 🛡️',boss:'Boss Savaşı — doğru cevapla, vur!',bossDown:'Boss yenildi! 🎉'}
+ en:{title:'NIR Grammar Quest',sub:'Build sentences. Beat the gate. Learn the rule.',play:'Play',levels:'Levels',locked:'Locked',soon:'Coming soon',level:'Level',resume:'Resume',restart:'Restart',menu:'Menu',pause:'Pause',win:'Level complete!',lose:'Try again',next:'Next',back:'Back',rule:'Grammar rule',made:'Made for NIR Academy by',by:'Dr. Niki Majidi',gate:'Grammar Gate — choose the correct word',sentDone:'Sentence complete! ✓',allDone:'All sentences built!',score:'Score',finishFirst:'Collect every word and pass every gate first!',shield:'Shield ready! 🛡️',boss:'Boss Battle — answer to strike!',bossDown:'Boss defeated! 🎉',nb:'My mistakes',nbEmpty:'No mistakes yet — great! Wrong answers at the gates are saved here for practice.',practice:'Practice',again:'Again',got:'Correct answers',hintRm:'Answer correctly twice to remove a card.'},
+ fa:{title:'ماجراجویی گرامر NIR',sub:'جمله بساز، از دروازه عبور کن، قاعده را یاد بگیر.',play:'شروع',levels:'مرحله‌ها',locked:'قفل',soon:'به‌زودی',level:'مرحله',resume:'ادامه',restart:'شروع دوباره',menu:'منو',pause:'توقف',win:'مرحله تمام شد!',lose:'دوباره امتحان کن',next:'بعدی',back:'بازگشت',rule:'قاعده‌ی گرامری',made:'ساخته‌شده برای آکادمی NIR توسط',by:'دکتر نیکی مجیدی',gate:'دروازه‌ی گرامر — کلمه‌ی درست را انتخاب کن',sentDone:'جمله کامل شد! ✓',allDone:'همه‌ی جمله‌ها ساخته شد!',score:'امتیاز',finishFirst:'اول همه‌ی کلمه‌ها و دروازه‌ها را کامل کن!',shield:'سپر فعال شد! 🛡️',boss:'نبرد با غول — درست جواب بده تا ضربه بزنی!',bossDown:'غول شکست خورد! 🎉',nb:'اشتباه‌های من',nbEmpty:'هنوز اشتباهی نداری — عالی! پاسخ‌های غلط در دروازه‌ها اینجا ذخیره می‌شوند تا تمرین کنی.',practice:'تمرین',again:'دوباره',got:'پاسخ‌های درست',hintRm:'دو بار درست جواب بده تا از لیست حذف شود.'},
+ tr:{title:'NIR Dilbilgisi Macerası',sub:'Cümle kur, kapıyı geç, kuralı öğren.',play:'Oyna',levels:'Seviyeler',locked:'Kilitli',soon:'Yakında',level:'Seviye',resume:'Devam',restart:'Yeniden başlat',menu:'Menü',pause:'Duraklat',win:'Seviye tamamlandı!',lose:'Tekrar dene',next:'Sonraki',back:'Geri',rule:'Dilbilgisi kuralı',made:'NIR Academy için hazırlayan:',by:'Dr. Niki Majidi',gate:'Dilbilgisi Kapısı — doğru kelimeyi seç',sentDone:'Cümle tamam! ✓',allDone:'Tüm cümleler kuruldu!',score:'Puan',finishFirst:'Önce tüm kelimeleri ve kapıları tamamla!',shield:'Kalkan hazır! 🛡️',boss:'Boss Savaşı — doğru cevapla, vur!',bossDown:'Boss yenildi! 🎉',nb:'Hatalarım',nbEmpty:'Henüz hata yok — harika! Kapılardaki yanlış cevaplar alıştırma için burada saklanır.',practice:'Alıştırma',again:'Tekrar',got:'Doğru cevaplar',hintRm:'Kaldırmak için iki kez doğru cevapla.'}
 };
 let lang='en';
 const tx=k=>(STR[lang]&&STR[lang][k])||STR.en[k]||k;
@@ -439,7 +440,7 @@ const BCOL=['#ff6a8d','#4fc3ff','#ff9a5a','#e8b83a','#a77bff'];
 function openBoss(){
   inp.l=inp.r=inp.j=0;
   const lv=LV[cur];if(!boss.qs)boss.qs=lv.gates.map((_,i)=>i).sort(()=>Math.random()-.5);
-  const g=lv.gates[boss.qs[boss.round%boss.qs.length]];
+  const gi=boss.qs[boss.round%boss.qs.length],g=lv.gates[gi];
   $('#gq').innerHTML='<span class="gk">👹 '+tx('boss')+'</span><div class="bhp">'+'♥'.repeat(boss.hp)+'<span style="opacity:.28">'+'♥'.repeat(boss.max-boss.hp)+'</span></div><br><b>'+g.q.replace('___','<b style="color:#ff9a4a">___</b>')+'</b>';
   const box=$('#gopts');box.innerHTML='';let answered=false,missed=false;
   const order=g.opts.map((o,idx)=>idx).sort(()=>Math.random()-.5);
@@ -449,7 +450,7 @@ function openBoss(){
         setTimeout(()=>{if(state!=='gate')return;
           if(boss.hp<=0){boss.dead=true;boss.fight=false;score+=150;SND.win();for(let i=0;i<5;i++)spawnBurst(boss.x+(i-2)*14,GY-30-i*10);spawnConfetti(40);toastS=tx('bossDown');toastT=2.6;$('#gate').style.display='none';state='play';last=performance.now();}
           else{boss.round++;openBoss();}},700);}
-      else{b.classList.add('bad');$('#gmsg').textContent=g[lang]||g.en;SND.bad();if(!missed){missed=true;hurt();}answered=false;setTimeout(()=>b.classList.remove('bad'),500);}
+      else{b.classList.add('bad');$('#gmsg').textContent=g[lang]||g.en;SND.bad();if(!missed){missed=true;nbWrong(cur,gi);hurt();}answered=false;setTimeout(()=>b.classList.remove('bad'),500);}
     };box.appendChild(b);});
   $('#gmsg').textContent='';
   $('#gate').style.display='flex';state='gate';
@@ -523,7 +524,7 @@ function openGate(i){
     b.onclick=()=>{if(answered)return;answered=true;
       if(idx===g.a){b.classList.add('ok');$('#gmsg').textContent='✓';SND.ok();gatesPassed[i]=true;score+=60;
         setTimeout(()=>{$('#gate').style.display='none';gateOpenIdx=-1;if(state==='gate'){state='play';last=performance.now();}},650);}
-      else{b.classList.add('bad');$('#gmsg').textContent=g[lang]||g.en;SND.bad();if(!missed){missed=true;hurt();}answered=false;setTimeout(()=>b.classList.remove('bad'),500);}
+      else{b.classList.add('bad');$('#gmsg').textContent=g[lang]||g.en;SND.bad();if(!missed){missed=true;nbWrong(cur,i);hurt();}answered=false;setTimeout(()=>b.classList.remove('bad'),500);}
     };box.appendChild(b);});
   $('#gmsg').textContent='';
   $('#gate').style.display='flex';state='gate';
@@ -943,8 +944,8 @@ function menuScreen(){
   <h1>${tx('title')}</h1><div class="sub">${tx('sub')}</div><div class="lvgrid">`;
   LV.forEach((l,i)=>{const open=i<sv.unlocked&&l.unlocked!==false;
     lv+=`<button class="lvb" style="--c:${LCOL[i%LCOL.length]}" ${open?'':'disabled'} data-p="${i}"><div style="font-size:20px">${LICON[i]||'✨'}</div><b>${tx('level')} ${i+1}</b><span>${l.nn&&l.nn[lang]?l.nn[lang]:l.topic}</span><small>${open?(sv.best[i+1]?'★ '+sv.best[i+1]:tx('play')):(l.unlocked===false?tx('soon'):tx('locked'))}</small></button>`;});
-  lv+='</div><div style="font-size:11px;opacity:.6;margin-top:6px">'+tx('made')+' '+tx('by')+'</div>';
-  oc.innerHTML=lv;
+  lv+='</div><div class="row"><button class="btn ghost" id="nbBtn">📒 '+tx('nb')+(nbCount()?' ('+nbCount()+')':'')+'</button></div><div style="font-size:11px;opacity:.6;margin-top:6px">'+tx('made')+' '+tx('by')+'</div>';
+  oc.innerHTML=lv;const nbb=$('#nbBtn');if(nbb)nbb.onclick=nbScreen;
   oc.querySelectorAll('[data-l]').forEach(b=>b.onclick=()=>{lang=b.dataset.l;sv.lang=lang;save();menuScreen();});
   oc.querySelectorAll('[data-p]').forEach(b=>b.onclick=()=>{const i=+b.dataset.p;if(i<sv.unlocked&&LV[i].unlocked!==false)startLevel(i);});
 }
@@ -975,6 +976,55 @@ function resultScreen(win){
   $('#rAgain').onclick=()=>startLevel(cur);
   $('#rMenu').onclick=menuScreen;
   const rn=$('#rNext');if(rn)rn.onclick=()=>startLevel(cur+1);
+}
+/* ---------- mistake notebook ---------- */
+const NBK='nirGrammarQuest.nb.v1';
+let nb={};try{nb=JSON.parse(localStorage.getItem(NBK))||{};}catch(e){}
+function nbSave(){try{localStorage.setItem(NBK,JSON.stringify(nb));}catch(e){}}
+function nbCount(){return Object.keys(nb).length;}
+function nbWrong(l,i){const k=l+'|'+i,e=nb[k]||(nb[k]={l,i,w:0,r:0});e.w++;e.r=0;nbSave();}
+function nbFill(g){return g.q.replace('___','<b style="color:#ffd84a">'+g.opts[g.a]+'</b>');}
+let prac=null;
+function nbScreen(){
+  state='nb';show('menu');$('#ov').scrollTop=0;
+  const oc=$('#oc'),es=Object.values(nb);
+  let h='<div class="logo">📒</div><h2>'+tx('nb')+'</h2>';
+  if(!es.length)h+='<div class="sub">'+tx('nbEmpty')+'</div>';
+  else{
+    h+='<div class="sub">'+tx('hintRm')+'</div>';
+    h+=es.map(e=>{const g=LV[e.l].gates[e.i],lv=LV[e.l];return '<div class="nbi"><small>'+tx('level')+' '+(e.l+1)+' · '+((lv.nn&&lv.nn[lang])||lv.topic)+' · ❌ '+e.w+'</small><div dir="ltr">'+nbFill(g)+'</div><div>'+(g[lang]||g.en)+'</div></div>';}).join('');
+    h+='<div class="row"><button class="btn" id="nbP">🎯 '+tx('practice')+'</button></div>';
+  }
+  h+='<div class="row"><button class="btn ghost" id="nbB">← '+tx('back')+'</button></div>';
+  oc.innerHTML=h;
+  const p=$('#nbP');if(p)p.onclick=nbPractice;
+  $('#nbB').onclick=menuScreen;
+}
+function nbPractice(){prac={ks:Object.keys(nb).sort(()=>Math.random()-.5).slice(0,5),n:0,ok:0};nbQ();}
+function nbQ(){
+  const oc=$('#oc');$('#ov').scrollTop=0;
+  if(prac.n>=prac.ks.length){
+    oc.innerHTML='<div class="logo">🎯</div><h2>'+tx('practice')+'</h2><div class="sub">'+tx('got')+': '+prac.ok+' / '+prac.ks.length+'</div><div class="row">'+(nbCount()?'<button class="btn" id="nbA">↻ '+tx('again')+'</button>':'')+'<button class="btn ghost" id="nbX">← '+tx('back')+'</button></div>';
+    const a=$('#nbA');if(a)a.onclick=nbPractice;$('#nbX').onclick=nbScreen;return;
+  }
+  const k=prac.ks[prac.n],e=nb[k];
+  if(!e){prac.n++;nbQ();return;}
+  const g=LV[e.l].gates[e.i];let done=false;
+  oc.innerHTML='<div class="logo">🎯</div><div class="sub">'+(prac.n+1)+' / '+prac.ks.length+'</div><div dir="ltr" style="font-size:18px;line-height:1.6;margin-bottom:12px">'+g.q.replace('___','<b style="color:#ff9a4a">___</b>')+'</div><div id="nbO"></div><div class="gmsg" id="nbM"></div><div class="row" id="nbN"></div><div class="row"><button class="btn ghost" id="nbX">← '+tx('back')+'</button></div>';
+  const box=$('#nbO');
+  g.opts.map((o,i)=>i).sort(()=>Math.random()-.5).forEach(i=>{
+    const b=document.createElement('button');b.className='opt';b.textContent=g.opts[i];
+    b.onclick=()=>{
+      if(done)return;done=true;const right=i===g.a;
+      if(right){b.classList.add('ok');prac.ok++;e.r++;SND.ok();if(e.r>=2)delete nb[k];}
+      else{b.classList.add('bad');e.w++;e.r=0;SND.bad();[...box.children].forEach(c=>{if(c.textContent===g.opts[g.a])c.classList.add('ok');});}
+      nbSave();
+      $('#nbM').textContent=(right?'✓ ':'')+(g[lang]||g.en);
+      const n=document.createElement('button');n.className='btn';n.textContent=tx('next');n.onclick=()=>{prac.n++;nbQ();};$('#nbN').appendChild(n);
+    };
+    box.appendChild(b);
+  });
+  $('#nbX').onclick=nbScreen;
 }
 /* ---------- pause ---------- */
 function pauseGame(){

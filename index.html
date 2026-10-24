@@ -154,11 +154,41 @@ const LV=[
   rule:{en:'Past Simple: regular verbs add -ed (played); many common verbs are irregular (go→went, write→wrote). Use it for finished actions in the past.',
         fa:'زمان گذشته ساده: افعال باقاعده ed می‌گیرند (played)، و بسیاری از افعال پرکاربرد بی‌قاعده‌اند (go→went, write→wrote). برای کارهایی که در گذشته تمام شده‌اند به کار می‌رود.',
         tr:'Geçmiş zaman: düzenli fiiller -ed alır (played), birçok yaygın fiil düzensizdir (go→went, write→wrote). Geçmişte tamamlanmış eylemler için kullanılır.'}},
- {topic:'Articles (a/an/the)',unlocked:false},
- {topic:'Prepositions of Place',unlocked:false}
+ {topic:'Articles (a/an/the)',nn:{fa:'حرف تعریف a/an/the',tr:'Artikeller (a/an/the)'},unlocked:true,
+  sky:['#ffb347','#ffe08a','#fff6d8'],hl:['#e8a560','#c9c15a','#8fbf5a'],
+  sentences:[
+   ['I','saw','a','dog','in','the','park.'],
+   ['She','ate','an','apple','for','lunch.'],
+   ['He','is','the','best','player','on','the','team.'],
+   ['We','need','an','umbrella','today.']
+  ],
+  gates:[
+   {q:'I have ___ orange in my bag.',opts:['a','an','the'],a:1,en:'Use an before a vowel sound: an orange.',fa:'قبل از صدای مصوت از an استفاده می‌کنیم: an orange.',tr:'Ünlü sesten önce an kullanılır: an orange.'},
+   {q:'She is ___ teacher at this school.',opts:['a','an','the'],a:0,en:'Use a before a consonant sound: a teacher.',fa:'قبل از صدای صامت از a استفاده می‌کنیم: a teacher.',tr:'Ünsüz sesten önce a kullanılır: a teacher.'},
+   {q:'Look at ___ sun — it is so bright today!',opts:['a','an','the'],a:2,en:'Use the for something unique or already known: the sun.',fa:'برای چیزی یکتا یا شناخته‌شده از the استفاده می‌کنیم: the sun.',tr:'Benzersiz veya bilinen bir şey için the kullanılır: the sun.'}
+  ],
+  rule:{en:'Articles: use a before a consonant sound, an before a vowel sound (a cat, an egg), and the for something specific or already mentioned (the sun, the book I read).',
+        fa:'حروف تعریف: قبل از صدای صامت از a و قبل از صدای مصوت از an استفاده می‌کنیم (a cat, an egg)، و برای چیز خاص یا قبلاً گفته‌شده از the استفاده می‌کنیم (the sun, the book I read).',
+        tr:'Artikeller: ünsüz sesten önce a, ünlü sesten önce an kullanılır (a cat, an egg); belirli veya daha önce bahsedilen bir şey için the kullanılır (the sun, the book I read).'}},
+ {topic:'Prepositions of Place',nn:{fa:'حروف اضافه‌ی مکان',tr:'Yer edatları'},unlocked:true,
+  sky:['#6a3fb0','#c15fae','#ffb199'],hl:['#5a3a8a','#7a4a7a','#3a6a5a'],
+  sentences:[
+   ['The','cat','is','under','the','table.'],
+   ['The','book','is','on','the','shelf.'],
+   ['She','is','standing','between','two','trees.'],
+   ['The','keys','are','in','the','drawer.']
+  ],
+  gates:[
+   {q:'The cat is hiding ___ the bed.',opts:['under','on','between'],a:0,en:'Under means below something: under the bed.',fa:'under یعنی زیر چیزی: under the bed.',tr:'Under bir şeyin altında demektir: under the bed.'},
+   {q:'The lamp is ___ the table.',opts:['under','on','in'],a:1,en:'On means on top of a surface: on the table.',fa:'on یعنی روی یک سطح: on the table.',tr:'On bir yüzeyin üstünde demektir: on the table.'},
+   {q:'She is sitting ___ her mom and dad.',opts:['under','on','between'],a:2,en:'Between means in the middle of two things: between mom and dad.',fa:'between یعنی وسط دو چیز: between mom and dad.',tr:'Between iki şeyin arasında demektir: between mom and dad.'}
+  ],
+  rule:{en:'Prepositions of place: in (inside), on (on a surface), under (below), between (in the middle of two things). They describe where something is.',
+        fa:'حروف اضافه‌ی مکان: in (داخل)، on (روی یک سطح)، under (زیر)، between (وسط دو چیز). این‌ها محل قرارگیری چیزی را توصیف می‌کنند.',
+        tr:'Yer edatları: in (içinde), on (bir yüzeyin üstünde), under (altında), between (iki şeyin arasında). Bir şeyin nerede olduğunu anlatırlar.'}}
 ];
 const KEY='nirGrammarQuest.v1';
-let sv={unlocked:3,best:{},lang:'en'};
+let sv={unlocked:5,best:{},lang:'en'};
 try{const s=JSON.parse(localStorage.getItem(KEY));if(s&&typeof s==='object'){sv.unlocked=Math.max(1,s.unlocked|0);sv.best=(s.best&&typeof s.best==='object')?s.best:{};sv.lang=s.lang||'en';}}catch(e){}
 function save(){try{localStorage.setItem(KEY,JSON.stringify(sv));}catch(e){}}
 lang=STR[sv.lang]?sv.lang:'en';

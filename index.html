@@ -325,9 +325,27 @@ const LV=[
   ],
   rule:{en:'Future: use will for predictions and quick decisions (I will help you). Use be going to for plans and when you see evidence now (She is going to study; It is going to rain).',
         fa:'آینده: برای پیش‌بینی و تصمیم‌های لحظه‌ای از will استفاده می‌کنیم (I will help you). برای برنامه‌های از قبل تصمیم‌گرفته‌شده و وقتی نشانه‌ای می‌بینیم از be going to استفاده می‌کنیم (She is going to study; It is going to rain).',
-        tr:'Gelecek: tahmin ve anlık kararlar için will (I will help you); önceden verilmiş planlar ve görülen işaretler için be going to (She is going to study; It is going to rain).'}}
+        tr:'Gelecek: tahmin ve anlık kararlar için will (I will help you); önceden verilmiş planlar ve görülen işaretler için be going to (She is going to study; It is going to rain).'}},
+ {topic:'Comparatives & Superlatives',nn:{fa:'صفت تفضیلی و عالی',tr:'Karşılaştırma ve üstünlük'},unlocked:true,
+  d:{en:'Comparing things and people',fa:'مقایسه‌ی چیزها و آدم‌ها',tr:'Şeyleri ve kişileri karşılaştırma'},
+  sky:['#6a4fe0','#7fb8ff','#e9f6ff'],hl:['#8c9be0','#6fb0d8','#4aa07a'],
+  sentences:[
+   ['My','brother','is','taller','than','me.'],
+   ['Istanbul','is','the','biggest','city','in','Turkey.'],
+   ['Today','is','hotter','than','yesterday.'],
+   ['She','is','the','most','intelligent','student','in','class.']
+  ],
+  gates:[
+   {q:'My sister is ___ than me.',opts:['taller','more tall','tallest'],a:0,en:'Short adjectives add -er before than: taller than.',fa:'صفت‌های کوتاه قبل از than پسوند er می‌گیرند: taller than.',tr:'Kısa sıfatlar than ile -er alır: taller than.'},
+   {q:'This is the ___ film I have ever seen.',opts:['most interesting','more interesting','interestinger'],a:0,en:'Long adjectives use the most for the superlative: the most interesting.',fa:'صفت‌های بلند در حالت عالی از the most استفاده می‌کنند: the most interesting.',tr:'Uzun sıfatlar üstünlükte the most alır: the most interesting.'},
+   {q:'Summer is ___ than winter in my city.',opts:['hotter','more hot','hottest'],a:0,en:'One-syllable adjectives ending in consonant-vowel-consonant double the last letter: hot → hotter.',fa:'صفت‌های یک‌سیلابی که به صامت-مصوت-صامت ختم می‌شوند، حرف آخر را دو برابر می‌کنند: hot → hotter.',tr:'Tek heceli ve ünsüz-ünlü-ünsüz biten sıfatlarda son harf ikilenir: hot → hotter.'},
+   {q:'He is ___ player in the team.',opts:['the best','the most good','the goodest'],a:0,en:'Good is irregular: good → better → the best.',fa:'good بی‌قاعده است: good → better → the best.',tr:'good düzensizdir: good → better → the best.'}
+  ],
+  rule:{en:'Comparatives and superlatives: short adjectives add -er / -est (taller, the tallest); long adjectives use more / the most (more interesting, the most interesting). Irregular: good → better → the best.',
+        fa:'صفت تفضیلی و عالی: صفت‌های کوتاه er / est می‌گیرند (taller, the tallest)؛ صفت‌های بلند از more / the most استفاده می‌کنند (more interesting, the most interesting). بی‌قاعده: good → better → the best.',
+        tr:'Karşılaştırma ve üstünlük: kısa sıfatlar -er / -est alır (taller, the tallest); uzun sıfatlar more / the most ile kullanılır (more interesting, the most interesting). Düzensiz: good → better → the best.'}}
 ];
-['A1','A1–A2','A1–A2','A1','A1','A2–B1','A2–B1'].forEach((c,i)=>{LV[i].cefr=c;});
+['A1','A1–A2','A1–A2','A1','A1','A2–B1','A2–B1','A2'].forEach((c,i)=>{LV[i].cefr=c;});
 const KEY='nirGrammarQuest.v1';
 let sv={unlocked:5,best:{},lang:'en',voice:true,stars:{},stat:{},mus:true,seen:false};
 try{const s=JSON.parse(localStorage.getItem(KEY));if(s&&typeof s==='object'){sv.unlocked=Math.max(1,s.unlocked|0);sv.best=(s.best&&typeof s.best==='object')?s.best:{};sv.lang=s.lang||'en';sv.voice=s.voice!==false;sv.stars=(s.stars&&typeof s.stars==='object')?s.stars:{};sv.stat=(s.stat&&typeof s.stat==='object')?s.stat:{};sv.mus=s.mus!==false;sv.seen=!!s.seen;}}catch(e){}
@@ -1021,8 +1039,8 @@ function show(view){
 }
 const SITES=['niracademy.com/','niracademy.com/game-center/'];
 function credit(){return '<p class="cr">'+tx('made')+' '+tx('by')+'<br>'+SITES.map(u=>'<a dir="ltr" href="https://'+u+'" target="_blank" rel="noopener">'+u+'</a>').join(' ')+'</p>';}
-const LICON=['🔤','⏳','🕰️','📘','📍','✅','🚀'];
-const LCOL=['#ffd84a','#4fc3ff','#ff7a8a','#ffb347','#b48cff','#4fe0b0','#ff7aa8'];
+const LICON=['🔤','⏳','🕰️','📘','📍','✅','🚀','📏'];
+const LCOL=['#ffd84a','#4fc3ff','#ff7a8a','#ffb347','#b48cff','#4fe0b0','#ff7aa8','#7fd0ff'];
 function menuScreen(){
   try{screen.orientation&&screen.orientation.unlock&&screen.orientation.unlock();}catch(e){}
   state='menu';mp=false;show('menu');musOff();

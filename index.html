@@ -364,9 +364,45 @@ const LV=[
   ],
   rule:{en:'Modals: can = ability or permission (She can swim); must = strong obligation, must not = forbidden (You must wear a helmet); should = advice (You should drink more water). After a modal, use the base verb without to or -s.',
         fa:'فعل‌های وجهی: can برای توانایی یا اجازه (She can swim)؛ must برای اجبار قوی و must not برای ممنوعیت (You must wear a helmet)؛ should برای توصیه (You should drink more water). بعد از آن‌ها فعل ساده بدون to و بدون s می‌آید.',
-        tr:'Modal fiiller: can yetenek veya izin (She can swim); must güçlü zorunluluk, must not yasak (You must wear a helmet); should tavsiye (You should drink more water). Ardından to ve -s almayan yalın fiil gelir.'}}
+        tr:'Modal fiiller: can yetenek veya izin (She can swim); must güçlü zorunluluk, must not yasak (You must wear a helmet); should tavsiye (You should drink more water). Ardından to ve -s almayan yalın fiil gelir.'}},
+ {topic:'First Conditional (if + will)',nn:{fa:'شرطی نوع اول (if + will)',tr:'Birinci koşul (if + will)'},unlocked:true,
+  d:{en:'Real possibilities and results',fa:'احتمال‌های واقعی و نتیجه‌ها',tr:'Gerçek olasılıklar ve sonuçlar'},
+  sky:['#4a6fa5','#9ec5d8','#f0f4ff'],hl:['#7a8fb8','#5f9ea0','#4a8f6a'],
+  sentences:[
+   ['If','it','rains,','we','will','stay','home.'],
+   ['If','you','study','hard,','you','will','pass.'],
+   ['We','will','win','if','we','play','well.'],
+   ['If','I','see','him,','I','will','tell','him.']
+  ],
+  gates:[
+   {q:'If it rains, we ___ stay home.',opts:['will','would','are'],a:0,en:'In the result part of a first conditional, use will + base verb: will stay.',fa:'در بخش نتیجه‌ی جمله‌ی شرطی نوع اول از will + فعل ساده استفاده می‌کنیم: will stay.',tr:'Birinci koşulun sonuç kısmında will + yalın fiil kullanılır: will stay.'},
+   {q:'If you ___ hard, you will pass the exam.',opts:['study','will study','studied'],a:0,en:'After if, use the present simple (not will): study.',fa:'بعد از if زمان حال ساده می‌آید، نه will: study.',tr:'if sonrasında geniş zaman kullanılır, will değil: study.'},
+   {q:'We will win if we ___ well.',opts:['play','will play','played'],a:0,en:'The if-part uses the present simple, even in the second half of the sentence: play.',fa:'بخش if همیشه حال ساده می‌گیرد، حتی اگر در نیمه‌ی دوم جمله باشد: play.',tr:'if kısmı cümlenin ikinci yarısında olsa bile geniş zaman alır: play.'},
+   {q:'If it is sunny tomorrow, we ___ to the beach.',opts:['will go','would go','went'],a:0,en:'For a real future possibility: if + present simple, then will + base verb: will go.',fa:'برای احتمال واقعی در آینده: if + حال ساده، سپس will + فعل ساده: will go.',tr:'Gelecekteki gerçek bir olasılık için: if + geniş zaman, sonra will + yalın fiil: will go.'}
+  ],
+  rule:{en:'First conditional: if + present simple, will + base verb. Use it for real or possible situations in the future (If it rains, we will stay home). Do not use will after if.',
+        fa:'شرطی نوع اول: if + حال ساده، will + فعل ساده. برای موقعیت‌های واقعی یا ممکن در آینده به کار می‌رود (If it rains, we will stay home). بعد از if از will استفاده نمی‌کنیم.',
+        tr:'Birinci koşul: if + geniş zaman, will + yalın fiil. Gelecekte gerçek veya olası durumlar için kullanılır (If it rains, we will stay home). if sonrasında will kullanılmaz.'}},
+ {topic:'Past Continuous',nn:{fa:'گذشته استمراری',tr:'Past Continuous'},unlocked:true,
+  d:{en:'Actions in progress in the past',fa:'کارهای در جریان در گذشته',tr:'Geçmişte süren eylemler'},
+  sky:['#1b2a5e','#4a4a9a','#b8a8e0'],hl:['#4a4a8a','#5a5a9a','#3a6a7a'],
+  sentences:[
+   ['I','was','sleeping','when','you','called.'],
+   ['They','were','playing','football','this','time','yesterday.'],
+   ['She','was','reading','while','he','was','cooking.'],
+   ['It','was','raining','when','we','left.']
+  ],
+  gates:[
+   {q:'I ___ TV when the phone rang.',opts:['was watching','watched','am watching'],a:0,en:'Use was/were + verb-ing for an action in progress when another action happened: was watching.',fa:'برای کاری که در جریان بود و کار دیگری وسطش اتفاق افتاد از was/were + فعل‌ing استفاده می‌کنیم: was watching.',tr:'Başka bir eylem olduğunda sürmekte olan eylem için was/were + fiil-ing kullanılır: was watching.'},
+   {q:'This time yesterday, they ___ football.',opts:['were playing','was playing','played'],a:0,en:'With they, use were + verb-ing. "This time yesterday" describes an action in progress: were playing.',fa:'با they از were + فعل‌ing استفاده می‌کنیم. «این موقع دیروز» کاری در جریان را نشان می‌دهد: were playing.',tr:'they ile were + fiil-ing kullanılır. "This time yesterday" sürmekte olan bir eylemi gösterir: were playing.'},
+   {q:'She was cooking ___ he was reading.',opts:['while','then','so'],a:0,en:'Use while for two actions happening at the same time: while.',fa:'برای دو کاری که هم‌زمان در جریان‌اند از while استفاده می‌کنیم: while.',tr:'Aynı anda süren iki eylem için while kullanılır: while.'},
+   {q:'They ___ dinner when the lights went out.',opts:['were eating','ate','eat'],a:0,en:'The longer action in progress uses was/were + verb-ing; the short interruption uses the past simple: were eating.',fa:'کار طولانی‌ترِ در جریان از was/were + فعل‌ing استفاده می‌کند و کار کوتاهِ قطع‌کننده گذشته‌ی ساده می‌گیرد: were eating.',tr:'Süren uzun eylem was/were + fiil-ing alır, kısa kesintiye uğratan eylem geçmiş zaman alır: were eating.'}
+  ],
+  rule:{en:'Past Continuous: was/were + verb-ing. Use it for an action in progress at a moment in the past, for an action interrupted by another (I was sleeping when you called), and with while for two actions at the same time.',
+        fa:'گذشته استمراری: was/were + فعل‌ing. برای کاری که در یک لحظه‌ی گذشته در جریان بود، کاری که کار دیگری قطعش کرد (I was sleeping when you called) و با while برای دو کار هم‌زمان به کار می‌رود.',
+        tr:'Geçmişte sürmekte olan eylemler için was/were + fiil-ing kullanılır; başka bir eylemin böldüğü eylem (I was sleeping when you called) ve while ile aynı anda süren iki eylem için de kullanılır.'}}
 ];
-['A1','A1–A2','A1–A2','A1','A1','A2–B1','A2–B1','A2','A2'].forEach((c,i)=>{LV[i].cefr=c;});
+['A1','A1–A2','A1–A2','A1','A1','A2–B1','A2–B1','A2','A2','A2–B1','A2–B1'].forEach((c,i)=>{LV[i].cefr=c;});
 const KEY='nirGrammarQuest.v1';
 let sv={unlocked:5,best:{},lang:'en',voice:true,stars:{},stat:{},mus:true,seen:false};
 try{const s=JSON.parse(localStorage.getItem(KEY));if(s&&typeof s==='object'){sv.unlocked=Math.max(1,s.unlocked|0);sv.best=(s.best&&typeof s.best==='object')?s.best:{};sv.lang=s.lang||'en';sv.voice=s.voice!==false;sv.stars=(s.stars&&typeof s.stars==='object')?s.stars:{};sv.stat=(s.stat&&typeof s.stat==='object')?s.stat:{};sv.mus=s.mus!==false;sv.seen=!!s.seen;}}catch(e){}
@@ -1109,8 +1145,8 @@ function show(view){
 }
 const SITES=['niracademy.com/','niracademy.com/game-center/'];
 function credit(){return '<p class="cr">'+tx('made')+' '+tx('by')+'<br>'+SITES.map(u=>'<a dir="ltr" href="https://'+u+'" target="_blank" rel="noopener">'+u+'</a>').join(' ')+'</p><p class="cr tip">'+tx('tipRot')+'</p>';}
-const LICON=['🔤','⏳','🕰️','📘','📍','✅','🚀','📏','🚦'];
-const LCOL=['#ffd84a','#4fc3ff','#ff7a8a','#ffb347','#b48cff','#4fe0b0','#ff7aa8','#7fd0ff','#ffb04f'];
+const LICON=['🔤','⏳','🕰️','📘','📍','✅','🚀','📏','🚦','🌦️','🌙'];
+const LCOL=['#ffd84a','#4fc3ff','#ff7a8a','#ffb347','#b48cff','#4fe0b0','#ff7aa8','#7fd0ff','#ffb04f','#74c0fc','#9a8cff'];
 function menuScreen(){
   try{screen.orientation&&screen.orientation.unlock&&screen.orientation.unlock();}catch(e){}
   state='menu';mp=false;show('menu');musOff();

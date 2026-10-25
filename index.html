@@ -150,6 +150,25 @@ button{touch-action:manipulation}
  .card{background:linear-gradient(180deg,rgba(40,32,92,.92),rgba(30,24,70,.92))}
  #ov{background-color:rgba(20,15,46,.8)}
 }
+
+/* ======= Small-screen & touch fixes ======= */
+#gate{overflow-y:auto;overflow-x:hidden}
+.gcard{margin:auto}
+.langRow button{min-height:44px;min-width:48px}
+@media(pointer:coarse){#hud .pill{min-height:44px}#pz,#vz,#mz{min-width:44px}}
+@media(pointer:coarse),(max-width:900px){#build{top:calc(58px + env(safe-area-inset-top,0px))}#toast{top:calc(104px + env(safe-area-inset-top,0px))}}
+@media(max-width:380px){#pz,#vz,#mz{min-width:40px;padding:0 6px}.pill{padding:5px 6px;gap:3px;font-size:13px}#scorep,#gemp{min-width:0}#hud .grp{gap:4px}}
+@media(max-height:430px){
+ #gate{padding:8px}
+ .gcard{padding:10px 16px}
+ .gcard .q{font-size:15px;margin-bottom:6px;line-height:1.4}
+ .gcard .q br{display:none}
+ #gopts{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+ .opt{margin:4px 0;min-height:44px;padding:8px 6px;font-size:15px}
+ .bhp{font-size:15px;margin-top:2px;letter-spacing:2px}
+ #tmr{margin:6px 0 0}
+ .gmsg{min-height:16px;margin-top:4px;font-size:12px}
+}
 </style>
 </head>
 <body>
@@ -271,13 +290,50 @@ const LV=[
   ],
   rule:{en:'Prepositions of place: in (inside), on (on a surface), under (below), between (in the middle of two things). They describe where something is.',
         fa:'حروف اضافه‌ی مکان: in (داخل)، on (روی یک سطح)، under (زیر)، between (وسط دو چیز). این‌ها محل قرارگیری چیزی را توصیف می‌کنند.',
-        tr:'Yer edatları: in (içinde), on (bir yüzeyin üstünde), under (altında), between (iki şeyin arasında). Bir şeyin nerede olduğunu anlatırlar.'}}
+        tr:'Yer edatları: in (içinde), on (bir yüzeyin üstünde), under (altında), between (iki şeyin arasında). Bir şeyin nerede olduğunu anlatırlar.'}},
+ {topic:'Present Perfect',nn:{fa:'حال کامل',tr:'Present Perfect'},unlocked:true,
+  d:{en:'Experiences and results up to now',fa:'تجربه‌ها و نتیجه‌ها تا الان',tr:'Şimdiye kadarki deneyimler ve sonuçlar'},
+  sky:['#1fa38a','#7fe0c0','#e8fff0'],hl:['#6fc0b0','#4fa88e','#3f8a5a'],
+  sentences:[
+   ['I','have','visited','Istanbul','twice.'],
+   ['She','has','finished','her','homework','already.'],
+   ['They','have','lived','here','since','2020.'],
+   ['We','have','never','eaten','sushi.']
+  ],
+  gates:[
+   {q:'She ___ her keys, so she cannot open the door.',opts:['has lost','lost','is losing'],a:0,en:'Use has/have + past participle for a past action with a result now: has lost.',fa:'برای کاری در گذشته که نتیجه‌اش الان هم هست از has/have + اسم مفعول (V3) استفاده می‌کنیم: has lost.',tr:'Şimdiye etkisi olan geçmiş eylem için has/have + V3 kullanılır: has lost.'},
+   {q:'I have never ___ to Japan.',opts:['been','be','was'],a:0,en:'After have/has, use the past participle: been.',fa:'بعد از have/has از اسم مفعول (V3) استفاده می‌کنیم: been.',tr:'have/has sonrasında fiilin üçüncü hali (V3) gelir: been.'},
+   {q:'They have lived in London ___ 2019.',opts:['since','for','ago'],a:0,en:'Use since with a starting point (2019); use for with a period (for five years).',fa:'since برای نقطه‌ی شروع زمان (مثل 2019) و for برای مدت زمان (مثل for five years) به کار می‌رود.',tr:'since başlangıç noktası (2019) ile, for ise süre (five years) ile kullanılır.'},
+   {q:'She has worked here ___ six years.',opts:['for','since','ago'],a:0,en:'Use for with a period of time (six years); use since with a starting point (2019).',fa:'for برای مدت زمان (مثل six years) و since برای نقطه‌ی شروع (مثل 2019) به کار می‌رود.',tr:'for süre (six years) ile, since başlangıç noktası (2019) ile kullanılır.'}
+  ],
+  rule:{en:'Present Perfect: have/has + past participle (V3). Use it for experiences (I have been to Paris), results now (She has lost her keys) and time up to now (for/since).',
+        fa:'حال کامل: have/has + اسم مفعول (V3). برای تجربه‌ها (I have been to Paris)، نتیجه‌ای که الان هم هست (She has lost her keys) و مدتی که تا الان ادامه دارد (for/since) به کار می‌رود.',
+        tr:'Present Perfect: have/has + V3. Deneyimler (I have been to Paris), şimdiye etkisi olan sonuçlar (She has lost her keys) ve şimdiye kadar süren zaman (for/since) için kullanılır.'}},
+ {topic:'Future: Will / Going to',nn:{fa:'آینده: will / going to',tr:'Gelecek: will / going to'},unlocked:true,
+  d:{en:'Predictions, intentions and plans',fa:'پیش‌بینی، قصد و برنامه',tr:'Tahmin, niyet ve planlar'},
+  sky:['#ff5ea0','#ffb36b','#fff0c8'],hl:['#c07ab0','#d89a7a','#6aa86a'],
+  sentences:[
+   ['Wait,','I','will','help','you.'],
+   ['She','is','going','to','study','medicine.'],
+   ['It','will','rain','this','evening.'],
+   ['We','are','going','to','visit','Paris','next','summer.']
+  ],
+  gates:[
+   {q:'Look at those dark clouds! It ___ rain.',opts:['is going to','are going to','is going'],a:0,en:'When we see evidence now (dark clouds), use going to: is going to rain.',fa:'وقتی الان نشانه‌ای می‌بینیم (ابرهای تیره) از going to استفاده می‌کنیم: is going to rain.',tr:'Şu an bir kanıt görüyorsak (kara bulutlar) going to kullanılır: is going to rain.'},
+   {q:'The phone is ringing. I ___ answer it!',opts:['will','am going to','am answering'],a:0,en:'Use will for a decision made at the moment of speaking: I will answer.',fa:'برای تصمیمی که همان لحظه‌ی صحبت گرفته می‌شود از will استفاده می‌کنیم: I will answer.',tr:'Konuşma anında verilen karar için will kullanılır: I will answer.'},
+   {q:'I have bought the tickets. We ___ fly to Rome on Friday.',opts:['are going to','is going to','go to'],a:0,en:'For plans already decided, use going to; with we, use are: are going to fly.',fa:'برای برنامه‌ای که از قبل تصمیمش را گرفته‌ایم از going to استفاده می‌کنیم؛ با we از are استفاده می‌شود: are going to.',tr:'Önceden karar verilmiş planlar için going to kullanılır; we ile are gelir: are going to.'}
+  ],
+  rule:{en:'Future: use will for predictions and quick decisions (I will help you). Use be going to for plans and when you see evidence now (She is going to study; It is going to rain).',
+        fa:'آینده: برای پیش‌بینی و تصمیم‌های لحظه‌ای از will استفاده می‌کنیم (I will help you). برای برنامه‌های از قبل تصمیم‌گرفته‌شده و وقتی نشانه‌ای می‌بینیم از be going to استفاده می‌کنیم (She is going to study; It is going to rain).',
+        tr:'Gelecek: tahmin ve anlık kararlar için will (I will help you); önceden verilmiş planlar ve görülen işaretler için be going to (She is going to study; It is going to rain).'}}
 ];
+['A1','A1–A2','A1–A2','A1','A1','A2–B1','A2–B1'].forEach((c,i)=>{LV[i].cefr=c;});
 const KEY='nirGrammarQuest.v1';
 let sv={unlocked:5,best:{},lang:'en',voice:true,stars:{},stat:{},mus:true,seen:false};
 try{const s=JSON.parse(localStorage.getItem(KEY));if(s&&typeof s==='object'){sv.unlocked=Math.max(1,s.unlocked|0);sv.best=(s.best&&typeof s.best==='object')?s.best:{};sv.lang=s.lang||'en';sv.voice=s.voice!==false;sv.stars=(s.stars&&typeof s.stars==='object')?s.stars:{};sv.stat=(s.stat&&typeof s.stat==='object')?s.stat:{};sv.mus=s.mus!==false;sv.seen=!!s.seen;}}catch(e){}
 function save(){try{localStorage.setItem(KEY,JSON.stringify(sv));}catch(e){}}
 lang=STR[sv.lang]?sv.lang:'en';
+sv.unlocked=Math.max(sv.unlocked,LV.length);
 
 /* ---------- canvas / world ---------- */
 const cv=$('#g'),X=cv.getContext('2d',{alpha:false});
@@ -965,8 +1021,8 @@ function show(view){
 }
 const SITES=['niracademy.com/','niracademy.com/game-center/'];
 function credit(){return '<p class="cr">'+tx('made')+' '+tx('by')+'<br>'+SITES.map(u=>'<a dir="ltr" href="https://'+u+'" target="_blank" rel="noopener">'+u+'</a>').join(' ')+'</p>';}
-const LICON=['🔤','⏳','🕰️','📘','📍'];
-const LCOL=['#ffd84a','#4fc3ff','#ff7a8a','#ffb347','#b48cff'];
+const LICON=['🔤','⏳','🕰️','📘','📍','✅','🚀'];
+const LCOL=['#ffd84a','#4fc3ff','#ff7a8a','#ffb347','#b48cff','#4fe0b0','#ff7aa8'];
 function menuScreen(){
   try{screen.orientation&&screen.orientation.unlock&&screen.orientation.unlock();}catch(e){}
   state='menu';mp=false;show('menu');musOff();
@@ -976,7 +1032,7 @@ function menuScreen(){
   <div class="logo">N</div>
   <h1>${tx('title')}</h1><div class="sub">${tx('sub')}</div><div class="lvgrid">`;
   LV.forEach((l,i)=>{const open=i<sv.unlocked&&l.unlocked!==false;
-    lv+=`<button class="lvb" style="--c:${LCOL[i%LCOL.length]}" ${open?'':'disabled'} data-p="${i}"><div style="font-size:20px">${LICON[i]||'✨'}</div><b>${tx('level')} ${i+1}</b><span>${l.nn&&l.nn[lang]?l.nn[lang]:l.topic}</span><small>${open?(sv.best[i+1]?('★'.repeat(sv.stars[i+1]||1)+' '+sv.best[i+1]):tx('play')):(l.unlocked===false?tx('soon'):tx('locked'))}</small></button>`;});
+    lv+=`<button class="lvb" style="--c:${LCOL[i%LCOL.length]}" title="${l.d?(l.d[lang]||l.d.en):''}" ${open?'':'disabled'} data-p="${i}"><div style="font-size:20px">${LICON[i]||'✨'}</div><b>${tx('level')} ${i+1}</b><span>${l.nn&&l.nn[lang]?l.nn[lang]:l.topic}</span><span style="font-size:10px;opacity:.65" dir="ltr">${l.cefr||''}</span><small>${open?(sv.best[i+1]?('★'.repeat(sv.stars[i+1]||1)+' '+sv.best[i+1]):tx('play')):(l.unlocked===false?tx('soon'):tx('locked'))}</small></button>`;});
   lv+='</div><div class="row"><button class="btn ghost" id="nbBtn">📒 '+tx('nb')+(nbCount()?' ('+nbCount()+')':'')+'</button><button class="btn ghost" id="repBtn">📊 '+tx('rep')+'</button></div>'+credit();
   oc.innerHTML=lv;const nbb=$('#nbBtn');if(nbb)nbb.onclick=nbScreen;const rpb=$('#repBtn');if(rpb)rpb.onclick=repScreen;
   oc.querySelectorAll('[data-l]').forEach(b=>b.onclick=()=>{lang=b.dataset.l;sv.lang=lang;save();menuScreen();});

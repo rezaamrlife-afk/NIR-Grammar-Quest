@@ -4,6 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#2a2466">
+<meta name="description" content="NIR Grammar Quest — a platform game that teaches English grammar. By NIR Academy.">
+<meta name="apple-mobile-web-app-title" content="NIR Grammar">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%23ff7a3d'/%3E%3Ctext x='32' y='45' font-size='36' text-anchor='middle' fill='white' font-family='Arial' font-weight='700'%3EN%3C/text%3E%3C/svg%3E">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <title>NIR Grammar Quest</title>
@@ -78,6 +81,7 @@ canvas{display:block;background:#171235;max-width:100%;max-height:100%}
 .pill{font-size:15px;background:linear-gradient(180deg,rgba(44,34,96,.72),rgba(20,15,50,.62))}
 #hearts{border-color:rgba(255,77,109,.35)}
 #scorep{border-color:rgba(255,216,74,.35);min-width:64px;justify-content:center}
+#mz{appearance:none;color:#fff;font:700 15px Fredoka,Vazirmatn,sans-serif;cursor:pointer;padding:7px 12px}
 #pz,#vz{appearance:none;color:#fff;font:700 15px Fredoka,Vazirmatn,sans-serif;cursor:pointer;padding:7px 12px}
 #pz:active,#vz:active{transform:scale(.94)}
 #build{top:calc(10px + env(safe-area-inset-top,0px));border:1px solid rgba(255,255,255,.14);box-shadow:0 6px 16px rgba(0,0,0,.25),inset 0 1px 0 rgba(255,255,255,.12)}
@@ -123,6 +127,18 @@ canvas{display:block;background:#171235;max-width:100%;max-height:100%}
 
 .nbi{background:rgba(255,255,255,.08);border:1px solid rgba(255,216,74,.3);border-radius:14px;padding:10px 12px;margin:8px 0;text-align:start;font-size:14px;line-height:1.6}.nbi small{display:block;color:#ffd84a;font-weight:600}
 .cr{font:13px/1.5 Fredoka,Vazirmatn,system-ui,sans-serif;text-align:center;margin:12px 0 0;color:#fff}.cr a{display:inline-block;padding:8px 6px;color:#ffc93c;font-weight:700;text-decoration:underline}
+#cd{position:fixed;left:0;right:0;top:30%;text-align:center;font:700 96px/1 Fredoka,Vazirmatn,sans-serif;color:#fff;text-shadow:0 5px 0 #ff7a3d,0 10px 24px rgba(0,0,0,.4);display:none;z-index:6;pointer-events:none}
+#cd.on{animation:cdA .9s ease-out}
+@keyframes cdA{0%{transform:scale(1.8);opacity:0}25%{opacity:1}100%{transform:scale(1);opacity:.95}}
+#intro{position:fixed;left:50%;top:20%;transform:translateX(-50%);display:none;z-index:6;pointer-events:none;text-align:center;padding:10px 26px 12px;border-radius:20px;border:2px solid rgba(255,255,255,.7);background:linear-gradient(160deg,rgba(75,66,184,.88),rgba(42,36,102,.88));color:#fff;font:600 16px Fredoka,Vazirmatn,sans-serif;box-shadow:0 12px 36px rgba(8,6,40,.45);white-space:nowrap}
+#intro b{display:block;font-size:30px;line-height:1.15;color:#ffd84a}
+#intro.on{animation:introA 2.6s ease forwards}
+@keyframes introA{0%{opacity:0;transform:translateX(-50%) translateY(14px) scale(.94)}14%{opacity:1;transform:translateX(-50%)}82%{opacity:1}100%{opacity:0;transform:translateX(-50%) translateY(-10px)}}
+#dng{position:fixed;inset:0;pointer-events:none;z-index:3;display:none;box-shadow:inset 0 0 90px 24px rgba(255,40,80,.55);animation:dngA 1s ease-in-out infinite}
+@keyframes dngA{50%{opacity:.35}}
+#pg{position:fixed;top:0;left:0;height:4px;width:0;background:linear-gradient(90deg,#ffd84a,#ff7a3d);z-index:4;display:none}
+#tmr{height:8px;border-radius:5px;background:rgba(255,255,255,.18);margin:10px 0 2px;overflow:hidden}#tmr i{display:block;height:100%;width:100%;background:linear-gradient(90deg,#ff4d6d,#ffd84a)}
+@media(prefers-reduced-motion:reduce){#dng{animation:none}}
 /* ======= Mobile fix + performance layer ======= */
 html,body{overscroll-behavior:none;-webkit-touch-callout:none;-webkit-text-size-adjust:100%}
 button{touch-action:manipulation}
@@ -141,7 +157,7 @@ button{touch-action:manipulation}
 
 <div id="hud">
   <div class="pill" id="hearts">❤️ <span id="hv">3</span></div>
-  <div class="grp"><button class="pill" id="vz" aria-label="Voice">🔊</button><button class="pill" id="pz" aria-label="Pause">⏸</button><div class="pill" id="gemp">💎 <span id="gv">0</span></div><div class="pill" id="scorep">⭐ <span id="sv0">0</span></div></div>
+  <div class="grp"><button class="pill" id="mz" aria-label="Music">🎵</button><button class="pill" id="vz" aria-label="Voice">🔊</button><button class="pill" id="pz" aria-label="Pause">⏸</button><div class="pill" id="gemp">💎 <span id="gv">0</span></div><div class="pill" id="scorep">⭐ <span id="sv0">0</span></div></div>
 </div>
 <div id="build"></div>
 <div id="toast"></div>
@@ -149,6 +165,8 @@ button{touch-action:manipulation}
   <div class="pad"><button class="cbtn" id="bl">◀</button><button class="cbtn" id="br">▶</button></div>
   <button id="jp">JUMP</button>
 </div>
+
+<div id="dng"></div><div id="pg"></div><div id="intro"></div><div id="cd"></div>
 
 <div id="gate">
   <div class="gcard">
@@ -165,9 +183,9 @@ button{touch-action:manipulation}
 "use strict";
 const $=s=>document.querySelector(s);
 const STR={
- en:{title:'NIR Grammar Quest',sub:'Build sentences. Beat the gate. Learn the rule.',play:'Play',levels:'Levels',locked:'Locked',soon:'Coming soon',level:'Level',resume:'Resume',restart:'Restart',menu:'Menu',pause:'Pause',win:'Level complete!',lose:'Try again',next:'Next',back:'Back',rule:'Grammar rule',made:'Made for NIR Academy by',by:'Dr. Niki Majidi',gate:'Grammar Gate — choose the correct word',sentDone:'Sentence complete! ✓',allDone:'All sentences built!',score:'Score',finishFirst:'Collect every word and pass every gate first!',shield:'Shield ready! 🛡️',boss:'Boss Battle — answer to strike!',bossDown:'Boss defeated! 🎉',nb:'My mistakes',nbEmpty:'No mistakes yet — great! Wrong answers at the gates are saved here for practice.',practice:'Practice',again:'Again',got:'Correct answers',hintRm:'Answer correctly twice to remove a card.'},
- fa:{title:'ماجراجویی گرامر NIR',sub:'جمله بساز، از دروازه عبور کن، قاعده را یاد بگیر.',play:'شروع',levels:'مرحله‌ها',locked:'قفل',soon:'به‌زودی',level:'مرحله',resume:'ادامه',restart:'شروع دوباره',menu:'منو',pause:'توقف',win:'مرحله تمام شد!',lose:'دوباره امتحان کن',next:'بعدی',back:'بازگشت',rule:'قاعده‌ی گرامری',made:'ساخته‌شده برای آکادمی NIR توسط',by:'دکتر نیکی مجیدی',gate:'دروازه‌ی گرامر — کلمه‌ی درست را انتخاب کن',sentDone:'جمله کامل شد! ✓',allDone:'همه‌ی جمله‌ها ساخته شد!',score:'امتیاز',finishFirst:'اول همه‌ی کلمه‌ها و دروازه‌ها را کامل کن!',shield:'سپر فعال شد! 🛡️',boss:'نبرد با غول — درست جواب بده تا ضربه بزنی!',bossDown:'غول شکست خورد! 🎉',nb:'اشتباه‌های من',nbEmpty:'هنوز اشتباهی نداری — عالی! پاسخ‌های غلط در دروازه‌ها اینجا ذخیره می‌شوند تا تمرین کنی.',practice:'تمرین',again:'دوباره',got:'پاسخ‌های درست',hintRm:'دو بار درست جواب بده تا از لیست حذف شود.'},
- tr:{title:'NIR Dilbilgisi Macerası',sub:'Cümle kur, kapıyı geç, kuralı öğren.',play:'Oyna',levels:'Seviyeler',locked:'Kilitli',soon:'Yakında',level:'Seviye',resume:'Devam',restart:'Yeniden başlat',menu:'Menü',pause:'Duraklat',win:'Seviye tamamlandı!',lose:'Tekrar dene',next:'Sonraki',back:'Geri',rule:'Dilbilgisi kuralı',made:'NIR Academy için hazırlayan:',by:'Dr. Niki Majidi',gate:'Dilbilgisi Kapısı — doğru kelimeyi seç',sentDone:'Cümle tamam! ✓',allDone:'Tüm cümleler kuruldu!',score:'Puan',finishFirst:'Önce tüm kelimeleri ve kapıları tamamla!',shield:'Kalkan hazır! 🛡️',boss:'Boss Savaşı — doğru cevapla, vur!',bossDown:'Boss yenildi! 🎉',nb:'Hatalarım',nbEmpty:'Henüz hata yok — harika! Kapılardaki yanlış cevaplar alıştırma için burada saklanır.',practice:'Alıştırma',again:'Tekrar',got:'Doğru cevaplar',hintRm:'Kaldırmak için iki kez doğru cevapla.'}
+ en:{title:'NIR Grammar Quest',sub:'Build sentences. Beat the gate. Learn the rule.',play:'Play',levels:'Levels',locked:'Locked',soon:'Coming soon',level:'Level',resume:'Resume',restart:'Restart',menu:'Menu',pause:'Pause',win:'Level complete!',lose:'Try again',next:'Next',back:'Back',rule:'Grammar rule',made:'Made for NIR Academy by',by:'Dr. Niki Majidi',gate:'Grammar Gate — choose the correct word',sentDone:'Sentence complete! ✓',allDone:'All sentences built!',score:'Score',finishFirst:'Collect every word and pass every gate first!',shield:'Shield ready! 🛡️',boss:'Boss Battle — answer to strike!',bossDown:'Boss defeated! 🎉',nb:'My mistakes',nbEmpty:'No mistakes yet — great! Wrong answers at the gates are saved here for practice.',practice:'Practice',again:'Again',got:'Correct answers',hintRm:'Answer correctly twice to remove a card.',flaw:'Flawless! +100',rep:'Teacher report',repNone:'Play a level to see your accuracy here.',repWeak:'Needs more practice',bestL:'Best',howT:'How to play',how1:'Run, jump and collect the glowing words in order to build the sentence.',how2:'At each gate, choose the correct grammar word.',how3:'Defeat the boss, then reach the flag!',go:'Start'},
+ fa:{title:'ماجراجویی گرامر NIR',sub:'جمله بساز، از دروازه عبور کن، قاعده را یاد بگیر.',play:'شروع',levels:'مرحله‌ها',locked:'قفل',soon:'به‌زودی',level:'مرحله',resume:'ادامه',restart:'شروع دوباره',menu:'منو',pause:'توقف',win:'مرحله تمام شد!',lose:'دوباره امتحان کن',next:'بعدی',back:'بازگشت',rule:'قاعده‌ی گرامری',made:'ساخته‌شده برای آکادمی NIR توسط',by:'دکتر نیکی مجیدی',gate:'دروازه‌ی گرامر — کلمه‌ی درست را انتخاب کن',sentDone:'جمله کامل شد! ✓',allDone:'همه‌ی جمله‌ها ساخته شد!',score:'امتیاز',finishFirst:'اول همه‌ی کلمه‌ها و دروازه‌ها را کامل کن!',shield:'سپر فعال شد! 🛡️',boss:'نبرد با غول — درست جواب بده تا ضربه بزنی!',bossDown:'غول شکست خورد! 🎉',nb:'اشتباه‌های من',nbEmpty:'هنوز اشتباهی نداری — عالی! پاسخ‌های غلط در دروازه‌ها اینجا ذخیره می‌شوند تا تمرین کنی.',practice:'تمرین',again:'دوباره',got:'پاسخ‌های درست',hintRm:'دو بار درست جواب بده تا از لیست حذف شود.',flaw:'بدون خطا! +۱۰۰',rep:'گزارش پیشرفت',repNone:'یک مرحله بازی کن تا دقت پاسخ‌هایت اینجا نشان داده شود.',repWeak:'نیاز به تمرین بیشتر',bestL:'بهترین',howT:'راهنمای بازی',how1:'بدو، بپر و کلمه‌های درخشان را به ترتیب جمع کن تا جمله ساخته شود.',how2:'در هر دروازه کلمه‌ی درست گرامری را انتخاب کن.',how3:'غول را شکست بده و به پرچم برس!',go:'شروع'},
+ tr:{title:'NIR Dilbilgisi Macerası',sub:'Cümle kur, kapıyı geç, kuralı öğren.',play:'Oyna',levels:'Seviyeler',locked:'Kilitli',soon:'Yakında',level:'Seviye',resume:'Devam',restart:'Yeniden başlat',menu:'Menü',pause:'Duraklat',win:'Seviye tamamlandı!',lose:'Tekrar dene',next:'Sonraki',back:'Geri',rule:'Dilbilgisi kuralı',made:'NIR Academy için hazırlayan:',by:'Dr. Niki Majidi',gate:'Dilbilgisi Kapısı — doğru kelimeyi seç',sentDone:'Cümle tamam! ✓',allDone:'Tüm cümleler kuruldu!',score:'Puan',finishFirst:'Önce tüm kelimeleri ve kapıları tamamla!',shield:'Kalkan hazır! 🛡️',boss:'Boss Savaşı — doğru cevapla, vur!',bossDown:'Boss yenildi! 🎉',nb:'Hatalarım',nbEmpty:'Henüz hata yok — harika! Kapılardaki yanlış cevaplar alıştırma için burada saklanır.',practice:'Alıştırma',again:'Tekrar',got:'Doğru cevaplar',hintRm:'Kaldırmak için iki kez doğru cevapla.',flaw:'Kusursuz! +100',rep:'İlerleme raporu',repNone:'Doğruluk oranını görmek için bir seviye oyna.',repWeak:'Daha çok alıştırma gerekli',bestL:'En iyi',howT:'Nasıl oynanır',how1:'Koş, zıpla ve cümleyi kurmak için parlayan kelimeleri sırayla topla.',how2:'Her kapıda doğru dilbilgisi kelimesini seç.',how3:'Canavarı yen ve bayrağa ulaş!',go:'Başla'}
 };
 let lang='en';
 const tx=k=>(STR[lang]&&STR[lang][k])||STR.en[k]||k;
@@ -256,8 +274,8 @@ const LV=[
         tr:'Yer edatları: in (içinde), on (bir yüzeyin üstünde), under (altında), between (iki şeyin arasında). Bir şeyin nerede olduğunu anlatırlar.'}}
 ];
 const KEY='nirGrammarQuest.v1';
-let sv={unlocked:5,best:{},lang:'en',voice:true};
-try{const s=JSON.parse(localStorage.getItem(KEY));if(s&&typeof s==='object'){sv.unlocked=Math.max(1,s.unlocked|0);sv.best=(s.best&&typeof s.best==='object')?s.best:{};sv.lang=s.lang||'en';sv.voice=s.voice!==false;}}catch(e){}
+let sv={unlocked:5,best:{},lang:'en',voice:true,stars:{},stat:{},mus:true,seen:false};
+try{const s=JSON.parse(localStorage.getItem(KEY));if(s&&typeof s==='object'){sv.unlocked=Math.max(1,s.unlocked|0);sv.best=(s.best&&typeof s.best==='object')?s.best:{};sv.lang=s.lang||'en';sv.voice=s.voice!==false;sv.stars=(s.stars&&typeof s.stars==='object')?s.stars:{};sv.stat=(s.stat&&typeof s.stat==='object')?s.stat:{};sv.mus=s.mus!==false;sv.seen=!!s.seen;}}catch(e){}
 function save(){try{localStorage.setItem(KEY,JSON.stringify(sv));}catch(e){}}
 lang=STR[sv.lang]?sv.lang:'en';
 
@@ -289,6 +307,9 @@ let p={x:60,y:GY,vx:0,vy:0,f:1,g:true,ph:0,inv:0,coy:0,buf:0,sq:0,gy:GY,jant:0,i
 let hearts=3,score=0,words=[],gateIdx=0,gatesPassed=[],toastT=0,toastS='',winT=0;
 let mp=false,gems=[],pick=null,shield=false,gc=0,combo=0,comboT=0,lastM=1,hitT=0,dustT=0,boss=null;
 
+let cdT=0,cdN=0,zm=0,flA=0,flC='#fff',hurtN=0,dngOn=false,itT=0,flaw=false,tmI=0;
+const REDUCE=matchMedia('(prefers-reduced-motion:reduce)').matches;
+
 function buildWorld(){
   const lv=LV[cur];
   const gateCount=lv.gates.length;
@@ -316,7 +337,7 @@ function reset(i){
   cur=i;
   buildWorld();buildExtras();
   p={x:60,y:GY,vx:0,vy:0,f:1,g:true,ph:0,inv:0,coy:0,buf:0,sq:0,gy:GY,jant:0,idle:0,happy:0,dt:0};
-  hearts=3;score=0;gateIdx=0;toastT=0;winT=0;cam=0;gateOpenIdx=-1;parts=[];
+  hearts=3;score=0;hurtN=0;gateIdx=0;toastT=0;winT=0;cam=0;gateOpenIdx=-1;parts=[];
   inp.l=inp.r=inp.j=0;
   words.forEach(w=>w.got=false);
   const gateEl=$('#gate');if(gateEl)gateEl.style.display='none';
@@ -351,14 +372,14 @@ let AC,MG,mTim=0,mNext=0,mStep=0;
 const actx=()=>{AC=AC||new(window.AudioContext||window.webkitAudioContext)();if(AC.state==='suspended')AC.resume();return AC};
 function nt(f,t,d,ty,v){const a=AC,o=a.createOscillator(),g=a.createGain();o.type=ty;o.frequency.value=f;g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(v,t+.015);g.gain.exponentialRampToValueAtTime(.0001,t+d);o.connect(g);g.connect(MG);o.start(t);o.stop(t+d+.05);}
 const MEL=[0,-1,2,4,-1,2,0,-1,4,-1,2,0,-1,2,4,7,-1,4,2,0,-1,2,0,-1,7,-1,4,2,-1,0,2,-1];
-function mSched(){if(!AC||!MG)return;const bpm=112,sp=60/bpm/2,sc=[0,2,4,5,7,9,11,12],r=220,hz=n=>r*Math.pow(2,n/12),ch=[[0,4,7],[5,9,12],[7,11,14],[0,4,7]];
+function mSched(){if(!AC||!MG)return;const bpm=(boss&&boss.fight&&!boss.dead)?140:112,sp=60/bpm/2,sc=[0,2,4,5,7,9,11,12],r=220,hz=n=>r*Math.pow(2,n/12),ch=[[0,4,7],[5,9,12],[7,11,14],[0,4,7]];
   while(mNext<AC.currentTime+.25){const s=mStep%32,bar=s>>3,b=s&7,c=ch[bar];
     if(b===0||b===4)nt(hz(c[0]-12),mNext,sp*3.4,'sine',.5);
     nt(hz(c[b%3]),mNext,sp*.85,'triangle',.08);
     const d=MEL[s];if(d>=0)nt(hz(sc[d%sc.length]+12),mNext,sp*1.5,'square',.1);
     mNext+=sp;mStep++;}
 }
-function musOn(vol){try{actx();if(!MG){MG=AC.createGain();MG.gain.value=0;MG.connect(AC.destination);}if(!mTim){mNext=AC.currentTime+.05;mStep=0;mTim=setInterval(mSched,60);}MG.gain.setTargetAtTime(vol,AC.currentTime,.2);}catch(e){}}
+function musOn(vol){if(!sv.mus){musOff();return;}try{actx();if(!MG){MG=AC.createGain();MG.gain.value=0;MG.connect(AC.destination);}if(!mTim){mNext=AC.currentTime+.05;mStep=0;mTim=setInterval(mSched,60);}MG.gain.setTargetAtTime(vol,AC.currentTime,.2);}catch(e){}}
 function musOff(){if(MG)try{MG.gain.setTargetAtTime(0,AC.currentTime,.25);}catch(e){}}
 function jingle(notes,ty,v,gap){try{const a=actx(),t=a.currentTime;notes.forEach((f,i)=>{const o=a.createOscillator(),g=a.createGain(),s=t+i*(gap||.09);o.type=ty||'triangle';o.frequency.value=f;g.gain.setValueAtTime(0,s);g.gain.linearRampToValueAtTime(v||.14,s+.01);g.gain.exponentialRampToValueAtTime(.0001,s+.3);o.connect(g);g.connect(a.destination);o.start(s);o.stop(s+.35);});}catch(e){}}
 const SND={word:()=>jingle([880,1174]),sent:()=>jingle([523,659,784,1047]),ok:()=>jingle([659,988]),bad:()=>jingle([294,220],'sawtooth',.1,.14),win:()=>jingle([523,659,784,1047,784,1047,1319],'triangle',.16,.12),hurt:()=>jingle([300,200],'sawtooth',.1,.1),gem:()=>jingle([1318,1760],'sine',.09,.06)};
@@ -379,7 +400,7 @@ function update(dt){
   for(const s of SOL){if(s.k&&p.x+11>s.x&&p.x-11<s.x+s.w&&p.y>s.y&&p.y-34<s.y+s.h){p.x=(p.vx>0)?s.x-11:s.x+s.w+11;p.vx=0;}}
   p.x=Math.max(12,Math.min(L,p.x));
   gatesX.forEach((gx,i)=>{if(!gatesPassed[i]&&p.x+11>gx-6&&p.x<gx+6){p.x=gx-12;p.vx=0;openGate(i);}});
-  if(boss&&!boss.dead){if(p.x>boss.x-70){p.x=boss.x-70;p.vx=0;}if(!boss.fight&&p.x>boss.x-170){boss.fight=true;p.vx=0;openBoss();}}
+  if(boss&&!boss.dead){if(p.x>boss.x-70){p.x=boss.x-70;p.vx=0;}if(!boss.fight&&p.x>boss.x-170){boss.fight=true;p.vx=0;shake=.6;flA=REDUCE?0:.45;flC='#ff3d5a';openBoss();}}
   const wasG=p.g,pv=p.vy;p.g=false;
   p.y+=p.vy*dt;
   for(const s of SOL){if(p.x+11>s.x&&p.x-11<s.x+s.w&&p.y>s.y&&p.y-34<s.y+s.h){if(p.vy>=0){p.y=s.y;p.g=true;p.gy=s.y;}else p.y=s.y+s.h+34;p.vy=0;}}
@@ -395,7 +416,7 @@ function update(dt){
     if(en.x<=en.x0){en.x=en.x0;en.dir=1;}else if(en.x>=en.x1){en.x=en.x1;en.dir=-1;}
     const ex=en.x,ew=13,eh=20,etop=GY-eh;
     if(p.x+10>ex-ew&&p.x-10<ex+ew&&p.y>etop-4){
-      if(p.vy>0&&p.y<etop+12){const pt=30*bump();en.alive=false;p.vy=-330;p.sq=.3;score+=pt;p.happy=.4;SND.ok();shake=.3;hitT=.09;vib(20);spawnBurst(ex,etop);spawnBurst(ex,etop+8);spawnText(ex,etop-6,'+'+pt);}
+      if(p.vy>0&&p.y<etop+12){const pt=30*bump();en.alive=false;p.vy=-330;p.sq=.3;score+=pt;p.happy=.4;SND.ok();shake=.3;hitT=.09;zm=REDUCE?0:.03;vib(20);spawnBurst(ex,etop);spawnBurst(ex,etop+8);spawnText(ex,etop-6,'+'+pt);}
       else hurt();
     }
   }
@@ -421,7 +442,7 @@ function curSentence(){
   return -1;
 }
 function allDone(){return gatesPassed.every(x=>x)&&words.every(w=>w.got)&&(!boss||boss.dead);}
-function hurt(){if(p.inv>0)return;if(shield){shield=false;p.inv=1.2;SND.ok();shake=.15;spawnBurst(p.x,p.y-22);spawnText(p.x,p.y-52,'🛡️');return;}hearts--;combo=0;lastM=1;hitT=.1;vib(40);p.inv=1.3;SND.hurt();shake=.25;const hp=$('#hearts');hp.classList.remove('pop');void hp.offsetWidth;hp.classList.add('pop');if(hearts<=0)finishLevel(false);}
+function hurt(){if(p.inv>0)return;if(shield){shield=false;p.inv=1.2;SND.ok();shake=.15;flA=REDUCE?0:.25;flC='#8fe3ff';spawnBurst(p.x,p.y-22);spawnText(p.x,p.y-52,'🛡️');return;}hearts--;hurtN++;flA=REDUCE?0:.35;flC='#ff3d5a';zm=REDUCE?0:.03;combo=0;lastM=1;hitT=.1;vib(40);p.inv=1.3;SND.hurt();shake=.25;const hp=$('#hearts');hp.classList.remove('pop');void hp.offsetWidth;hp.classList.add('pop');if(hearts<=0)finishLevel(false);}
 function spawnConfetti(n){const cols=['#ffd84a','#ff7a8a','#4fc3ff','#7ff0a8','#d9a8ff','#ff9a5a'];for(let i=0;i<n;i++)parts.push({x:p.x+(Math.random()-.5)*30,y:p.y-46,l:1.6,vx:(Math.random()-.5)*190,vy:-90-Math.random()*130,cf:1,col:cols[i%6],r:Math.random()*6});}
 function say(t){if(!sv.voice||!('speechSynthesis' in window))return;try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t);u.lang='en-US';u.rate=.9;speechSynthesis.speak(u);}catch(e){}}
 function flyWord(wd){
@@ -442,20 +463,22 @@ function openBoss(){
   inp.l=inp.r=inp.j=0;
   const lv=LV[cur];if(!boss.qs)boss.qs=lv.gates.map((_,i)=>i).sort(()=>Math.random()-.5);
   const gi=boss.qs[boss.round%boss.qs.length],g=lv.gates[gi];
-  $('#gq').innerHTML='<span class="gk">👹 '+tx('boss')+'</span><div class="bhp">'+'♥'.repeat(boss.hp)+'<span style="opacity:.28">'+'♥'.repeat(boss.max-boss.hp)+'</span></div><br><b>'+g.q.replace('___','<b style="color:#ff9a4a">___</b>')+'</b>';
-  const box=$('#gopts');box.innerHTML='';let answered=false,missed=false;
+  $('#gq').innerHTML='<span class="gk">👹 '+tx('boss')+'</span><div class="bhp">'+'♥'.repeat(boss.hp)+'<span style="opacity:.28">'+'♥'.repeat(boss.max-boss.hp)+'</span></div><br><b>'+g.q.replace('___','<b style="color:#ff9a4a">___</b>')+'</b><div id="tmr"><i></i></div>';
+  const box=$('#gopts');box.innerHTML='';let answered=false,missed=false,solved=false;
   const order=g.opts.map((o,idx)=>idx).sort(()=>Math.random()-.5);
   order.forEach(idx=>{const b=document.createElement('button');b.className='opt';b.textContent=g.opts[idx];
     b.onclick=()=>{if(answered)return;answered=true;
-      if(idx===g.a){b.classList.add('ok');$('#gmsg').textContent='✓';SND.ok();boss.hp--;boss.hit=.5;score+=100;shake=.3;hitT=.09;vib(30);spawnBurst(boss.x,GY-60);spawnBurst(boss.x+12,GY-40);spawnText(boss.x,GY-100,'+100');
+      if(idx===g.a){b.classList.add('ok');$('#gmsg').textContent='✓';solved=true;if(!missed)statAdd(cur,1);SND.ok();boss.hp--;boss.hit=.5;score+=100;shake=.3;hitT=.09;zm=REDUCE?0:.05;flA=REDUCE?0:.3;flC='#fff';vib(30);spawnBurst(boss.x,GY-60);spawnBurst(boss.x+12,GY-40);spawnText(boss.x,GY-100,'+100');
         setTimeout(()=>{if(state!=='gate')return;
           if(boss.hp<=0){boss.dead=true;boss.fight=false;score+=150;SND.win();for(let i=0;i<5;i++)spawnBurst(boss.x+(i-2)*14,GY-30-i*10);spawnConfetti(40);toastS=tx('bossDown');toastT=2.6;$('#gate').style.display='none';state='play';last=performance.now();}
           else{boss.round++;openBoss();}},700);}
-      else{b.classList.add('bad');$('#gmsg').textContent=g[lang]||g.en;SND.bad();if(!missed){missed=true;nbWrong(cur,gi);hurt();}answered=false;setTimeout(()=>b.classList.remove('bad'),500);}
+      else{b.classList.add('bad');$('#gmsg').textContent=g[lang]||g.en;SND.bad();if(!missed){missed=true;statAdd(cur,0);nbWrong(cur,gi);hurt();}answered=false;setTimeout(()=>b.classList.remove('bad'),500);}
     };box.appendChild(b);});
   $('#gmsg').textContent='';
   $('#gate').style.display='flex';state='gate';
+  bossTimer(()=>solved,()=>{if(missed||solved)return;missed=true;statAdd(cur,0);nbWrong(cur,gi);hurt();$('#gmsg').textContent='⏱ '+(g[lang]||g.en);SND.bad();});
 }
+function bossTimer(isDone,onTO){clearInterval(tmI);let t=12;tmI=setInterval(()=>{if(state!=='gate'||isDone()){clearInterval(tmI);return;}t-=.1;const b=document.querySelector('#tmr i');if(b)b.style.width=Math.max(0,t/12*100)+'%';if(t<=0){clearInterval(tmI);onTO();}},100);}
 function drawBoss(cx){
   if(!boss||boss.dead)return;
   if(boss.hit>0)boss.hit-=1/60;
@@ -523,9 +546,9 @@ function openGate(i){
   const order=g.opts.map((o,idx)=>idx).sort(()=>Math.random()-.5);
   order.forEach(idx=>{const b=document.createElement('button');b.className='opt';b.textContent=g.opts[idx];
     b.onclick=()=>{if(answered)return;answered=true;
-      if(idx===g.a){b.classList.add('ok');$('#gmsg').textContent='✓';SND.ok();gatesPassed[i]=true;score+=60;
+      if(idx===g.a){b.classList.add('ok');$('#gmsg').textContent='✓';SND.ok();gatesPassed[i]=true;if(!missed)statAdd(cur,1);{const pt=missed?20:60*bump();score+=pt;spawnText(p.x,p.y-60,'+'+pt);}
         setTimeout(()=>{$('#gate').style.display='none';gateOpenIdx=-1;if(state==='gate'){state='play';last=performance.now();}},650);}
-      else{b.classList.add('bad');$('#gmsg').textContent=g[lang]||g.en;SND.bad();if(!missed){missed=true;nbWrong(cur,i);hurt();}answered=false;setTimeout(()=>b.classList.remove('bad'),500);}
+      else{b.classList.add('bad');$('#gmsg').textContent=g[lang]||g.en;SND.bad();if(!missed){missed=true;statAdd(cur,0);nbWrong(cur,i);hurt();}answered=false;setTimeout(()=>b.classList.remove('bad'),500);}
     };box.appendChild(b);});
   $('#gmsg').textContent='';
   $('#gate').style.display='flex';state='gate';
@@ -867,6 +890,7 @@ function drawPlayer(){
 function draw(){
   let ox=0,oy=0;if(shake>0){ox=(Math.random()-.5)*5;oy=(Math.random()-.5)*5;}
   X.save();X.translate(ox,oy);
+  if(zm>.001){X.translate(W/2,H/2);X.scale(1+zm,1+zm);X.translate(-W/2,-H/2);}
   const cx=Math.round(cam);
   drawSky();
   dustMotes();
@@ -895,6 +919,8 @@ function draw(){
   X.globalAlpha=1;parts=parts.filter(q=>q.l>0);
   X.restore();
   vignette();
+  if(flA>.01){X.globalAlpha=Math.min(.5,flA);X.fillStyle=flC;X.fillRect(0,0,W,H);X.globalAlpha=1;}
+  flA*=.9;zm*=.88;
   if(shake>0)shake-=1/60;
 }
 function dustMotes(){
@@ -911,6 +937,7 @@ function vignette(){if(VG){X.save();X.setTransform(1,0,0,1,0,0);X.drawImage(VG,0
 let hvLast=-1,svLast=-1,gcLast=-1;
 function pulse(el){el.classList.remove('pop');void el.offsetWidth;el.classList.add('pop');}
 const eHV=$('#hv'),eSV=$('#sv0'),eGV=$('#gv'),eBuild=$('#build'),eToast=$('#toast'),eHearts=$('#hearts'),eScoreP=$('#scorep'),eGemP=$('#gemp');
+const eDng=$('#dng'),ePg=$('#pg');let pcLast=-1;
 let bKey='';
 function hud(){
   if(hearts!==hvLast){eHV.textContent=hearts;pulse(eHearts);hvLast=hearts;}
@@ -923,6 +950,8 @@ function hud(){
   if(k!==bKey){eBuild.innerHTML=h;bKey=k;}
   if(toastT>0){toastT-=1/60;if(eToast.style.display!=='block')eToast.style.display='block';if(eToast.textContent!==toastS)eToast.textContent=toastS;}
   else if(eToast.style.display!=='none')eToast.style.display='none';
+  const dn=state==='play'&&hearts===1;if(dn!==dngOn){dngOn=dn;eDng.style.display=dn?'block':'none';}
+  const pc=Math.min(100,Math.round(p.x/(L-20)*100));if(pc!==pcLast){pcLast=pc;ePg.style.width=pc+'%';}
 }
 
 /* ---------- screens ---------- */
@@ -931,7 +960,8 @@ function show(view){
   $('#hud').style.display=view==='play'?'flex':'none';
   $('#build').style.display=view==='play'?'flex':'none';
   $('#ctl').style.display=view==='play'?'flex':'none';
-  if(view!=='play')$('#toast').style.display='none';
+  if(view!=='play'){$('#toast').style.display='none';$('#dng').style.display='none';dngOn=false;$('#cd').style.display='none';$('#intro').style.display='none';}
+  $('#pg').style.display=view==='play'?'block':'none';
 }
 const SITES=['niracademy.com/','niracademy.com/game-center/'];
 function credit(){return '<p class="cr">'+tx('made')+' '+tx('by')+'<br>'+SITES.map(u=>'<a dir="ltr" href="https://'+u+'" target="_blank" rel="noopener">'+u+'</a>').join(' ')+'</p>';}
@@ -946,9 +976,9 @@ function menuScreen(){
   <div class="logo">N</div>
   <h1>${tx('title')}</h1><div class="sub">${tx('sub')}</div><div class="lvgrid">`;
   LV.forEach((l,i)=>{const open=i<sv.unlocked&&l.unlocked!==false;
-    lv+=`<button class="lvb" style="--c:${LCOL[i%LCOL.length]}" ${open?'':'disabled'} data-p="${i}"><div style="font-size:20px">${LICON[i]||'✨'}</div><b>${tx('level')} ${i+1}</b><span>${l.nn&&l.nn[lang]?l.nn[lang]:l.topic}</span><small>${open?(sv.best[i+1]?'★ '+sv.best[i+1]:tx('play')):(l.unlocked===false?tx('soon'):tx('locked'))}</small></button>`;});
-  lv+='</div><div class="row"><button class="btn ghost" id="nbBtn">📒 '+tx('nb')+(nbCount()?' ('+nbCount()+')':'')+'</button></div>'+credit();
-  oc.innerHTML=lv;const nbb=$('#nbBtn');if(nbb)nbb.onclick=nbScreen;
+    lv+=`<button class="lvb" style="--c:${LCOL[i%LCOL.length]}" ${open?'':'disabled'} data-p="${i}"><div style="font-size:20px">${LICON[i]||'✨'}</div><b>${tx('level')} ${i+1}</b><span>${l.nn&&l.nn[lang]?l.nn[lang]:l.topic}</span><small>${open?(sv.best[i+1]?('★'.repeat(sv.stars[i+1]||1)+' '+sv.best[i+1]):tx('play')):(l.unlocked===false?tx('soon'):tx('locked'))}</small></button>`;});
+  lv+='</div><div class="row"><button class="btn ghost" id="nbBtn">📒 '+tx('nb')+(nbCount()?' ('+nbCount()+')':'')+'</button><button class="btn ghost" id="repBtn">📊 '+tx('rep')+'</button></div>'+credit();
+  oc.innerHTML=lv;const nbb=$('#nbBtn');if(nbb)nbb.onclick=nbScreen;const rpb=$('#repBtn');if(rpb)rpb.onclick=repScreen;
   oc.querySelectorAll('[data-l]').forEach(b=>b.onclick=()=>{lang=b.dataset.l;sv.lang=lang;save();menuScreen();});
   oc.querySelectorAll('[data-p]').forEach(b=>b.onclick=()=>{const i=+b.dataset.p;if(i<sv.unlocked&&LV[i].unlocked!==false)startLevel(i);});
 }
@@ -959,11 +989,29 @@ function lockLandscape(){
   try{const d=document.documentElement,fs=d.requestFullscreen||d.webkitRequestFullscreen,r=fs&&fs.call(d,{navigationUI:'hide'});if(r&&r.then)r.then(lock).catch(()=>{});else lock();}catch(e){}
   setTimeout(()=>{if(innerHeight>innerWidth&&state==='play'){toastS='Tip: turn your phone sideways for a bigger view';toastT=3.5;}},1200);
 }
-function startLevel(i){lockLandscape();mp=false;reset(i);hvLast=-1;svLast=-1;gcLast=-1;bKey='';state='play';show('play');musOn(.45);last=performance.now();}
+function repScreen(){
+  state='nb';show('menu');$('#ov').scrollTop=0;
+  const oc=$('#oc');let h='<div class="logo">📊</div><h2>'+tx('rep')+'</h2>',worst=null,wp=101,any=false;
+  h+=LV.map((l,i)=>{const e=sv.stat[l.topic]||{ok:0,bad:0},t=e.ok+e.bad,pc=t?Math.round(e.ok/t*100):0;if(t){any=true;if(pc<wp){wp=pc;worst=l;}}
+    return '<div class="nbi"><small>'+tx('level')+' '+(i+1)+' · '+((l.nn&&l.nn[lang])||l.topic)+'</small><div style="display:flex;align-items:center;gap:8px"><div style="flex:1;height:10px;border-radius:6px;background:rgba(255,255,255,.15);overflow:hidden"><i style="display:block;height:100%;width:'+pc+'%;background:'+(pc>=75?'#3cc468':pc>=50?'#ffb93c':'#ff4d6d')+'"></i></div><b dir="ltr">'+(t?pc+'%':'—')+'</b></div><div dir="ltr" style="font-size:12px;opacity:.85">'+(sv.stars[i+1]?'★'.repeat(sv.stars[i+1])+' · ':'')+t+' Q · '+tx('bestL')+': '+(sv.best[i+1]||'—')+'</div></div>';}).join('');
+  if(!any)h+='<div class="sub">'+tx('repNone')+'</div>';
+  else if(worst&&wp<100)h+='<div id="rule" style="display:block"><b>'+tx('repWeak')+':</b> '+((worst.nn&&worst.nn[lang])||worst.topic)+' ('+wp+'%)</div>';
+  h+='<div class="row"><button class="btn ghost" id="repB">← '+tx('back')+'</button></div>';
+  oc.innerHTML=h;$('#repB').onclick=menuScreen;
+}
+function showHow(i){
+  state='menu';show('menu');
+  $('#oc').innerHTML='<div class="logo">🎮</div><h2>'+tx('howT')+'</h2><div class="nbi">🏃 '+tx('how1')+'</div><div class="nbi">🚪 '+tx('how2')+'</div><div class="nbi">👹 '+tx('how3')+'</div>'+(COARSE?'':'<div class="nbi">⌨️ ← → · Space · Esc</div>')+'<div class="row"><button class="btn" id="hwGo">▶ '+tx('go')+'</button></div>';
+  $('#hwGo').onclick=()=>{sv.seen=true;save();startLevel(i);};
+}
+function startLevel(i){if(!sv.seen){showHow(i);return;}lockLandscape();mp=false;reset(i);hvLast=-1;svLast=-1;gcLast=-1;bKey='';state='play';show('play');musOn(.45);last=performance.now();cdT=3;cdN=-1;showIntro(i);}
+function cdShow(t){const c=$('#cd');c.textContent=t;c.style.display='block';c.classList.remove('on');void c.offsetWidth;c.classList.add('on');}
+function cdTick(){const n=Math.max(0,Math.ceil(cdT));if(n!==cdN){cdN=n;cdShow(n>0?String(n):'GO!');jingle([n?523:1047],'triangle',.14,.1);if(!n)setTimeout(()=>{$('#cd').style.display='none';},700);}}
+function showIntro(i){const el=$('#intro'),l=LV[i];el.innerHTML='<span>'+tx('level')+' '+(i+1)+'</span><b>'+((l.nn&&l.nn[lang])||l.topic)+'</b>';el.style.display='block';el.classList.remove('on');void el.offsetWidth;el.classList.add('on');clearTimeout(itT);itT=setTimeout(()=>{el.style.display='none';},2700);}
 function finishLevel(win){
   $('#gate').style.display='none';gateOpenIdx=-1;inp.l=inp.r=inp.j=0;
   state=win?'cele':'res';show('');
-  if(win){SND.win();spawnConfetti(60);sv.best[cur+1]=Math.max(sv.best[cur+1]||0,score);if(cur+1>=sv.unlocked&&cur+1<LV.length&&LV[cur+1].unlocked!==false)sv.unlocked=Math.max(sv.unlocked,cur+2);save();}
+  if(win){flaw=hurtN===0;if(flaw)score+=100;SND.win();spawnConfetti(60);sv.best[cur+1]=Math.max(sv.best[cur+1]||0,score);{const n=hearts>=3?3:hearts===2?2:1;sv.stars[cur+1]=Math.max(sv.stars[cur+1]||0,n);}if(cur+1>=sv.unlocked&&cur+1<LV.length&&LV[cur+1].unlocked!==false)sv.unlocked=Math.max(sv.unlocked,cur+2);save();}
   musOff();
   setTimeout(()=>resultScreen(win),win?700:300);
 }
@@ -972,10 +1020,11 @@ function resultScreen(win){
   const n=hearts>=3?3:(hearts===2?2:1);
   let html=`<div class="logo">${win?'🏆':'N'}</div><h2>${win?tx('win'):tx('lose')}</h2>`;
   if(win)html+=`<div class="stars">${[0,1,2].map(i=>`<span class="${i<n?'':'off'}" style="animation-delay:${.25+i*.22}s">★</span>`).join('')}</div>`;
-  html+=`<div class="sub">${tx('score')}: ${score}${gems.length?' · 💎 '+gc+'/'+gems.length:''}</div>`;
+  html+=`<div class="sub">${tx('score')}: <span id="rScore">${score}</span>${gems.length?' · 💎 '+gc+'/'+gems.length:''}</div>`;if(win&&flaw)html+='<div class="sub" style="font-size:18px">💯 '+tx('flaw')+'</div>';
   if(win){html+=`<div id="rule" style="display:block"><b>${tx('rule')}:</b><br>${lv.rule[lang]||lv.rule.en}</div>`;}
   html+=`<div class="row"><button class="btn" id="rAgain">${tx('restart')}</button>${(win&&cur+1<LV.length&&LV[cur+1].unlocked!==false)?`<button class="btn" id="rNext">${tx('next')}</button>`:''}<button class="btn ghost" id="rMenu">${tx('menu')}</button></div>${credit()}`;
   oc.innerHTML=html;show('menu');
+  const rs=$('#rScore');if(rs&&win){const to=score,t0=performance.now();(function f(n){const u=Math.min(1,(n-t0)/900);rs.textContent=Math.round(to*(1-Math.pow(1-u,3)));if(u<1)requestAnimationFrame(f);})(t0);}
   $('#rAgain').onclick=()=>startLevel(cur);
   $('#rMenu').onclick=menuScreen;
   const rn=$('#rNext');if(rn)rn.onclick=()=>startLevel(cur+1);
@@ -985,6 +1034,7 @@ const NBK='nirGrammarQuest.nb.v1';
 let nb={};try{nb=JSON.parse(localStorage.getItem(NBK))||{};}catch(e){}
 function nbSave(){try{localStorage.setItem(NBK,JSON.stringify(nb));}catch(e){}}
 function nbCount(){return Object.keys(nb).length;}
+function statAdd(l,ok){const k=LV[l].topic,e=sv.stat[k]||(sv.stat[k]={ok:0,bad:0});if(ok)e.ok++;else e.bad++;save();}
 function nbWrong(l,i){const k=l+'|'+i,e=nb[k]||(nb[k]={l,i,w:0,r:0});e.w++;e.r=0;nbSave();}
 function nbFill(g){return g.q.replace('___','<b style="color:#ffd84a">'+g.opts[g.a]+'</b>');}
 let prac=null;
@@ -1050,13 +1100,14 @@ function resumeGame(){
 $('#pz').addEventListener('click',pauseGame);
 const vzb=$('#vz');vzb.textContent=sv.voice?'🔊':'🔇';
 vzb.addEventListener('click',()=>{sv.voice=!sv.voice;save();vzb.textContent=sv.voice?'🔊':'🔇';if(!sv.voice&&window.speechSynthesis)try{speechSynthesis.cancel();}catch(e){}vzb.blur();});
+const mzb=$('#mz');mzb.textContent=sv.mus?'🎵':'🔕';mzb.addEventListener('click',()=>{sv.mus=!sv.mus;save();mzb.textContent=sv.mus?'🎵':'🔕';if(sv.mus&&state==='play')musOn(.45);else musOff();mzb.blur();});
 
 /* ---------- loop (capped to ~60fps, paused while phone is in portrait) ---------- */
 let lastDraw=0;
 function loop(ts){requestAnimationFrame(loop);
   if(ts-lastDraw<15)return;lastDraw=ts;
   const dt=Math.max(0,Math.min(.05,(ts-last)/1000||0));last=ts;T+=dt;
-  if(state==='play'){if(hitT>0){hitT-=dt;update(dt*.18);}else update(dt);}
+  if(state==='play'){if(cdT>0){cdT-=dt;inp.j=0;p.buf=0;cdTick();}else if(hitT>0){hitT-=dt;update(dt*.18);}else update(dt);}
   draw();if(state==='play'||state==='gate')hud();
 }
 document.addEventListener('visibilitychange',()=>{

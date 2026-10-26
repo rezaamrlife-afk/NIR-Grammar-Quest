@@ -1,39 +1,105 @@
-/* NIR Grammar Quest — service worker.
-   Page: opens instantly from cache and refreshes itself in the background (new version on next launch).
-   Fonts: cached after first use. Everything else: cache-first. */
-const V = 'nir-gq-v1', FONTS = 'nir-gq-fonts';
-const SHELL = ['./', './index.html', './manifest.webmanifest', './icons/icon-192.png', './icons/icon-512.png', './icons/icon-maskable-512.png', './icons/apple-touch-icon.png'];
+/* NIR Grammar Quest — service worker */
+const VERSION = 'nir-gq-v2';
+const FONTS = 'nir-gq-fonts-v1';
 
-self.addEventListener('install', e => {
-  e.waitUntil(caches.open(V).then(c => c.addAll(SHELL)).then(() => self.skipWaiting()));
+const SHELL = [
+  './',
+  './index.html',
+  './manifest.webmanifest',
+  './icon-192.png',
+  './icon-512.png',
+  './icon-maskable-512.png',
+  './apple-touch-icon.png'
+];
+
+self.addEventListener('install', event => {
+  event.waitUntil(
+    caches.open(VERSION)
+      .then(cache => cache.addAll(SHELL))
+      .then(() => self.skipWaiting())
+  );
 });
-self.addEventListener('activate', e => {
-  e.waitUntil(caches.keys()
-    .then(ks => Promise.all(ks.filter(k => k !== V && k !== FONTS).map(k => caches.delete(k))))
-    .then(() => self.clients.claim()));
+
+self.addEventListener('activate', event => {
+  event.waitUntil(
+    caches.keys()
+      .then(keys => Promise.all(
+        keys
+          .filter(key => key !== VERSION && key !== FONTS)
+          .map(key => caches.delete(key))
+      ))
+      .then(() => self.clients.claim())
+  );
 });
-self.addEventListener('fetch', e => {
-  const r = e.request;
-  if (r.method !== 'GET') return;
-  const u = new URL(r.url);
-  if (u.hostname === 'fonts.googleapis.com' || u.hostname === 'fonts.gstatic.com') {
-    e.respondWith(caches.open(FONTS).then(async c => {
-      const hit = await c.match(r);
-      const net = fetch(r).then(res => { if (res.ok || res.type === 'opaque') c.put(r, res.clone()); return res; }).catch(() => hit);
-      return hit || net;
-    }));
+
+self.addEventListener('fetch', event => {
+  const request = event.request;
+
+  if (request.method !== 'GET') return;
+
+  const url = new URL(request.url);
+
+  if (
+    url.hostname === 'fonts.googleapis.com' ||
+    url.hostname === 'fonts.gstatic.com'
+  ) {
+    event.respondWith(
+      caches.open(FONTS).then(async cache => {
+        const cached = await cache.match(request);
+
+        try {
+          const response = await fetch(request);
+
+          if (response.ok) {
+            await cache.put(request, response.clone());
+          }
+
+          return response;
+        } catch {
+          if (cached) return cached;
+          throw new Error('Font unavailable offline');
+        }
+      })
+    );
     return;
   }
-  if (u.origin !== location.origin) return;
-  if (r.mode === 'navigate') {
-    e.respondWith(caches.match('./index.html').then(hit => {
-      const net = fetch(r).then(res => { if (res.ok) { const cp = res.clone(); caches.open(V).then(c => c.put('./index.html', cp)); } return res; }).catch(() => hit);
-      return hit || net;
-    }));
+
+  if (url.origin !== self.location.origin) return;
+
+  if (request.mode === 'navigate') {
+    event.respondWith(
+      fetch(request)
+        .then(response => {
+          if (response.ok) {
+            const copy = response.clone();
+            caches.open(VERSION)
+              .then(cache => cache.put('./index.html', copy));
+          }
+          return response;
+        })
+        .catch(async () => {
+          const cached = await caches.match('./index.html');
+          if (cached) return cached;
+          return caches.match('./');
+        })
+    );
     return;
   }
-  e.respondWith(caches.match(r).then(hit => hit || fetch(r).then(res => {
-    if (res.ok) { const cp = res.clone(); caches.open(V).then(c => c.put(r, cp)); }
-    return res;
-  })));
+
+  event.respondWith(
+    caches.match(request).then(cached => {
+      if (cached) return cached;
+
+      return fetch(request).then(response => {
+        if (response.ok) {
+          const copy = response.clone();
+
+          caches.open(VERSION)
+            .then(cache => cache.put(request, copy));
+        }
+
+        return response;
+      });
+    })
+  );
 });

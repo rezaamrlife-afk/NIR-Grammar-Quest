@@ -403,9 +403,27 @@ const LV=[
   ],
   rule:{en:'Past Continuous: was/were + verb-ing. Use it for an action in progress at a moment in the past, for an action interrupted by another (I was sleeping when you called), and with while for two actions at the same time.',
         fa:'گذشته استمراری: was/were + فعل‌ing. برای کاری که در یک لحظه‌ی گذشته در جریان بود، کاری که کار دیگری قطعش کرد (I was sleeping when you called) و با while برای دو کار هم‌زمان به کار می‌رود.',
-        tr:'Geçmişte sürmekte olan eylemler için was/were + fiil-ing kullanılır; başka bir eylemin böldüğü eylem (I was sleeping when you called) ve while ile aynı anda süren iki eylem için de kullanılır.'}}
+        tr:'Geçmişte sürmekte olan eylemler için was/were + fiil-ing kullanılır; başka bir eylemin böldüğü eylem (I was sleeping when you called) ve while ile aynı anda süren iki eylem için de kullanılır.'}},
+ {topic:'Passive Voice',nn:{fa:'مجهول (Passive)',tr:'Edilgen çatı'},unlocked:true,
+  d:{en:'When the action matters most',fa:'وقتی خودِ کار مهم است',tr:'Eylem öne çıktığında'},
+  sky:['#0f766e','#5eead4','#ecfeff'],hl:['#5fa8a0','#4a9a8a','#3a7a5a'],
+  sentences:[
+   ['The','window','was','broken','yesterday.'],
+   ['English','is','spoken','all','over','the','world.'],
+   ['The','letter','was','written','by','my','teacher.'],
+   ['These','cars','are','made','in','Turkey.']
+  ],
+  gates:[
+   {q:'The window ___ by a ball yesterday.',opts:['was broken','broke','is breaking'],a:0,en:'Passive: be + past participle (V3). For the past, use was/were + V3: was broken.',fa:'مجهول: فعل be + اسم مفعول (V3). برای گذشته از was/were + V3 استفاده می‌کنیم: was broken.',tr:'Edilgen: be + V3. Geçmiş için was/were + V3 kullanılır: was broken.'},
+   {q:'Chocolate ___ from cocoa beans.',opts:['is made','makes','is making'],a:0,en:'Use is/are + V3 for the present passive; the action matters, not who does it: is made.',fa:'برای مجهول حال از is/are + V3 استفاده می‌کنیم؛ انجام‌دهنده مهم نیست: is made.',tr:'Şimdiki edilgen için is/are + V3 kullanılır; yapanın önemi yoktur: is made.'},
+   {q:'The letter was written ___ my teacher.',opts:['by','with','from'],a:0,en:'Use by to say who did the action: by my teacher.',fa:'برای گفتن انجام‌دهنده‌ی کار از by استفاده می‌کنیم: by my teacher.',tr:'Eylemi yapanı belirtmek için by kullanılır: by my teacher.'},
+   {q:'English ___ all over the world.',opts:['is spoken','speaks','is speaking'],a:0,en:'Use the passive when the subject receives the action: English is spoken.',fa:'وقتی فاعل جمله کار را دریافت می‌کند از مجهول استفاده می‌کنیم: English is spoken.',tr:'Özne eylemi alıyorsa edilgen kullanılır: English is spoken.'}
+  ],
+  rule:{en:'Passive voice: be + past participle (V3). Use it when the action matters more than who did it (English is spoken here). Present: is/are + V3; past: was/were + V3. Add by + agent if needed (written by my teacher).',
+        fa:'مجهول: فعل be + اسم مفعول (V3). وقتی خودِ کار از انجام‌دهنده مهم‌تر است به کار می‌رود (English is spoken here). حال: is/are + V3؛ گذشته: was/were + V3. در صورت نیاز با by انجام‌دهنده را می‌گوییم (written by my teacher).',
+        tr:'Edilgen: be + V3. Eylem, yapandan daha önemliyse kullanılır (English is spoken here). Geniş zaman: is/are + V3; geçmiş: was/were + V3. Gerekirse by ile yapan belirtilir (written by my teacher).'}}
 ];
-['A1','A1–A2','A1–A2','A1','A1','A2–B1','A2–B1','A2','A2','A2–B1','A2–B1'].forEach((c,i)=>{LV[i].cefr=c;});
+['A1','A1–A2','A1–A2','A1','A1','A2–B1','A2–B1','A2','A2','A2–B1','A2–B1','B1'].forEach((c,i)=>{LV[i].cefr=c;});
 const KEY='nirGrammarQuest.v1';
 let sv={unlocked:5,best:{},lang:'en',voice:true,stars:{},stat:{},mus:true,seen:false};
 try{const s=JSON.parse(localStorage.getItem(KEY));if(s&&typeof s==='object'){sv.unlocked=Math.max(1,s.unlocked|0);sv.best=(s.best&&typeof s.best==='object')?s.best:{};sv.lang=s.lang||'en';sv.voice=s.voice!==false;sv.stars=(s.stars&&typeof s.stars==='object')?s.stars:{};sv.stat=(s.stat&&typeof s.stat==='object')?s.stat:{};sv.mus=s.mus!==false;sv.seen=!!s.seen;}}catch(e){}
@@ -1247,8 +1265,8 @@ function show(view){
 }
 const SITES=['niracademy.com/','niracademy.com/game-center/'];
 function credit(){return '<p class="cr">'+tx('made')+' '+tx('by')+'<br>'+SITES.map(u=>'<a dir="ltr" href="https://'+u+'" target="_blank" rel="noopener">'+u+'</a>').join(' ')+'</p><p class="cr tip">'+tx('tipRot')+'</p>';}
-const LICON=['🔤','⏳','🕰️','📘','📍','✅','🚀','📏','🚦','🌦️','🌙'];
-const LCOL=['#ffd84a','#4fc3ff','#ff7a8a','#ffb347','#b48cff','#4fe0b0','#ff7aa8','#7fd0ff','#ffb04f','#74c0fc','#9a8cff'];
+const LICON=['🔤','⏳','🕰️','📘','📍','✅','🚀','📏','🚦','🌦️','🌙','📜'];
+const LCOL=['#ffd84a','#4fc3ff','#ff7a8a','#ffb347','#b48cff','#4fe0b0','#ff7aa8','#7fd0ff','#ffb04f','#74c0fc','#9a8cff','#5eead4'];
 function menuScreen(){
   try{screen.orientation&&screen.orientation.unlock&&screen.orientation.unlock();}catch(e){}
   state='menu';mp=false;show('menu');musOff();
